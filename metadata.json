@@ -1,0 +1,6 @@
+{
+  "name": "CIIT 2026",
+  "description": "Plataforma oficial da Conferência Internacional de Investimentos de Tete 2026 (CIIT2026). Conectando investidores globais às oportunidades de desenvolvimento de Tete, Moçambique.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
