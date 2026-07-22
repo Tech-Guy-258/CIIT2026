@@ -39,6 +39,7 @@ export default function Navbar({
   const navItems = [
     { label: t.navHome, href: '#home' },
     { label: t.navAbout, href: '#about' },
+    { label: (t as any).navProfile || 'Perfil de Tete', href: '#tete-profile' },
     { label: t.nav6cs, href: '#sectors' },
     { label: t.navSpeakers, href: '#speakers' },
     { label: t.navAgenda, href: '#agenda' },

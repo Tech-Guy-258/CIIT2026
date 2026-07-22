@@ -14,6 +14,7 @@ import RegistrationForm from './components/RegistrationForm';
 import TravelGuide from './components/TravelGuide';
 import AdminDashboard from './components/AdminDashboard';
 import InvestorChat from './components/InvestorChat';
+import TeteProfile from './components/TeteProfile';
 
 import { INITIAL_REGISTRATIONS, TRANSLATIONS, SPONSORS } from './data';
 import { Registration } from './types';
@@ -30,7 +31,7 @@ export default function App() {
   // Section Tracking via scroll handler
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['home', 'about', 'sectors', 'speakers', 'agenda', 'registration', 'travel', 'admin'];
+      const sections = ['home', 'about', 'tete-profile', 'sectors', 'speakers', 'agenda', 'registration', 'travel', 'admin'];
       const scrollPosition = window.scrollY + 200;
 
       for (const section of sections) {
@@ -100,6 +101,9 @@ export default function App() {
 
         {/* ABOUT CONFERENCE SECTION */}
         <About lang={lang} />
+
+        {/* TETE PROVINCE PROFILE & TOURIST ATTRACTIONS SECTION */}
+        <TeteProfile lang={lang} />
 
         {/* THE 6 CS OF TETE SECTORS GRID */}
         <Sectors lang={lang} />

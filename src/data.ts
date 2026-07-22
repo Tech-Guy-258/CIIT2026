@@ -360,6 +360,7 @@ export const TRANSLATIONS = {
   pt: {
     navHome: 'Início',
     navAbout: 'Sobre',
+    navProfile: 'Perfil de Tete',
     nav6cs: 'Os 6C\'s de Tete',
     navSpeakers: 'Oradores',
     navAgenda: 'Programa',
@@ -426,6 +427,7 @@ export const TRANSLATIONS = {
   en: {
     navHome: 'Home',
     navAbout: 'About',
+    navProfile: 'Tete Profile',
     nav6cs: 'Tete 6 C\'s',
     navSpeakers: 'Speakers',
     navAgenda: 'Agenda',
