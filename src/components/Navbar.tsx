@@ -38,6 +38,7 @@ export default function Navbar({
 
   const navItems = [
     { label: t.navHome, href: '#home' },
+    { label: lang === 'pt' ? 'Câmbio & Mercado' : 'Market & Rates', href: '#banco-moc-economic-dashboard' },
     { label: t.navAbout, href: '#about' },
     { label: (t as any).navProfile || 'Perfil de Tete', href: '#tete-profile' },
     { label: t.nav6cs, href: '#sectors' },
@@ -49,6 +50,13 @@ export default function Navbar({
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     setIsOpen(false);
+    if (href === '#banco-moc-economic-dashboard') {
+      const btn = document.getElementById('btn-open-sidebar-market') || document.getElementById('btn-float-sidebar-toggle');
+      if (btn) {
+        btn.click();
+        return;
+      }
+    }
     const element = document.querySelector(href);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
@@ -58,11 +66,7 @@ export default function Navbar({
   return (
     <nav
       id="navbar"
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? 'bg-corporate-950/95 backdrop-blur-md border-b border-gold-600/20 py-3 shadow-lg'
-          : 'bg-gradient-to-b from-corporate-950/80 to-transparent py-5'
-      }`}
+      className="relative w-full transition-all duration-300 bg-corporate-950/95 backdrop-blur-md border-b border-gold-600/20 py-2.5 shadow-lg z-50"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">

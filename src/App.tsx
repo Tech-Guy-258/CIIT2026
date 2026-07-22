@@ -15,16 +15,18 @@ import TravelGuide from './components/TravelGuide';
 import AdminDashboard from './components/AdminDashboard';
 import InvestorChat from './components/InvestorChat';
 import TeteProfile from './components/TeteProfile';
+import BancoMocFinancialSuite from './components/BancoMocFinancialSuite';
 
 import { INITIAL_REGISTRATIONS, TRANSLATIONS, SPONSORS } from './data';
 import { Registration } from './types';
-import { Mail, Phone, MapPin, ExternalLink, Calendar, ChevronRight } from 'lucide-react';
+import { Mail, Phone, MapPin, ExternalLink, Calendar, ChevronRight, ArrowUp } from 'lucide-react';
 
 export default function App() {
   const [lang, setLang] = useState<'pt' | 'en'>('pt');
   const [registrations, setRegistrations] = useState<Registration[]>(INITIAL_REGISTRATIONS);
   const [showAdmin, setShowAdmin] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+  const [showBackToTop, setShowBackToTop] = useState(false);
 
   const t = TRANSLATIONS[lang];
 
@@ -45,6 +47,8 @@ export default function App() {
           }
         }
       }
+
+      setShowBackToTop(window.scrollY > 300);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -71,26 +75,35 @@ export default function App() {
     }
   };
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div id="root-layout" className="min-h-screen flex flex-col justify-between bg-neutral-50 text-neutral-900 overflow-x-hidden selection:bg-gold-500 selection:text-corporate-950">
       
-      {/* Navigation Bar */}
-      <Navbar
-        lang={lang}
-        setLang={setLang}
-        activeSection={activeSection}
-        onRegisterClick={() => scrollToSection('registration')}
-        onAdminToggle={() => {
-          setShowAdmin(!showAdmin);
-          setTimeout(() => {
-            scrollToSection('admin');
-          }, 100);
-        }}
-        showAdminLink={showAdmin}
-      />
+      {/* FIXED STICKY HEADER (NAVBAR + BANCO DE MOÇAMBIQUE TICKER BAR) */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-corporate-950 shadow-2xl border-b border-gold-500/20">
+        <Navbar
+          lang={lang}
+          setLang={setLang}
+          activeSection={activeSection}
+          onRegisterClick={() => scrollToSection('registration')}
+          onAdminToggle={() => {
+            setShowAdmin(!showAdmin);
+            setTimeout(() => {
+              scrollToSection('admin');
+            }, 100);
+          }}
+          showAdminLink={showAdmin}
+        />
+
+        {/* BANCO DE MOÇAMBIQUE EXCHANGE TICKER CAROUSEL */}
+        <BancoMocFinancialSuite lang={lang} />
+      </header>
 
       {/* Main Sections */}
-      <main className="flex-grow">
+      <main className="flex-grow pt-[115px] sm:pt-[120px]">
         
         {/* HERO SECTION */}
         <Hero
@@ -256,6 +269,21 @@ export default function App() {
 
         </div>
       </footer>
+
+      {/* VOLTAR AO INÍCIO (BACK TO TOP) FLOATING BUTTON */}
+      {showBackToTop && (
+        <button
+          id="btn-back-to-top"
+          onClick={scrollToTop}
+          className="fixed bottom-6 right-6 z-40 px-3.5 py-3 bg-corporate-900/90 hover:bg-gold-500 text-gold-300 hover:text-corporate-950 border border-gold-500/50 hover:border-gold-400 shadow-2xl backdrop-blur-md transition-all duration-300 transform hover:scale-105 flex items-center space-x-2 group cursor-pointer"
+          title={lang === 'pt' ? 'Voltar ao Início' : 'Back to Top'}
+        >
+          <ArrowUp className="w-4 h-4 text-gold-400 group-hover:text-corporate-950 transition-transform group-hover:-translate-y-1" />
+          <span className="hidden sm:inline text-xs font-mono font-bold uppercase tracking-wider">
+            {lang === 'pt' ? 'Voltar ao Início' : 'Back to Top'}
+          </span>
+        </button>
+      )}
 
     </div>
   );

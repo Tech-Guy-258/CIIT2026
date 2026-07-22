@@ -55,7 +55,7 @@ export default function Hero({ lang, onRegisterClick, onExploreClick }: HeroProp
   return (
     <section
       id="home"
-      className="relative min-h-screen bg-corporate-950 flex items-center justify-center pt-24 pb-16 overflow-hidden px-4"
+      className="relative min-h-[90vh] bg-corporate-950 flex items-center justify-center pt-12 pb-16 overflow-hidden px-4"
     >
       {/* Background Stylized Elements */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-corporate-900 via-corporate-950 to-black z-0" />
