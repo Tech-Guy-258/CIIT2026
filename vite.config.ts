@@ -4,8 +4,14 @@ import path from 'path';
 import {defineConfig} from 'vite';
 
 export default defineConfig(({ mode }) => {
-  // Use relative base './' for production so assets load regardless of subfolder or repo name
-  const base = mode === 'production' || process.env.NODE_ENV === 'production' ? './' : '/';
+  const repoName = process.env.GITHUB_REPOSITORY
+    ? process.env.GITHUB_REPOSITORY.split('/')[1]
+    : 'CIIT2026';
+
+  const base = mode === 'production' || process.env.NODE_ENV === 'production'
+    ? `/${repoName}/`
+    : '/';
+
   return {
     base,
     plugins: [react(), tailwindcss()],
