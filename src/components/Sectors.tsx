@@ -92,15 +92,15 @@ export default function Sectors({ lang }: SectorsProps) {
 
                   {/* Title & Subtitle */}
                   <h3 className="text-2xl font-display font-bold text-white tracking-tight uppercase group-hover:text-gold-300 transition-colors">
-                    {sector.title}
+                    {lang === 'pt' ? sector.title : (sector.titleEn || sector.title)}
                   </h3>
                   <p className="text-xs font-mono font-bold text-gold-400 mt-1 uppercase tracking-wider">
-                    {sector.subtitle}
+                    {lang === 'pt' ? sector.subtitle : (sector.subtitleEn || sector.subtitle)}
                   </p>
 
                   {/* Short Description */}
                   <p className="text-sm text-gray-200 mt-4 line-clamp-3 leading-relaxed font-light">
-                    {sector.description}
+                    {lang === 'pt' ? sector.description : (sector.descriptionEn || sector.description)}
                   </p>
                 </div>
 
@@ -111,7 +111,7 @@ export default function Sectors({ lang }: SectorsProps) {
                       {t.sectDataLabel}
                     </span>
                     <span className="text-gold-300 font-bold block mt-0.5 text-sm">
-                      {sector.keyData}
+                      {lang === 'pt' ? sector.keyData : (sector.keyDataEn || sector.keyData)}
                     </span>
                   </div>
                   <div className="p-2.5 rounded-none bg-gold-500/20 text-gold-300 group-hover:bg-gold-500 group-hover:text-corporate-950 transition-all duration-300 border border-gold-500/40">
@@ -162,15 +162,15 @@ export default function Sectors({ lang }: SectorsProps) {
                       {renderIcon(selectedSector.iconName, "w-6 h-6 text-gold-400")}
                     </div>
                     <span className="text-xs font-mono text-gold-400 tracking-widest uppercase font-bold">
-                      Pilar {selectedSector.title}
+                      {lang === 'pt' ? 'Pilar' : 'Pillar'} {lang === 'pt' ? selectedSector.title : (selectedSector.titleEn || selectedSector.title)}
                     </span>
                   </div>
 
                   <h3 className="text-3xl font-display font-light text-white uppercase tracking-tight">
-                    {selectedSector.title}
+                    {lang === 'pt' ? selectedSector.title : (selectedSector.titleEn || selectedSector.title)}
                   </h3>
                   <p className="text-sm font-mono text-gold-300 uppercase tracking-widest mt-1">
-                    {selectedSector.subtitle}
+                    {lang === 'pt' ? selectedSector.subtitle : (selectedSector.subtitleEn || selectedSector.subtitle)}
                   </p>
                 </div>
               </div>
@@ -182,7 +182,7 @@ export default function Sectors({ lang }: SectorsProps) {
                     {lang === 'pt' ? 'Contexto de Investimento' : 'Investment Context'}
                   </h4>
                   <p className="text-sm text-gray-700 leading-relaxed font-light">
-                    {selectedSector.description}
+                    {lang === 'pt' ? selectedSector.description : (selectedSector.descriptionEn || selectedSector.description)}
                   </p>
                 </div>
 
@@ -194,7 +194,7 @@ export default function Sectors({ lang }: SectorsProps) {
                       {t.sectDataLabel}
                     </span>
                     <span className="text-base font-display font-black text-corporate-950 block">
-                      {selectedSector.keyData}
+                      {lang === 'pt' ? selectedSector.keyData : (selectedSector.keyDataEn || selectedSector.keyData)}
                     </span>
                   </div>
                 </div>
@@ -205,7 +205,7 @@ export default function Sectors({ lang }: SectorsProps) {
                     {t.sectOppTitle}
                   </h4>
                   <ul className="space-y-3">
-                    {selectedSector.investmentOpportunities.map((opportunity, i) => (
+                    {(lang === 'pt' ? selectedSector.investmentOpportunities : (selectedSector.investmentOpportunitiesEn || selectedSector.investmentOpportunities)).map((opportunity, i) => (
                       <li key={i} className="flex items-start space-x-3 text-sm text-gray-600">
                         <span className="w-1.5 h-1.5 rounded-full bg-gold-600 mt-2 flex-shrink-0" />
                         <span>{opportunity}</span>

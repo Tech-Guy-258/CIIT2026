@@ -420,20 +420,20 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
 
   // List of 15 districts of Tete Province (Wikipedia)
   const districtsList = [
-    { name: 'Angónia', capital: 'Ulongué', detail: 'Planalto fértil, alta produção agrícola (batata, milho, feijão) e clima fresco.' },
-    { name: 'Cahora-Bassa', capital: 'Songo', detail: 'Sede da Hidroeléctrica de Cahora Bassa e da vasta albufeira sobre o Zambeze.' },
-    { name: 'Cidade de Tete', capital: 'Tete', detail: 'Capital provincial, centro financeiro, comercial e de serviços nas margens do Zambeze.' },
-    { name: 'Changara', capital: 'Luenha', detail: 'Pecuária caprina e bovina, entroncamento rodoviário para o Zimbábue.' },
-    { name: 'Chifunde', capital: 'Chifunde', detail: 'Zona de transição florestal, rica em recursos florestais e agricultura.' },
-    { name: 'Chiúta', capital: 'Manje', detail: 'Área com potencial mineiro e agropecuário no centro da província.' },
-    { name: 'Doa', capital: 'Doa', detail: 'Distrito criado recentemente, atravessado pela linha fêmea de caminho de ferro.' },
-    { name: 'Macanga', capital: 'Furancungo', detail: 'Planalto norte rico em recursos florestais, tabaco e minerais.' },
-    { name: 'Marávia', capital: 'Fingoe', detail: 'Distrito fronteiriço com a Zâmbia, com vastas reservas de caça e savana.' },
-    { name: 'Marara', capital: 'Marara', detail: 'Proximidade com o Rio Zambeze, projetos agrícolas de irrigação.' },
-    { name: 'Moatize', capital: 'Moatize', detail: 'Coração da mineração de carvão metalúrgico e centro industrial em expansão.' },
-    { name: 'Mutarara', capital: 'Nhamayabué', detail: 'Localizado no extremo sul, junto à mítica Ponte D. Ana sobre o Zambeze.' },
-    { name: 'Nhamatanda / Tsangano', capital: 'Ntengo-Wambusi', detail: 'Zona de alta altitude, produtora de hortícolas e citrinos de qualidade.' },
-    { name: 'Zumbo', capital: 'Zumbo', detail: 'Ponto extremo ocidental, fronteira com Zâmbia e Zimbábue na confluência do Luangwa.' },
+    { name: 'Angónia', capital: 'Ulongué', detail: lang === 'pt' ? 'Planalto fértil, alta produção agrícola (batata, milho, feijão) e clima fresco.' : 'Fertile plateau, high agricultural output (potatoes, corn, beans), and cool highland climate.' },
+    { name: 'Cahora-Bassa', capital: 'Songo', detail: lang === 'pt' ? 'Sede da Hidroeléctrica de Cahora Bassa e da vasta albufeira sobre o Zambeze.' : 'Home to the Cahora Bassa Hydroelectric dam and the vast lake reservoir on the Zambezi.' },
+    { name: 'Cidade de Tete', capital: 'Tete', detail: lang === 'pt' ? 'Capital provincial, centro financeiro, comercial e de serviços nas margens do Zambeze.' : 'Provincial capital, commercial and financial hub along the banks of the Zambezi.' },
+    { name: 'Changara', capital: 'Luenha', detail: lang === 'pt' ? 'Pecuária caprina e bovina, entroncamento rodoviário para o Zimbábue.' : 'Goat and cattle livestock hub, major highway junction leading to Zimbabwe.' },
+    { name: 'Chifunde', capital: 'Chifunde', detail: lang === 'pt' ? 'Zona de transição florestal, rica em recursos florestais e agricultura.' : 'Forest transition zone rich in timber resources and agriculture.' },
+    { name: 'Chiúta', capital: 'Manje', detail: lang === 'pt' ? 'Área com potencial mineiro e agropecuário no centro da província.' : 'Region with high mineral and farming potential in central Tete.' },
+    { name: 'Doa', capital: 'Doa', detail: lang === 'pt' ? 'Distrito criado recentemente, atravessado pela linha fêmea de caminho de ferro.' : 'Recently created district traversed by the main railway line.' },
+    { name: 'Macanga', capital: 'Furancungo', detail: lang === 'pt' ? 'Planalto norte rico em recursos florestais, tabaco e minerais.' : 'Northern plateau rich in forestry, tobacco farming, and mineral deposits.' },
+    { name: 'Marávia', capital: 'Fingoe', detail: lang === 'pt' ? 'Distrito fronteiriço com a Zâmbia, com vastas reservas de caça e savana.' : 'Border district with Zambia featuring extensive game reserves and savanna.' },
+    { name: 'Marara', capital: 'Marara', detail: lang === 'pt' ? 'Proximidade com o Rio Zambeze, projetos agrícolas de irrigação.' : 'Located near the Zambezi River with key agricultural irrigation projects.' },
+    { name: 'Moatize', capital: 'Moatize', detail: lang === 'pt' ? 'Coração da mineração de carvão metalúrgico e centro industrial em expansão.' : 'Heart of metallurgical coal mining and a fast-growing industrial center.' },
+    { name: 'Mutarara', capital: 'Nhamayabué', detail: lang === 'pt' ? 'Localizado no extremo sul, junto à mítica Ponte D. Ana sobre o Zambeze.' : 'Located in the far south near the historic Dona Ana Rail Bridge on the Zambezi.' },
+    { name: 'Nhamatanda / Tsangano', capital: 'Ntengo-Wambusi', detail: lang === 'pt' ? 'Zona de alta altitude, produtora de hortícolas e citrinos de qualidade.' : 'High-altitude district producing premium vegetables and citrus fruits.' },
+    { name: 'Zumbo', capital: 'Zumbo', detail: lang === 'pt' ? 'Ponto extremo ocidental, fronteira com Zâmbia e Zimbábue na confluência do Luangwa.' : 'Westernmost point, bordering Zambia and Zimbabwe at the Luangwa confluence.' },
   ];
 
   const filteredAttractions = filterType === 'all' 
@@ -473,44 +473,44 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-12">
           <div className="bg-corporate-950/80 border border-white/10 p-4 rounded-none text-center hover:border-gold-500/40 transition-colors">
             <MapPin className="w-5 h-5 text-gold-400 mx-auto mb-1.5" />
-            <span className="text-[9px] font-mono text-gray-400 uppercase tracking-widest block">Área Territorial</span>
+            <span className="text-[9px] font-mono text-gray-400 uppercase tracking-widest block">{lang === 'pt' ? 'Área Territorial' : 'Territorial Area'}</span>
             <span className="text-base font-display font-bold text-white block mt-0.5">100.724 km²</span>
             <span className="text-[9px] text-gray-500 block mt-0.5">Wiki / INE</span>
           </div>
 
           <div className="bg-corporate-950/80 border border-white/10 p-4 rounded-none text-center hover:border-gold-500/40 transition-colors">
             <Users className="w-5 h-5 text-gold-400 mx-auto mb-1.5" />
-            <span className="text-[9px] font-mono text-gray-400 uppercase tracking-widest block">População Est.</span>
-            <span className="text-base font-display font-bold text-white block mt-0.5">~2.76 Milhões</span>
-            <span className="text-[9px] text-gray-500 block mt-0.5">Habitantes</span>
+            <span className="text-[9px] font-mono text-gray-400 uppercase tracking-widest block">{lang === 'pt' ? 'População Est.' : 'Est. Population'}</span>
+            <span className="text-base font-display font-bold text-white block mt-0.5">{lang === 'pt' ? '~2.76 Milhões' : '~2.76 Million'}</span>
+            <span className="text-[9px] text-gray-500 block mt-0.5">{lang === 'pt' ? 'Habitantes' : 'Inhabitants'}</span>
           </div>
 
           <div className="bg-corporate-950/80 border border-white/10 p-4 rounded-none text-center hover:border-gold-500/40 transition-colors">
             <Building2 className="w-5 h-5 text-gold-400 mx-auto mb-1.5" />
-            <span className="text-[9px] font-mono text-gray-400 uppercase tracking-widest block">Capital</span>
-            <span className="text-base font-display font-bold text-white block mt-0.5">Cidade de Tete</span>
-            <span className="text-[9px] text-gray-500 block mt-0.5">Margens do Zambeze</span>
+            <span className="text-[9px] font-mono text-gray-400 uppercase tracking-widest block">{lang === 'pt' ? 'Capital' : 'Capital'}</span>
+            <span className="text-base font-display font-bold text-white block mt-0.5">{lang === 'pt' ? 'Cidade de Tete' : 'Tete City'}</span>
+            <span className="text-[9px] text-gray-500 block mt-0.5">{lang === 'pt' ? 'Margens do Zambeze' : 'Zambezi Banks'}</span>
           </div>
 
           <div className="bg-corporate-950/80 border border-white/10 p-4 rounded-none text-center hover:border-gold-500/40 transition-colors">
             <Sun className="w-5 h-5 text-gold-400 mx-auto mb-1.5" />
-            <span className="text-[9px] font-mono text-gray-400 uppercase tracking-widest block">Clima Predominante</span>
-            <span className="text-base font-display font-bold text-white block mt-0.5">Tropical Seco</span>
-            <span className="text-[9px] text-gray-500 block mt-0.5">Calor & Sol constante</span>
+            <span className="text-[9px] font-mono text-gray-400 uppercase tracking-widest block">{lang === 'pt' ? 'Clima Predominante' : 'Climate'}</span>
+            <span className="text-base font-display font-bold text-white block mt-0.5">{lang === 'pt' ? 'Tropical Seco' : 'Tropical Dry'}</span>
+            <span className="text-[9px] text-gray-500 block mt-0.5">{lang === 'pt' ? 'Calor & Sol constante' : 'Warm & Sunny'}</span>
           </div>
 
           <div className="bg-corporate-950/80 border border-white/10 p-4 rounded-none text-center hover:border-gold-500/40 transition-colors">
             <Layers className="w-5 h-5 text-gold-400 mx-auto mb-1.5" />
-            <span className="text-[9px] font-mono text-gray-400 uppercase tracking-widest block">Divisão</span>
-            <span className="text-base font-display font-bold text-white block mt-0.5">15 Distritos</span>
-            <span className="text-[9px] text-gray-500 block mt-0.5">Municípios & Vilas</span>
+            <span className="text-[9px] font-mono text-gray-400 uppercase tracking-widest block">{lang === 'pt' ? 'Divisão' : 'Division'}</span>
+            <span className="text-base font-display font-bold text-white block mt-0.5">{lang === 'pt' ? '15 Distritos' : '15 Districts'}</span>
+            <span className="text-[9px] text-gray-500 block mt-0.5">{lang === 'pt' ? 'Municípios & Vilas' : 'Municipalities & Towns'}</span>
           </div>
 
           <div className="bg-corporate-950/80 border border-white/10 p-4 rounded-none text-center hover:border-gold-500/40 transition-colors">
             <Award className="w-5 h-5 text-gold-400 mx-auto mb-1.5" />
-            <span className="text-[9px] font-mono text-gray-400 uppercase tracking-widest block">Especialidade</span>
-            <span className="text-base font-display font-bold text-gold-400 block mt-0.5">Cabrito & Energia</span>
-            <span className="text-[9px] text-gray-500 block mt-0.5">Marca de Origem</span>
+            <span className="text-[9px] font-mono text-gray-400 uppercase tracking-widest block">{lang === 'pt' ? 'Especialidade' : 'Specialty'}</span>
+            <span className="text-base font-display font-bold text-gold-400 block mt-0.5">{lang === 'pt' ? 'Cabrito & Energia' : 'Goat Meat & Energy'}</span>
+            <span className="text-[9px] text-gray-500 block mt-0.5">{lang === 'pt' ? 'Marca de Origem' : 'Origin Designation'}</span>
           </div>
         </div>
 
@@ -652,7 +652,9 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
 
                     {/* Highlights bullet points */}
                     <div className="pt-3 border-t border-white/10 space-y-1.5">
-                      <span className="text-[10px] font-mono text-gray-400 uppercase tracking-widest block mb-1">Destaques da Visita:</span>
+                      <span className="text-[10px] font-mono text-gray-400 uppercase tracking-widest block mb-1">
+                        {lang === 'pt' ? 'Destaques da Visita:' : 'Visit Highlights:'}
+                      </span>
                       {item.highlights.map((hl, i) => (
                         <div key={i} className="flex items-center space-x-2 text-[11px] text-gray-300">
                           <CheckCircle2 className="w-3 h-3 text-gold-500 flex-shrink-0" />
@@ -702,10 +704,12 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
                 <Landmark className="w-6 h-6 text-gold-400 flex-shrink-0" />
                 <div>
                   <h4 className="text-sm font-bold text-white uppercase tracking-wider">
-                    Fonte Oficial dos Pontos Turísticos "Não Deixe de Visitar"
+                    {lang === 'pt' ? 'Fonte Oficial dos Pontos Turísticos "Não Deixe de Visitar"' : 'Official Source for "Must-Visit" Tourist Attractions'}
                   </h4>
                   <p className="text-xs text-gray-400 font-light mt-0.5">
-                    Informações e roteiros turísticos compilados diretamente do Portal Oficial de Turismo do Governo de Moçambique.
+                    {lang === 'pt'
+                      ? 'Informações e roteiros turísticos compilados diretamente do Portal Oficial de Turismo do Governo de Moçambique.'
+                      : 'Tourism information and itineraries compiled directly from the Official Tourism Portal of the Government of Mozambique.'}
                   </p>
                 </div>
               </div>
@@ -716,7 +720,7 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
                 rel="noreferrer"
                 className="px-4 py-2 bg-gold-600 hover:bg-gold-500 text-corporate-950 font-bold uppercase text-[10px] tracking-widest flex items-center space-x-2 transition-colors flex-shrink-0"
               >
-                <span>Aceder Visit Mozambique</span>
+                <span>{lang === 'pt' ? 'Aceder Visit Mozambique' : 'Access Visit Mozambique'}</span>
                 <ExternalLink className="w-3.5 h-3.5" />
               </a>
             </div>
@@ -731,26 +735,34 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
               <div className="flex items-center space-x-2 border-b border-gold-500/20 pb-3">
                 <MapPin className="w-5 h-5 text-gold-400" />
                 <h3 className="text-lg font-display font-light uppercase text-white tracking-wider">
-                  Localização & Geografia (Dados Wikipédia)
+                  {lang === 'pt' ? 'Localização & Geografia (Dados Wikipédia)' : 'Location & Geography (Wikipedia Data)'}
                 </h3>
               </div>
 
               <p className="text-gray-300 text-xs md:text-sm leading-relaxed font-light">
-                A <strong className="text-gold-400">Província de Tete</strong> situa-se no interior da região centro de Moçambique, cobrindo uma área de <strong>100.724 km²</strong>. É atravessada pelo majestoso Rio Zambeze, que a divide em duas regiões geográficas distintas.
+                {lang === 'pt' ? (
+                  <>A <strong className="text-gold-400">Província de Tete</strong> situa-se no interior da região centro de Moçambique, cobrindo uma área de <strong>100.724 km²</strong>. É atravessada pelo majestoso Rio Zambeze, que a divide em duas regiões geográficas distintas.</>
+                ) : (
+                  <>The <strong className="text-gold-400">Tete Province</strong> is located in central Mozambique, covering an area of <strong>100,724 km²</strong>. It is traversed by the majestic Zambezi River, dividing it into two distinct geographical regions.</>
+                )}
               </p>
 
               <div className="space-y-2 bg-corporate-900/60 p-4 border border-white/5 text-xs text-gray-300">
-                <h4 className="font-mono text-gold-400 uppercase tracking-wider font-bold mb-2">Fronteiras Nacionais e Internacionais:</h4>
+                <h4 className="font-mono text-gold-400 uppercase tracking-wider font-bold mb-2">
+                  {lang === 'pt' ? 'Fronteiras Nacionais e Internacionais:' : 'National & International Borders:'}
+                </h4>
                 <ul className="space-y-1.5 list-disc list-inside">
-                  <li><strong>Norte:</strong> Zâmbia e Malawi</li>
-                  <li><strong>Este:</strong> Província da Zambézia</li>
-                  <li><strong>Sul:</strong> Províncias de Sofala e Manica</li>
-                  <li><strong>Oeste:</strong> Zimbábue</li>
+                  <li><strong>{lang === 'pt' ? 'Norte:' : 'North:'}</strong> {lang === 'pt' ? 'Zâmbia e Malawi' : 'Zambia and Malawi'}</li>
+                  <li><strong>{lang === 'pt' ? 'Este:' : 'East:'}</strong> {lang === 'pt' ? 'Província da Zambézia' : 'Zambezia Province'}</li>
+                  <li><strong>{lang === 'pt' ? 'Sul:' : 'South:'}</strong> {lang === 'pt' ? 'Províncias de Sofala e Manica' : 'Sofala and Manica Provinces'}</li>
+                  <li><strong>{lang === 'pt' ? 'Oeste:' : 'West:'}</strong> {lang === 'pt' ? 'Zimbábue' : 'Zimbabwe'}</li>
                 </ul>
               </div>
 
               <p className="text-gray-300 text-xs md:text-sm leading-relaxed font-light">
-                O clima é predominantemente tropical seco/semiárido ao longo do vale do Zambeze, com temperaturas elevadas durante a maior parte do ano, e mais ameno nas zonas planálticas de alta altitude como a Angónia e Tsangano.
+                {lang === 'pt'
+                  ? 'O clima é predominantemente tropical seco/semiárido ao longo do vale do Zambeze, com temperaturas elevadas durante a maior parte do ano, e mais ameno nas zonas planálticas de alta altitude como a Angónia e Tsangano.'
+                  : 'The climate is predominantly dry tropical/semi-arid along the Zambezi valley, with warm temperatures year-round, and milder in high-altitude plateaus like Angónia and Tsangano.'}
               </p>
             </div>
 
@@ -759,33 +771,47 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
               <div className="flex items-center space-x-2 border-b border-gold-500/20 pb-3">
                 <Award className="w-5 h-5 text-gold-400" />
                 <h3 className="text-lg font-display font-light uppercase text-white tracking-wider">
-                  Economia & Potencial de Tete (Dados Wikipédia)
+                  {lang === 'pt' ? 'Economia & Potencial de Tete (Dados Wikipédia)' : 'Economy & Potential of Tete (Wikipedia Data)'}
                 </h3>
               </div>
 
               <p className="text-gray-300 text-xs md:text-sm leading-relaxed font-light">
-                A economia de Tete destaca-se no cenário nacional e internacional por integrar alguns dos maiores megaprojetos industriais e energéticos do continente africano:
+                {lang === 'pt'
+                  ? 'A economia de Tete destaca-se no cenário nacional e internacional por integrar alguns dos maiores megaprojetos industriais e energéticos do continente africano:'
+                  : 'Tete\'s economy stands out nationally and internationally by hosting major industrial and energy megaprojects on the African continent:'}
               </p>
 
               <div className="space-y-3">
                 <div className="bg-corporate-900/60 p-3.5 border border-white/5">
-                  <span className="text-xs font-bold text-gold-400 uppercase tracking-wider block">⚡ Potência Energética de Cahora Bassa</span>
+                  <span className="text-xs font-bold text-gold-400 uppercase tracking-wider block">
+                    {lang === 'pt' ? '⚡ Potência Energética de Cahora Bassa' : '⚡ Cahora Bassa Power Powerhouse'}
+                  </span>
                   <p className="text-[11px] text-gray-400 mt-1">
-                    Sede da Hidroeléctrica de Cahora Bassa (HCB), com capacidade instalada de 2.075 MW, abastecendo Moçambique e exportando eletricidade para África do Sul e Zimbábue.
+                    {lang === 'pt'
+                      ? 'Sede da Hidroeléctrica de Cahora Bassa (HCB), com capacidade instalada de 2.075 MW, abastecendo Moçambique e exportando eletricidade para África do Sul e Zimbábue.'
+                      : 'Home to the Cahora Bassa Hydroelectric plant (HCB), with an installed capacity of 2,075 MW, powering Mozambique and exporting electricity to South Africa and Zimbabwe.'}
                   </p>
                 </div>
 
                 <div className="bg-corporate-900/60 p-3.5 border border-white/5">
-                  <span className="text-xs font-bold text-gold-400 uppercase tracking-wider block">⛏️ Bacia Carbonífera de Moatize</span>
+                  <span className="text-xs font-bold text-gold-400 uppercase tracking-wider block">
+                    {lang === 'pt' ? '⛏️ Bacia Carbonífera de Moatize' : '⛏️ Moatize Coal Basin'}
+                  </span>
                   <p className="text-[11px] text-gray-400 mt-1">
-                    Alberga uma das maiores reservas mundiais de carvão mineral (coke e térmico), ligada por corredores férreos aos portos oceânicos da Beira e Nacala.
+                    {lang === 'pt'
+                      ? 'Alberga uma das maiores reservas mundiais de carvão mineral (coke e térmico), ligada por corredores férreos aos portos oceânicos da Beira e Nacala.'
+                      : 'Hosts vast coal mineral reserves (coking and thermal), connected by heavy-haul railways to deepwater ports in Beira and Nacala.'}
                   </p>
                 </div>
 
                 <div className="bg-corporate-900/60 p-3.5 border border-white/5">
-                  <span className="text-xs font-bold text-gold-400 uppercase tracking-wider block">🐐 Pecuária & Agronegócio Tradicional</span>
+                  <span className="text-xs font-bold text-gold-400 uppercase tracking-wider block">
+                    {lang === 'pt' ? '🐐 Pecuária & Agronegócio Tradicional' : '🐐 Livestock & Traditional Agribusiness'}
+                  </span>
                   <p className="text-[11px] text-gray-400 mt-1">
-                    Referência na criação de gado caprino (Cabrito de Tete), bovino, produção de tabaco, milho, feijão e fruteiras cítricas.
+                    {lang === 'pt'
+                      ? 'Referência na criação de gado caprino (Cabrito de Tete), bovino, produção de tabaco, milho, feijão e fruteiras cítricas.'
+                      : 'Renowned for goat farming (Tete Goat), cattle livestock, tobacco cultivation, corn, beans, and citrus fruits.'}
                   </p>
                 </div>
               </div>
@@ -799,10 +825,12 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
             <div className="bg-corporate-950 border border-white/10 p-5">
               <h3 className="text-lg font-display font-light text-white uppercase tracking-wider flex items-center space-x-2">
                 <Compass className="w-5 h-5 text-gold-400" />
-                <span>Divisão Administrativa: Os 15 Distritos da Província de Tete</span>
+                <span>{lang === 'pt' ? 'Divisão Administrativa: Os 15 Distritos da Província de Tete' : 'Administrative Division: The 15 Districts of Tete Province'}</span>
               </h3>
               <p className="text-xs text-gray-400 font-light mt-1">
-                Conforme documentado pela Wikipédia e pelo Instituto Nacional de Estatística de Moçambique.
+                {lang === 'pt'
+                  ? 'Conforme documentado pela Wikipédia e pelo Instituto Nacional de Estatística de Moçambique.'
+                  : 'As documented by Wikipedia and Mozambique\'s National Institute of Statistics.'}
               </p>
             </div>
 
@@ -829,10 +857,12 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
               <Info className="w-6 h-6 text-gold-400 flex-shrink-0" />
               <div>
                 <h3 className="text-xl font-display font-light text-white uppercase tracking-wider">
-                  Declaração de Transparência & Fontes das Informações
+                  {lang === 'pt' ? 'Declaração de Transparência & Fontes das Informações' : 'Transparency Statement & Sources of Information'}
                 </h3>
                 <p className="text-xs text-gray-400 font-light mt-0.5">
-                  Conforme solicitado, todos os dados estatísticos, demográficos, geográficos e turísticos apresentados neste espaço foram rigorosamente extraídos e compilados das fontes oficiais abaixo.
+                  {lang === 'pt'
+                    ? 'Conforme solicitado, todos os dados estatísticos, demográficos, geográficos e turísticos apresentados neste espaço foram rigorosamente extraídos e compilados das fontes oficiais abaixo.'
+                    : 'All statistical, demographic, geographical, and tourist information presented in this section has been compiled from official public citations below.'}
                 </p>
               </div>
             </div>
@@ -843,10 +873,14 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
                 <div className="space-y-1">
                   <div className="flex items-center space-x-2">
                     <BookOpen className="w-4 h-4 text-gold-400" />
-                    <span className="text-sm font-bold text-white uppercase tracking-wider">1. Wikipédia em Português</span>
+                    <span className="text-sm font-bold text-white uppercase tracking-wider">
+                      {lang === 'pt' ? '1. Wikipédia em Português' : '1. Wikipedia (Portuguese)'}
+                    </span>
                   </div>
                   <p className="text-xs text-gray-300 font-light">
-                    Artigo principal sobre a Província de Tete: Dados de área (100.724 km²), limites geográficos, rios, história, demografia e lista completa dos 15 distritos administrativos.
+                    {lang === 'pt'
+                      ? 'Artigo principal sobre a Província de Tete: Dados de área (100.724 km²), limites geográficos, rios, história, demografia e lista completa dos 15 distritos administrativos.'
+                      : 'Main article on Tete Province: Area data (100,724 km²), geographical boundaries, rivers, history, demography, and complete list of the 15 administrative districts.'}
                   </p>
                   <span className="text-[10px] font-mono text-gold-400 block pt-1">
                     URL: https://pt.wikipedia.org/wiki/Tete_(prov%C3%ADncia)
@@ -859,7 +893,7 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
                   rel="noreferrer"
                   className="px-4 py-2 bg-white/10 hover:bg-gold-500 hover:text-corporate-950 text-white font-bold uppercase text-[10px] tracking-widest flex items-center space-x-1.5 transition-colors flex-shrink-0 cursor-pointer"
                 >
-                  <span>Abrir Wikipédia</span>
+                  <span>{lang === 'pt' ? 'Abrir Wikipédia' : 'Open Wikipedia'}</span>
                   <ExternalLink className="w-3.5 h-3.5" />
                 </a>
               </div>
@@ -869,10 +903,14 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
                 <div className="space-y-1">
                   <div className="flex items-center space-x-2">
                     <Compass className="w-4 h-4 text-gold-400" />
-                    <span className="text-sm font-bold text-white uppercase tracking-wider">2. Visit Mozambique (Portal Oficial de Turismo)</span>
+                    <span className="text-sm font-bold text-white uppercase tracking-wider">
+                      {lang === 'pt' ? '2. Visit Mozambique (Portal Oficial de Turismo)' : '2. Visit Mozambique (Official Tourism Portal)'}
+                    </span>
                   </div>
                   <p className="text-xs text-gray-300 font-light">
-                    Portal do Ministério da Cultura e Turismo de Moçambique: Guia de atrações "Não deixe de visitar" da Província de Tete (Cahora Bassa, Songo, Pontes sobre o Zambeze, Parque Nacional do Mágoè, Missão de Boroma, Zumbo e Gastronomia de Cabrito/Matemba).
+                    {lang === 'pt'
+                      ? 'Portal do Ministério da Cultura e Turismo de Moçambique: Guia de atrações "Não deixe de visitar" da Província de Tete (Cahora Bassa, Songo, Pontes sobre o Zambeze, Parque Nacional do Mágoè, Missão de Boroma, Zumbo e Gastronomia de Cabrito/Matemba).'
+                      : 'Ministry of Culture and Tourism of Mozambique portal: "Must-Visit" attraction guide for Tete Province (Cahora Bassa, Songo, Zambezi Bridges, Mágoè National Park, Boroma Mission, Zumbo, and Local Cuisine).'}
                   </p>
                   <span className="text-[10px] font-mono text-gold-400 block pt-1">
                     URL: https://www.visitmozambique.gov.mz/onde-ir/provincias/tete/
@@ -885,14 +923,16 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
                   rel="noreferrer"
                   className="px-4 py-2 bg-white/10 hover:bg-gold-500 hover:text-corporate-950 text-white font-bold uppercase text-[10px] tracking-widest flex items-center space-x-1.5 transition-colors flex-shrink-0 cursor-pointer"
                 >
-                  <span>Abrir Visit Mozambique</span>
+                  <span>{lang === 'pt' ? 'Abrir Visit Mozambique' : 'Open Visit Mozambique'}</span>
                   <ExternalLink className="w-3.5 h-3.5" />
                 </a>
               </div>
             </div>
 
             <div className="text-center pt-2 text-[11px] text-gray-500 italic">
-              Governo da Província de Tete • Conferência Internacional de Investimentos de Tete (CIIT2026)
+              {lang === 'pt'
+                ? 'Governo da Província de Tete • Conferência Internacional de Investimentos de Tete (CIIT2026)'
+                : 'Government of Tete Province • International Conference on Tete Investments (CIIT2026)'}
             </div>
           </div>
         )}

@@ -47,9 +47,9 @@ export default function Agenda({ lang }: AgendaProps) {
     // Filter by search query
     if (searchQuery.trim() !== '') {
       const query = searchQuery.toLowerCase();
-      const titleMatches = session.title.toLowerCase().includes(query);
-      const descMatches = session.description?.toLowerCase().includes(query) || false;
-      const locMatches = session.location.toLowerCase().includes(query);
+      const titleMatches = (session.title.toLowerCase().includes(query)) || (session.titleEn?.toLowerCase().includes(query) || false);
+      const descMatches = (session.description?.toLowerCase().includes(query) || false) || (session.descriptionEn?.toLowerCase().includes(query) || false);
+      const locMatches = (session.location.toLowerCase().includes(query)) || (session.locationEn?.toLowerCase().includes(query) || false);
       return titleMatches || descMatches || locMatches;
     }
 
@@ -192,11 +192,11 @@ export default function Agenda({ lang }: AgendaProps) {
                 {/* Right block: Content column */}
                 <div className="flex-grow space-y-3">
                   <h3 className="text-lg font-display font-bold text-corporate-950 group-hover:text-gold-700 transition-colors tracking-tight leading-snug">
-                    {session.title}
+                    {lang === 'pt' ? session.title : (session.titleEn || session.title)}
                   </h3>
                   {session.description && (
                     <p className="text-xs md:text-sm text-gray-500 font-light leading-relaxed">
-                      {session.description}
+                      {lang === 'pt' ? session.description : (session.descriptionEn || session.description)}
                     </p>
                   )}
 
@@ -229,7 +229,7 @@ export default function Agenda({ lang }: AgendaProps) {
                   {/* Location display */}
                   <div className="flex items-center space-x-2 pt-2 text-[11px] text-gray-400 font-mono">
                     <MapPin className="w-3.5 h-3.5 text-gray-300" />
-                    <span>{session.location}</span>
+                    <span>{lang === 'pt' ? session.location : (session.locationEn || session.location)}</span>
                   </div>
                 </div>
               </div>

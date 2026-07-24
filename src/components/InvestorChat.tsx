@@ -87,6 +87,16 @@ export default function InvestorChat({ lang }: InvestorChatProps) {
   const [userInput, setUserInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
 
+  // Sync default welcome message when language toggles
+  useEffect(() => {
+    setMessages(prev => {
+      if (prev.length === 1 && prev[0].id === '1') {
+        return [{ ...prev[0], text: defaultWelcomeMsg }];
+      }
+      return prev;
+    });
+  }, [lang, defaultWelcomeMsg]);
+
   // Auto-scroll chat internally to bottom without scrolling main window
   useEffect(() => {
     if (isInitialMount.current) {
@@ -155,7 +165,9 @@ export default function InvestorChat({ lang }: InvestorChatProps) {
         <div className="text-center max-w-2xl mx-auto mb-10">
           <div className="flex items-center justify-center space-x-2">
             <Sparkles className="w-5 h-5 text-gold-500 animate-pulse" />
-            <span className="text-[10px] font-mono text-gold-400 font-bold uppercase tracking-widest">Guia Virtual de Inteligência</span>
+            <span className="text-[10px] font-mono text-gold-400 font-bold uppercase tracking-widest">
+              {lang === 'pt' ? 'Guia Virtual de Inteligência' : 'Virtual Intelligence Guide'}
+            </span>
           </div>
           <h2 className="text-2xl md:text-4xl font-display font-light text-white mt-3 uppercase tracking-wider">
             Tete Invest AI Assistant

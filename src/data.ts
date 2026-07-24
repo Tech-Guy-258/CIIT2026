@@ -17,60 +17,78 @@ export const SPEAKERS: Speaker[] = [
     id: 'sp1',
     name: 'Dr. Valige Tauabo',
     role: 'Governador da Província',
+    roleEn: 'Governor of Tete Province',
     company: 'Governo da Província de Tete',
     bio: 'Líder visionário impulsionando o desenvolvimento industrial, agrícola e logístico de Tete, focado em criar um ambiente de negócios favorável para atração de capitais internacionais.',
+    bioEn: 'Visionary leader driving the industrial, agricultural, and logistical growth of Tete, dedicated to creating a welcoming investment climate for global capital.',
     imageUrl: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=400',
     nationality: 'Moçambique',
+    nationalityEn: 'Mozambique',
     featured: true
   },
   {
     id: 'sp2',
     name: 'Eng. Amélia Tomás',
     role: 'Diretora Executiva de Energia e Projetos',
+    roleEn: 'Executive Director of Energy & Infrastructure',
     company: 'Cahora Bassa Energia S.A.',
     bio: 'Especialista em infraestruturas elétricas de grande escala, com mais de 15 anos de liderança na modernização de redes de transmissão regionais na África Austral.',
+    bioEn: 'Large-scale electrical grid specialist with over 15 years leading cross-border energy transmission modernization across Southern Africa.',
     imageUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400',
     nationality: 'Moçambique',
+    nationalityEn: 'Mozambique',
     featured: true
   },
   {
     id: 'sp3',
     name: 'Mr. David Harrington',
     role: 'Sócio Gestor de Infraestruturas de África',
+    roleEn: 'Managing Partner for Africa Infrastructure',
     company: 'Apex Global Capital',
     bio: 'Investidor internacional focado em capital de risco e infraestruturas logísticas críticas, gerindo mais de $2.5B em ativos nos mercados emergentes de África.',
+    bioEn: 'International investor focused on private equity and critical infrastructure logistics, managing over $2.5B in emerging African market assets.',
     imageUrl: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=400',
     nationality: 'Reino Unido',
+    nationalityEn: 'United Kingdom',
     featured: true
   },
   {
     id: 'sp4',
     name: 'Dra. Isabel Santos',
     role: 'Consultora de Parcerias Público-Privadas',
+    roleEn: 'Public-Private Partnerships Advisor',
     company: 'Banco Africano de Desenvolvimento (BAD)',
     bio: 'Economista sênior dedicada a estruturar financiamentos para o setor de energias limpas e de agronegócio de valor acrescentado.',
+    bioEn: 'Senior economist specializing in multilateral blended finance for renewable energy and value-added agribusiness developments.',
     imageUrl: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=400',
     nationality: 'Portugal',
+    nationalityEn: 'Portugal',
     featured: false
   },
   {
     id: 'sp5',
     name: 'Marta Chilaule',
     role: 'Presidente da Associação Industrial de Tete',
+    roleEn: 'President of Tete Industrial Association',
     company: 'AIT',
     bio: 'Líder associativa focada na integração de PMEs locais nas cadeias de valor dos megaprojetos minerais e de infraestrutura da província de Tete.',
+    bioEn: 'Business advocate driving SME integration into local supply chains of Tete\'s major mining and infrastructure megaprojects.',
     imageUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400',
     nationality: 'Moçambique',
+    nationalityEn: 'Mozambique',
     featured: false
   },
   {
     id: 'sp6',
     name: 'Dr. Zhang Wei',
     role: 'VP de Operações de Recursos Minerais',
+    roleEn: 'VP of Mineral Resource Operations',
     company: 'Sino-Africa Resource Group',
     bio: 'Engenheiro de minas com vasta experiência na descarbonização industrial e logística sustentável de minerais críticos em Moçambique e Zimbábue.',
+    bioEn: 'Mining engineer with broad experience in industrial decarbonization and green transport logistics for critical minerals across Southern Africa.',
     imageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400',
     nationality: 'China',
+    nationalityEn: 'China',
     featured: false
   }
 ];
@@ -79,84 +97,138 @@ export const THE_6_CS: SectorDetail[] = [
   {
     id: 'c1',
     title: 'Cahora Bassa',
+    titleEn: 'Cahora Bassa',
     subtitle: 'Energia & Recursos Hídricos',
+    subtitleEn: 'Energy & Water Resources',
     description: 'A maior central hidroelétrica da África Austral, gerando mais de 2.075 MW de energia limpa. Tete assume-se como o hub energético regional, exportando energia para a África do Sul, Zimbábue e toda a região SADC.',
+    descriptionEn: 'The largest hydroelectric station in Southern Africa, producing over 2,075 MW of clean power. Tete is the regional energy powerhouse, exporting electricity to South Africa, Zimbabwe, and SADC grids.',
     investmentOpportunities: [
       'Projetos de energia solar flutuante na albufeira',
       'Redes de transmissão de média e alta tensão',
       'Desenvolvimento de mini-hídricas de suporte comunitário'
     ],
+    investmentOpportunitiesEn: [
+      'Floating solar power installations on the reservoir',
+      'Medium and high-voltage transmission grid expansion',
+      'Off-grid mini-hydro developments for local industries'
+    ],
     keyData: '2.075 MW de Potência Instalada',
+    keyDataEn: '2,075 MW Installed Hydropower',
     iconName: 'Zap',
     imageUrl: cahoraBassaImg
   },
   {
     id: 'c2',
     title: 'Carvão',
+    titleEn: 'Coal',
     subtitle: 'Mineração & Recursos Minerais',
+    subtitleEn: 'Mining & Mineral Resources',
     description: 'Tete alberga uma das maiores bacias de carvão metalúrgico e térmico não exploradas do mundo (bacia de Moatize). Atualmente, a mineração é um dos principais pilares das exportações de Moçambique, ligada por ferrovia ao Porto de Nacala e Porto da Beira.',
+    descriptionEn: 'Tete hosts one of the largest metallurgical and thermal coal basins in the world (Moatize Basin). Mining serves as a cornerstone of Mozambican exports, connected via railway corridors to Nacala and Beira deepwater ports.',
     investmentOpportunities: [
       'Beneficiação de carvão e subprodutos',
       'Tecnologias de mineração verde e reabilitação ambiental',
       'Mineração complementar de ferro, fosfatos e minerais industriais'
     ],
+    investmentOpportunitiesEn: [
+      'Coal washing, beneficiation, and by-product processing',
+      'Green mining technologies and environmental rehabilitation',
+      'Extraction of iron ore, phosphate, and critical industrial minerals'
+    ],
     keyData: 'Bacia de Moatize (Reservas Globais)',
+    keyDataEn: 'Moatize World-Class Coal Reserve',
     iconName: 'Gem',
     imageUrl: coalImg
   },
   {
     id: 'c3',
     title: 'Cabrito',
+    titleEn: 'Tete Goat',
     subtitle: 'Pecuária de Excelência',
+    subtitleEn: 'Elite Livestock & Goat Meat',
     description: 'O famoso "Cabrito de Tete" é reconhecido nacionalmente pela sua qualidade gastronómica única, impulsionada pelo pasto natural específico da província. Uma marca com indicação geográfica protegida em desenvolvimento.',
+    descriptionEn: 'The famous "Tete Goat" (Cabrito de Tete) is nationally celebrated for its organic flavor derived from acacia brush feeding. A trademark with protected geographical indication currently undergoing global expansion.',
     investmentOpportunities: [
       'Matadouros industriais modernos com certificação Halal',
       'Unidades de processamento de carne e cadeias de frio',
       'Exportação organizada para mercados do Médio Oriente'
     ],
+    investmentOpportunitiesEn: [
+      'Modern industrial Halal-certified abattoirs',
+      'Meat packaging, processing plants, and cold-chain facilities',
+      'Export channels tailored for Middle Eastern markets'
+    ],
     keyData: '+1.5M de Cabeças de Gado Caprino',
+    keyDataEn: '+1.5 Million Goat Livestock Herd',
     iconName: 'Beef',
     imageUrl: caprinosImg
   },
   {
     id: 'c4',
     title: 'Citrinos',
+    titleEn: 'Citrus',
     subtitle: 'Agronegócio & Culturas de Rendimento',
+    subtitleEn: 'Agribusiness & Cash Crops',
     description: 'Com condições climáticas excecionais e as águas do majestoso Rio Zambeze, Tete apresenta um solo altamente fértil ideal para a produção em larga escala de laranjas, limões e outras frutas cítricas de qualidade superior.',
+    descriptionEn: 'Blessed with sunny weather and abundant water from the Zambezi River, Tete features fertile soils perfectly suited for large-scale production of high-grade oranges, lemons, and citrus fruits.',
     investmentOpportunities: [
       'Sistemas de irrigação de alta eficiência',
       'Fábricas de sumos, polpas e embalamento para exportação',
       'Criação de marcas próprias de citrinos para o mercado regional'
     ],
+    investmentOpportunitiesEn: [
+      'High-efficiency commercial drip irrigation systems',
+      'Fruit juice concentrating, pulping, and export packing plants',
+      'Regional citrus branding for SADC consumer markets'
+    ],
     keyData: 'Milhares de hectares de solos férteis irrigáveis',
+    keyDataEn: 'Thousands of Hectares Irrigable Farmland',
     iconName: 'Sprout',
     imageUrl: citrosImg
   },
   {
     id: 'c5',
     title: 'Cimento',
+    titleEn: 'Cement',
     subtitle: 'Indústria Civil & Construção',
+    subtitleEn: 'Construction & Civil Industry',
     description: 'Ricas jazidas de calcário e gesso alimentam uma indústria de cimento e cal em forte expansão, servindo não apenas os megaprojetos locais mas também as necessidades de infraestrutura dos países vizinhos como Malawi e Zimbábue.',
+    descriptionEn: 'Rich limestone and gypsum deposits power a rapidly expanding cement and lime manufacturing industry, supplying both local megaprojects and landlocked SADC neighbor nations like Malawi and Zimbabwe.',
     investmentOpportunities: [
       'Fábricas de clínquer e aditivos sustentáveis',
       'Expansão da capacidade de fornecimento regional de cal industrial',
       'Materiais de construção pré-fabricados de alto desempenho'
     ],
+    investmentOpportunitiesEn: [
+      'Clinker and sustainable cement additives production',
+      'Industrial lime manufacturing for regional export',
+      'High-performance pre-fabricated building materials'
+    ],
     keyData: 'Proximidade estratégica com mercados SADC encravados',
+    keyDataEn: 'Strategic Access to Landlocked SADC Markets',
     iconName: 'Building',
     imageUrl: cimentoImg
   },
   {
     id: 'c6',
     title: 'Cobre & Algodão',
+    titleEn: 'Copper & Cotton',
     subtitle: 'Metais Críticos & Têxteis (Diversificação)',
+    subtitleEn: 'Critical Metals & Textiles (Diversification)',
     description: 'Tete diversifica o seu portfólio de exportação com reservas comprovadas de cobre e ferro, bem como uma tradição agrícola vibrante na produção de algodão (o "ouro branco"), tabaco e castanha de caju.',
+    descriptionEn: 'Tete expands its export portfolio with confirmed copper and iron deposits alongside a vibrant agricultural legacy in cotton ("white gold"), tobacco, and cashew nut processing.',
     investmentOpportunities: [
       'Pesquisa e extração de cobre e minerais críticos para transição energética',
       'Processamento local de algodão e indústria de fiação/têxtil',
       'Unidades de processamento e refinação de castanha de caju'
     ],
+    investmentOpportunitiesEn: [
+      'Copper exploration and energy transition critical minerals mining',
+      'Local cotton ginning, spinning, and textile manufacturing',
+      'Cashew nut processing and oil refining units'
+    ],
     keyData: 'Minerais de transição e culturas de alto rendimento',
+    keyDataEn: 'Transition Minerals & High-Yield Crops',
     iconName: 'Cpu',
     imageUrl: algodaoImg
   }
@@ -168,45 +240,60 @@ export const AGENDA: AgendaSession[] = [
     id: 'd1s1',
     time: '08:30 - 09:30',
     title: 'Sessão de Abertura Oficial',
+    titleEn: 'Official Opening Ceremony',
     description: 'Boas-vindas por Sua Excelência o Governador da Província de Tete, discursos ministeriais e apresentação dos objetivos estratégicos da CIIT2026.',
+    descriptionEn: 'Welcome address by His Excellency the Governor of Tete Province, ministerial keynote speeches, and strategic roadmap unveiling for CIIT2026.',
     speakerIds: ['sp1'],
     location: 'Grande Auditório Zambeze',
+    locationEn: 'Grand Zambezi Auditorium',
     category: 'plenary'
   },
   {
     id: 'd1s2',
     time: '09:45 - 11:15',
     title: 'Painel Principal: O Papel de Tete na Transição Energética da África Austral',
+    titleEn: 'Keynote Panel: Tete\'s Role in Southern Africa\'s Energy Transition',
     description: 'Como Cahora Bassa e novos projetos de energia solar colocarão Tete na vanguarda da geração sustentável regional.',
+    descriptionEn: 'How Cahora Bassa and floating solar power developments position Tete at the forefront of green energy generation across SADC.',
     speakerIds: ['sp2', 'sp4'],
     location: 'Grande Auditório Zambeze',
+    locationEn: 'Grand Zambezi Auditorium',
     category: 'energy'
   },
   {
     id: 'd1s3',
     time: '11:30 - 13:00',
     title: 'Mineração Responsável: Descarbonização e Logística na Bacia de Moatize',
+    titleEn: 'Responsible Mining: Decarbonization & Logistics in Moatize Basin',
     description: 'Estratégias de investimento para otimização da logística ferroviária e portuária e adoção de tecnologias limpas na exploração mineral.',
+    descriptionEn: 'Investment strategies for greening railway/port logistics corridors and applying clean tech to mineral processing.',
     speakerIds: ['sp6', 'sp5'],
     location: 'Grande Auditório Zambeze',
+    locationEn: 'Grand Zambezi Auditorium',
     category: 'mining'
   },
   {
     id: 'd1s4',
     time: '13:00 - 14:30',
     title: 'Almoço Executivo de Networking',
+    titleEn: 'Executive Networking Luncheon',
     description: 'Almoço privado com investidores, delegações internacionais e decisores políticos.',
+    descriptionEn: 'Private networking lunch connecting institutional investors, international delegates, and high-level policymakers.',
     speakerIds: [],
     location: 'Terraço dos Baobás',
+    locationEn: 'Baobab Terrace',
     category: 'networking'
   },
   {
     id: 'd1s5',
     time: '14:45 - 16:30',
     title: 'Mesa Redonda: Estruturação de Financiamentos para Grandes Infraestruturas',
+    titleEn: 'Roundtable: Infrastructure Project Financing & Blended Capital',
     description: 'Parcerias público-privadas e captação de fundos multilaterais para estradas, pontes e redes de telecomunicação na província.',
+    descriptionEn: 'Public-Private Partnerships (PPPs) and multilateral funding structures for roads, bridges, and regional telecom grids.',
     speakerIds: ['sp3', 'sp4'],
     location: 'Sala de Conferências VIP',
+    locationEn: 'VIP Conference Suite',
     category: 'infrastructure'
   },
 
@@ -215,36 +302,48 @@ export const AGENDA: AgendaSession[] = [
     id: 'd2s1',
     time: '09:00 - 10:30',
     title: 'Agronegócio Sustentável: Industrialização dos Citrinos e Pecuária de Tete',
+    titleEn: 'Sustainable Agribusiness: Citrus Industrialization & Livestock Export',
     description: 'Oportunidades de agregação de valor local na carne do "Cabrito de Tete" (Indicação Geográfica) e no estabelecimento de explorações de citrinos voltadas para a exportação.',
+    descriptionEn: 'Unlocking value addition in protected "Tete Goat" meat exports and establishing export-oriented citrus farms.',
     speakerIds: ['sp5'],
     location: 'Grande Auditório Zambeze',
+    locationEn: 'Grand Zambezi Auditorium',
     category: 'agriculture'
   },
   {
     id: 'd2s2',
     time: '10:45 - 12:30',
     title: 'Sessão B2B: Matchmaking de Investimento Direto Estrangeiro',
+    titleEn: 'B2B Session: Foreign Direct Investment Matchmaking',
     description: 'Sessões pré-agendadas de 1-on-1 entre detentores de projetos locais e capitalistas de risco globais.',
+    descriptionEn: 'Pre-arranged 1-on-1 executive dealmaking meetings between project sponsors and global venture funds.',
     speakerIds: ['sp3', 'sp1'],
     location: 'Sala Executiva Tete Plaza',
+    locationEn: 'Tete Plaza Executive Suite',
     category: 'networking'
   },
   {
     id: 'd2s3',
     time: '14:00 - 15:30',
     title: 'Desenvolvimento Industrial e Zonas Económicas Especiais',
+    titleEn: 'Industrial Zones & Special Economic Zone (SEZ) Incentives',
     description: 'Incentivos fiscais, facilidades alfandegárias e infraestrutura logística no corredor de desenvolvimento de Tete.',
+    descriptionEn: 'Tax holidays, customs duty exemptions, and logistics facilities in Tete\'s Special Economic Zones.',
     speakerIds: ['sp4', 'sp6'],
     location: 'Grande Auditório Zambeze',
+    locationEn: 'Grand Zambezi Auditorium',
     category: 'infrastructure'
   },
   {
     id: 'd2s4',
     time: '16:00 - 18:00',
     title: 'Cocktail de Gala e Apresentação Cultural',
+    titleEn: 'Gala Dinner & Cultural Showcase',
     description: 'Celebração da cultura de Tete com degustação de gastronomia local premium (Cabrito de Tete preparado por chefs de renome) e danças tradicionais.',
+    descriptionEn: 'Celebration of Tete culture with tasting of gourmet Tete Goat dishes prepared by top chefs alongside live traditional performances.',
     speakerIds: [],
     location: 'Jardins Fluviais do Zambeze',
+    locationEn: 'Zambezi Riverside Gardens',
     category: 'networking'
   },
 
@@ -253,18 +352,24 @@ export const AGENDA: AgendaSession[] = [
     id: 'd3s1',
     time: '09:30 - 11:30',
     title: 'Fórum de Jovens Empreendedores e Inovação Local',
+    titleEn: 'Youth Entrepreneurship & Local Innovation Forum',
     description: 'Apresentação de startups moçambicanas focadas em soluções agro-tech, fintech e energia solar residencial.',
+    descriptionEn: 'Pitching session for innovative Mozambican startups focusing on ag-tech, fintech, and off-grid solar solutions.',
     speakerIds: ['sp5', 'sp2'],
     location: 'Grande Auditório Zambeze',
+    locationEn: 'Grand Zambezi Auditorium',
     category: 'plenary'
   },
   {
     id: 'd3s2',
     time: '11:45 - 13:00',
     title: 'Assinatura de Memorandos de Entendimento (MoU) e Encerramento',
+    titleEn: 'MoU Signing Ceremony & Official Closing Statements',
     description: 'Formalização de acordos bilaterais de investimento facilitados durante a conferência e leitura do Comunicado Final de Tete.',
+    descriptionEn: 'Formal signing of bilateral investment agreements brokered during the summit and reading of the Official Tete Declaration.',
     speakerIds: ['sp1', 'sp3'],
     location: 'Grande Auditório Zambeze',
+    locationEn: 'Grand Zambezi Auditorium',
     category: 'plenary'
   }
 ];
@@ -274,7 +379,9 @@ export const HOTELS: HotelRecommendation[] = [
     name: 'VIP Executive Tete Hotel',
     stars: 4,
     description: 'O hotel de eleição para viajantes de negócios na cidade de Tete. Oferece quartos confortáveis, um centro de conferências totalmente equipado, uma piscina exterior relaxante e um restaurante de alta cozinha internacional.',
+    descriptionEn: 'The premier corporate choice in Tete City. Features well-appointed executive suites, a fully equipped conference center, outdoor swimming pool, and fine international dining.',
     address: 'Av. da Liberdade, Tete, Moçambique',
+    addressEn: 'Liberdade Avenue, Tete, Mozambique',
     phone: '+258 25 224 800',
     website: 'https://www.viphotels.com',
     image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80&w=600'
@@ -283,7 +390,9 @@ export const HOTELS: HotelRecommendation[] = [
     name: 'Baobá Hotel Tete',
     stars: 4,
     description: 'Localizado ao longo das margens cénicas do majestoso Rio Zambeze, rodeado por baobás icónicos. Excelente para relaxar após reuniões executivas intensas, com uma excelente vista sobre a ponte suspensa de Tete.',
+    descriptionEn: 'Nestled along the scenic banks of the majestic Zambezi River among ancient baobab trees. Ideal for post-meeting relaxation with sweeping views of the Tete suspension bridge.',
     address: 'Estrada Nacional N7, Tete, Moçambique',
+    addressEn: 'National Highway N7, Tete, Mozambique',
     phone: '+258 84 311 0122',
     website: '#',
     image: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&q=80&w=600'
@@ -292,7 +401,9 @@ export const HOTELS: HotelRecommendation[] = [
     name: 'Hotel Zambeze',
     stars: 3,
     description: 'Um hotel moderno no centro financeiro de Tete, oferecendo acomodações executivas práticas, serviço de transfer gratuito do aeroporto de Tete (TET) e excelente wi-fi corporativo.',
+    descriptionEn: 'A modern business hotel in Tete\'s commercial center, offering convenient executive lodging, complimentary Tete Airport (TET) transfers, and high-speed fiber internet.',
     address: 'Rua de Angola, Cidade de Tete',
+    addressEn: 'Angola Street, Tete City, Mozambique',
     phone: '+258 25 223 900',
     website: '#',
     image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&q=80&w=600'

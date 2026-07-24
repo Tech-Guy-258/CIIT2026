@@ -206,14 +206,14 @@ export default function App() {
                   : 'The Tete International Investment Conference empowers Mozambican commerce by promoting elite foreign private venture connections.'}
               </p>
               <div className="pt-2 text-xs text-gold-400 font-semibold italic">
-                "Tete, Terra dos 6C's e da Diversidade"
+                {lang === 'pt' ? '"Tete, Terra dos 6C\'s e da Diversidade"' : '"Tete, Land of the 6Cs and Diversity"'}
               </div>
             </div>
 
             {/* Column 2: Quick Links */}
             <div className="space-y-4">
               <h4 className="text-xs font-mono font-bold tracking-widest text-gold-400 uppercase">
-                Links Rápidos
+                {lang === 'pt' ? 'Links Rápidos' : 'Quick Links'}
               </h4>
               <ul className="space-y-2 text-xs text-gray-400">
                 <li>
@@ -242,7 +242,7 @@ export default function App() {
             {/* Column 3: Contacts */}
             <div className="space-y-4">
               <h4 className="text-xs font-mono font-bold tracking-widest text-gold-400 uppercase">
-                Contactos / Inquiries
+                {lang === 'pt' ? 'Contactos' : 'Contacts'}
               </h4>
               <ul className="space-y-3 text-xs text-gray-400">
                 <li className="flex items-start space-x-2">

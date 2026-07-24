@@ -94,7 +94,7 @@ export default function Hero({ lang, onRegisterClick, onExploreClick }: HeroProp
         </h1>
 
         <p className="text-xs md:text-sm font-mono font-bold tracking-widest text-gray-400 uppercase mb-8">
-          Conferência Internacional de Investimentos de Tete
+          {lang === 'pt' ? 'Conferência Internacional de Investimentos de Tete' : 'International Conference on Tete Investments'}
         </p>
 
         {/* Theme Motto Quote Box */}

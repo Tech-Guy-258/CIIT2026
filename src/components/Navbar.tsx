@@ -79,10 +79,10 @@ export default function Navbar({
             </div>
             <div className="hidden lg:block border-l border-white/20 pl-3">
               <span className="text-[10px] text-gray-300 tracking-wider font-mono block">
-                CONFERÊNCIA INTERNACIONAL
+                {lang === 'pt' ? 'CONFERÊNCIA INTERNACIONAL' : 'INTERNATIONAL CONFERENCE'}
               </span>
               <span className="text-[10px] text-gold-400 font-sans block uppercase font-medium">
-                DE INVESTIMENTOS DE TETE
+                {lang === 'pt' ? 'DE INVESTIMENTOS DE TETE' : 'ON TETE INVESTMENTS'}
               </span>
             </div>
           </div>

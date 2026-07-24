@@ -52,14 +52,14 @@ export default function Speakers({ lang }: SpeakersProps) {
                 
                 {/* Nationality badge */}
                 <span className="absolute top-4 right-4 bg-corporate-950/85 backdrop-blur-sm border border-white/10 text-[9px] text-gray-200 px-2.5 py-1 rounded-none font-mono font-bold tracking-wider uppercase">
-                  {speaker.nationality}
+                  {lang === 'pt' ? speaker.nationality : (speaker.nationalityEn || speaker.nationality)}
                 </span>
 
                 {/* Featured speaker indicator badge */}
                 {speaker.featured && (
                   <span className="absolute bottom-4 left-4 bg-gold-500 text-corporate-950 text-[9px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-none flex items-center space-x-1 shadow-sm">
                     <Award className="w-3 h-3" />
-                    <span>Featured Keynote</span>
+                    <span>{lang === 'pt' ? 'Destaque Plenário' : 'Featured Keynote'}</span>
                   </span>
                 )}
               </div>
@@ -71,14 +71,14 @@ export default function Speakers({ lang }: SpeakersProps) {
                     {speaker.name}
                   </h3>
                   <p className="text-xs font-mono font-medium text-gold-700 mt-1 uppercase tracking-wider">
-                    {speaker.role}
+                    {lang === 'pt' ? speaker.role : (speaker.roleEn || speaker.role)}
                   </p>
                   <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mt-0.5">
                     {speaker.company}
                   </p>
 
                   <p className="text-xs text-gray-500 leading-relaxed mt-4 font-light line-clamp-3">
-                    {speaker.bio}
+                    {lang === 'pt' ? speaker.bio : (speaker.bioEn || speaker.bio)}
                   </p>
                 </div>
 

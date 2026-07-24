@@ -119,7 +119,7 @@ export default function TravelGuide({ lang }: TravelGuideProps) {
                       {hotel.name}
                     </h4>
                     <p className="text-xs text-gray-500 leading-relaxed font-light line-clamp-3">
-                      {hotel.description}
+                      {lang === 'pt' ? hotel.description : (hotel.descriptionEn || hotel.description)}
                     </p>
                   </div>
 
@@ -127,7 +127,7 @@ export default function TravelGuide({ lang }: TravelGuideProps) {
                   <div className="mt-6 pt-4 border-t border-gray-100 space-y-3 text-xs text-gray-400">
                     <div className="flex items-start space-x-2">
                       <MapPin className="w-4 h-4 text-gray-300 flex-shrink-0" />
-                      <span>{hotel.address}</span>
+                      <span>{lang === 'pt' ? hotel.address : (hotel.addressEn || hotel.address)}</span>
                     </div>
 
                     <div className="flex items-center space-x-2">
