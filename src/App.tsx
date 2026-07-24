@@ -154,6 +154,7 @@ export default function App() {
             registrations={registrations}
             onAddManualAttendee={handleAddManualAttendee}
             onClearRegistrations={handleClearRegistrations}
+            onCloseAdmin={() => setShowAdmin(false)}
           />
         )}
 

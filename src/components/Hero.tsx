@@ -55,7 +55,7 @@ export default function Hero({ lang, onRegisterClick, onExploreClick }: HeroProp
   return (
     <section
       id="home"
-      className="relative min-h-[90vh] bg-corporate-950 flex items-center justify-center pt-12 pb-16 overflow-hidden px-4"
+      className="relative min-h-[85vh] sm:min-h-[90vh] bg-corporate-950 flex items-center justify-center py-8 sm:py-12 md:py-16 overflow-hidden px-3 sm:px-6"
     >
       {/* Background Stylized Elements */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-corporate-900 via-corporate-950 to-black z-0" />
@@ -73,102 +73,102 @@ export default function Hero({ lang, onRegisterClick, onExploreClick }: HeroProp
       </div>
 
       {/* Luxury gold glow circles */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gold-600/10 rounded-full blur-3xl pointer-events-none z-0" />
-      <div className="absolute bottom-10 right-10 w-80 h-80 bg-corporate-600/10 rounded-full blur-3xl pointer-events-none z-0" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 sm:w-96 h-72 sm:h-96 bg-gold-600/10 rounded-full blur-3xl pointer-events-none z-0" />
+      <div className="absolute bottom-10 right-10 w-60 sm:w-80 h-60 sm:h-80 bg-corporate-600/10 rounded-full blur-3xl pointer-events-none z-0" />
 
-      <div className="relative z-10 max-w-5xl mx-auto text-center flex flex-col items-center">
+      <div className="relative z-10 max-w-5xl mx-auto text-center flex flex-col items-center w-full">
         {/* Mozambique Government Banner Header badge */}
-        <div className="animate-fade-in flex flex-col items-center mb-6 space-y-2">
+        <div className="animate-fade-in flex flex-col items-center mb-4 sm:mb-6 space-y-2">
           {/* Emblem representation */}
-          <div className="flex items-center space-x-3 bg-gold-500/5 border border-gold-500/20 px-4 py-1.5 rounded-none backdrop-blur-md">
-            <span className="w-1.5 h-1.5 rounded-full bg-gold-500 animate-pulse" />
-            <p className="text-[10px] tracking-widest uppercase font-mono text-gold-400 font-bold">
+          <div className="flex items-center space-x-2 sm:space-x-3 bg-gold-500/5 border border-gold-500/20 px-3 sm:px-4 py-1 sm:py-1.5 rounded-none backdrop-blur-md">
+            <span className="w-1.5 h-1.5 rounded-full bg-gold-500 animate-pulse flex-shrink-0" />
+            <p className="text-[9px] sm:text-[10px] tracking-wider sm:tracking-widest uppercase font-mono text-gold-400 font-bold">
               {t.heroSubtitle}
             </p>
           </div>
         </div>
 
         {/* Brand Main Title */}
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-display font-light tracking-tight text-white mb-2 uppercase leading-[1.1]">
+        <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-light tracking-tight text-white mb-2 uppercase leading-[1.1]">
           CIIT<span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-500 via-gold-400 to-gold-300 font-black">2026</span>
         </h1>
 
-        <p className="text-xs md:text-sm font-mono font-bold tracking-widest text-gray-400 uppercase mb-8">
+        <p className="text-[10px] sm:text-xs md:text-sm font-mono font-bold tracking-wider sm:tracking-widest text-gray-400 uppercase mb-6 sm:mb-8 max-w-2xl px-2">
           {lang === 'pt' ? 'Conferência Internacional de Investimentos de Tete' : 'International Conference on Tete Investments'}
         </p>
 
         {/* Theme Motto Quote Box */}
-        <div className="max-w-3xl mb-12 border-l-2 border-gold-600 pl-6 md:pl-8 py-4 text-left bg-corporate-900/40 backdrop-blur-sm">
-          <p className="text-lg md:text-3xl font-light text-gray-100 leading-relaxed">
+        <div className="max-w-3xl mb-8 sm:mb-12 border-l-2 border-gold-600 pl-4 sm:pl-6 md:pl-8 py-3 sm:py-4 text-left bg-corporate-900/40 backdrop-blur-sm w-full">
+          <p className="text-base sm:text-xl md:text-3xl font-light text-gray-100 leading-snug sm:leading-relaxed">
             {lang === 'pt' ? (
               <>O <span className="italic font-serif text-gold-400">Epicentro</span> do Crescimento Económico da África Austral</>
             ) : (
               <>The <span className="italic font-serif text-gold-400">Epicenter</span> of Southern African Economic Growth</>
             )}
           </p>
-          <p className="text-xs text-gray-400 mt-2 font-mono uppercase tracking-widest">
+          <p className="text-[10px] sm:text-xs text-gray-400 mt-2 font-mono uppercase tracking-widest">
             {t.heroMotto}
           </p>
         </div>
 
         {/* Date and Location Pills */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mb-12 w-full max-w-2xl">
-          <div className="flex items-center space-x-4 bg-white/5 border border-white/10 px-6 py-4 rounded-none backdrop-blur-sm text-left flex-1 w-full">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 mb-8 sm:mb-12 w-full max-w-2xl">
+          <div className="flex items-center space-x-3 sm:space-x-4 bg-white/5 border border-white/10 px-4 sm:px-6 py-3 sm:py-4 rounded-none backdrop-blur-sm text-left flex-1 w-full">
             <Calendar className="w-5 h-5 text-gold-500 flex-shrink-0" />
             <div>
               <span className="text-[9px] text-gray-500 block font-mono uppercase tracking-widest font-bold">Data / Date</span>
-              <span className="text-sm font-medium text-white">{t.heroDate}</span>
+              <span className="text-xs sm:text-sm font-medium text-white">{t.heroDate}</span>
             </div>
           </div>
 
-          <div className="flex items-center space-x-4 bg-white/5 border border-white/10 px-6 py-4 rounded-none backdrop-blur-sm text-left flex-1 w-full">
+          <div className="flex items-center space-x-3 sm:space-x-4 bg-white/5 border border-white/10 px-4 sm:px-6 py-3 sm:py-4 rounded-none backdrop-blur-sm text-left flex-1 w-full">
             <MapPin className="w-5 h-5 text-gold-500 flex-shrink-0" />
             <div>
               <span className="text-[9px] text-gray-500 block font-mono uppercase tracking-widest font-bold">Local / Venue</span>
-              <span className="text-sm font-medium text-white">{t.heroLocation}</span>
+              <span className="text-xs sm:text-sm font-medium text-white">{t.heroLocation}</span>
             </div>
           </div>
         </div>
 
         {/* Countdown Dashboard */}
         {!timeLeft.isOver && (
-          <div className="mb-14 w-full max-w-xl">
-            <div className="bg-corporate-900/60 border border-gold-500/20 rounded-none p-6 backdrop-blur-md shadow-2xl relative">
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-corporate-950 px-4 py-1 border border-gold-500/25 rounded-none flex items-center space-x-1">
+          <div className="mb-10 sm:mb-14 w-full max-w-xl">
+            <div className="bg-corporate-900/60 border border-gold-500/20 rounded-none p-4 sm:p-6 backdrop-blur-md shadow-2xl relative">
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-corporate-950 px-3 sm:px-4 py-0.5 sm:py-1 border border-gold-500/25 rounded-none flex items-center space-x-1">
                 <Clock className="w-3 h-3 text-gold-500" />
-                <span className="text-[9px] uppercase font-mono tracking-widest text-gold-400 font-bold">COUNTDOWN</span>
+                <span className="text-[8px] sm:text-[9px] uppercase font-mono tracking-widest text-gold-400 font-bold">COUNTDOWN</span>
               </div>
               
-              <div className="grid grid-cols-4 gap-4 text-center mt-2">
+              <div className="grid grid-cols-4 gap-2 sm:gap-4 text-center mt-2">
                 <div className="flex flex-col">
-                  <span className="text-3xl md:text-4xl font-display font-light text-white tracking-tight">
+                  <span className="text-2xl sm:text-3xl md:text-4xl font-display font-light text-white tracking-tight">
                     {String(timeLeft.days).padStart(2, '0')}
                   </span>
-                  <span className="text-[9px] uppercase font-mono tracking-widest text-gray-400 mt-1">
+                  <span className="text-[8px] sm:text-[9px] uppercase font-mono tracking-wider sm:tracking-widest text-gray-400 mt-1">
                     {t.countdownDays}
                   </span>
                 </div>
                 <div className="flex flex-col border-l border-white/10">
-                  <span className="text-3xl md:text-4xl font-display font-light text-white tracking-tight">
+                  <span className="text-2xl sm:text-3xl md:text-4xl font-display font-light text-white tracking-tight">
                     {String(timeLeft.hours).padStart(2, '0')}
                   </span>
-                  <span className="text-[9px] uppercase font-mono tracking-widest text-gray-400 mt-1">
+                  <span className="text-[8px] sm:text-[9px] uppercase font-mono tracking-wider sm:tracking-widest text-gray-400 mt-1">
                     {t.countdownHours}
                   </span>
                 </div>
                 <div className="flex flex-col border-l border-white/10">
-                  <span className="text-3xl md:text-4xl font-display font-light text-white tracking-tight">
+                  <span className="text-2xl sm:text-3xl md:text-4xl font-display font-light text-white tracking-tight">
                     {String(timeLeft.minutes).padStart(2, '0')}
                   </span>
-                  <span className="text-[9px] uppercase font-mono tracking-widest text-gray-400 mt-1">
+                  <span className="text-[8px] sm:text-[9px] uppercase font-mono tracking-wider sm:tracking-widest text-gray-400 mt-1">
                     {t.countdownMinutes}
                   </span>
                 </div>
                 <div className="flex flex-col border-l border-white/10">
-                  <span className="text-3xl md:text-4xl font-display font-bold text-gold-500 tracking-tight animate-pulse">
+                  <span className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-gold-500 tracking-tight animate-pulse">
                     {String(timeLeft.seconds).padStart(2, '0')}
                   </span>
-                  <span className="text-[9px] uppercase font-mono tracking-widest text-gray-400 mt-1">
+                  <span className="text-[8px] sm:text-[9px] uppercase font-mono tracking-wider sm:tracking-widest text-gray-400 mt-1">
                     {t.countdownSeconds}
                   </span>
                 </div>
@@ -178,11 +178,11 @@ export default function Hero({ lang, onRegisterClick, onExploreClick }: HeroProp
         )}
 
         {/* Hero Actions */}
-        <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto">
           <button
             id="hero-register-btn"
             onClick={onRegisterClick}
-            className="w-full sm:w-auto px-10 py-4 rounded-none bg-slate-900 text-white font-bold uppercase text-xs tracking-widest border border-gold-500 hover:bg-gold-500 hover:text-slate-950 transition-colors duration-200 cursor-pointer text-center"
+            className="w-full sm:w-auto px-6 sm:px-10 py-3.5 sm:py-4 rounded-none bg-slate-900 text-white font-bold uppercase text-xs tracking-widest border border-gold-500 hover:bg-gold-500 hover:text-slate-950 transition-colors duration-200 cursor-pointer text-center"
           >
             {t.registerBtn}
           </button>
@@ -190,7 +190,7 @@ export default function Hero({ lang, onRegisterClick, onExploreClick }: HeroProp
           <button
             id="hero-explore-btn"
             onClick={onExploreClick}
-            className="w-full sm:w-auto px-10 py-4 rounded-none bg-white/5 hover:bg-white/10 text-white border border-white/20 text-xs uppercase tracking-widest font-bold hover:scale-[1.02] transition-all duration-200 cursor-pointer flex items-center justify-center space-x-2"
+            className="w-full sm:w-auto px-6 sm:px-10 py-3.5 sm:py-4 rounded-none bg-white/5 hover:bg-white/10 text-white border border-white/20 text-xs uppercase tracking-widest font-bold hover:scale-[1.02] transition-all duration-200 cursor-pointer flex items-center justify-center space-x-2"
           >
             <span>{t.learnMore}</span>
             <ChevronRight className="w-4 h-4 text-gold-400" />

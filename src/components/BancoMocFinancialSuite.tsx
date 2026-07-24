@@ -200,8 +200,8 @@ export default function BancoMocFinancialSuite({ lang }: BancoMocFinancialSuiteP
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex flex-col md:flex-row items-center justify-between gap-3">
           
           {/* Label Badge */}
-          <div className="flex items-center space-x-2 flex-shrink-0 bg-gold-500/10 border border-gold-500/40 px-2.5 py-1 text-[10px] font-mono tracking-wider text-gold-300 font-bold uppercase">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <div className="h-8 flex items-center space-x-2 flex-shrink-0 bg-gold-500/10 border border-gold-500/40 px-2.5 text-[10px] sm:text-xs font-mono tracking-wider text-gold-300 font-bold uppercase">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse flex-shrink-0"></span>
             <span>{lang === 'pt' ? 'BANCO DE MOÇAMBIQUE' : 'BANK OF MOZAMBIQUE'}</span>
             <span className="hidden sm:inline text-gray-400">|</span>
             <span className="hidden sm:inline text-gray-300 font-normal">
@@ -223,7 +223,7 @@ export default function BancoMocFinancialSuite({ lang }: BancoMocFinancialSuiteP
               {[...rates, ...rates].map((item, idx) => (
                 <div
                   key={`${item.code}-${idx}`}
-                  className="inline-flex items-center space-x-2 text-xs font-mono bg-white/5 border border-white/10 px-3 py-1 hover:border-gold-500/40 transition-colors cursor-pointer"
+                  className="h-8 inline-flex items-center space-x-2 text-xs font-mono bg-white/5 border border-white/10 px-3 hover:border-gold-500/40 transition-colors cursor-pointer"
                   onClick={() => {
                     setFromCurrency(item.code);
                     setToCurrency('MZN');
@@ -255,7 +255,7 @@ export default function BancoMocFinancialSuite({ lang }: BancoMocFinancialSuiteP
               id="btn-refresh-bm-rates"
               onClick={handleRefreshData}
               disabled={isRefreshing}
-              className="p-1.5 bg-white/5 hover:bg-gold-500/20 border border-white/10 hover:border-gold-500/50 text-gray-300 hover:text-gold-300 transition-colors cursor-pointer"
+              className="h-8 w-8 flex items-center justify-center bg-white/5 hover:bg-gold-500/20 border border-white/10 hover:border-gold-500/50 text-gray-300 hover:text-gold-300 transition-colors cursor-pointer flex-shrink-0"
               title={lang === 'pt' ? 'Atualizar Cotações' : 'Refresh Rates'}
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-gold-400' : ''}`} />
@@ -264,9 +264,9 @@ export default function BancoMocFinancialSuite({ lang }: BancoMocFinancialSuiteP
             <button
               id="btn-open-sidebar-market"
               onClick={() => setIsSidebarOpen(true)}
-              className="px-3.5 py-1 bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 hover:to-gold-400 text-corporate-950 font-bold uppercase tracking-wider flex items-center space-x-2 transition-all shadow-md cursor-pointer"
+              className="h-8 px-3.5 bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 hover:to-gold-400 text-corporate-950 text-[11px] font-bold uppercase tracking-wider flex items-center space-x-2 transition-all shadow-md cursor-pointer whitespace-nowrap flex-shrink-0"
             >
-              <ArrowRightLeft className="w-3.5 h-3.5" />
+              <ArrowRightLeft className="w-3.5 h-3.5 flex-shrink-0" />
               <span>{lang === 'pt' ? 'Mercado & Conversor' : 'Market & Converter'}</span>
             </button>
           </div>

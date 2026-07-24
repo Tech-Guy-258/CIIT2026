@@ -6,20 +6,22 @@
 import React, { useState } from 'react';
 import { Registration } from '../types';
 import { TRANSLATIONS } from '../data';
-import { Lock, FileSpreadsheet, Search, RefreshCw, Trash2, ShieldCheck, UserPlus, TrendingUp, Briefcase, Globe, Mail, Filter, LogOut } from 'lucide-react';
+import { Lock, FileSpreadsheet, Search, RefreshCw, Trash2, ShieldCheck, UserPlus, TrendingUp, Briefcase, Globe, Mail, Filter, LogOut, X } from 'lucide-react';
 
 interface AdminDashboardProps {
   lang: 'pt' | 'en';
   registrations: Registration[];
   onAddManualAttendee: (attendee: Registration) => void;
   onClearRegistrations: () => void;
+  onCloseAdmin?: () => void;
 }
 
 export default function AdminDashboard({
   lang,
   registrations,
   onAddManualAttendee,
-  onClearRegistrations
+  onClearRegistrations,
+  onCloseAdmin
 }: AdminDashboardProps) {
   const t = TRANSLATIONS[lang];
 
@@ -130,8 +132,19 @@ export default function AdminDashboard({
 
   if (!isAuthenticated) {
     return (
-      <section id="admin" className="py-24 bg-neutral-900 text-white border-b border-gray-800 flex items-center justify-center min-h-[60vh] px-4">
+      <section id="admin" className="py-24 bg-neutral-900 text-white border-b border-gray-800 flex items-center justify-center min-h-[60vh] px-4 relative">
         <div className="bg-corporate-950 border border-gold-600/30 p-8 rounded-none shadow-2xl max-w-md w-full text-center relative overflow-hidden">
+          {onCloseAdmin && (
+            <button
+              id="admin-close-login-btn"
+              onClick={onCloseAdmin}
+              className="absolute top-3 right-3 p-1.5 rounded-none text-gray-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+              title={lang === 'pt' ? 'Fechar' : 'Close'}
+            >
+              <X className="w-5 h-5 text-gold-400" />
+            </button>
+          )}
+
           <div className="absolute top-0 left-0 w-32 h-32 bg-gold-600/5 rounded-none blur-2xl pointer-events-none" />
           
           <div className="w-12 h-12 rounded-none bg-gold-500/10 border border-gold-500/40 flex items-center justify-center mx-auto mb-6">
@@ -198,10 +211,13 @@ export default function AdminDashboard({
           <div className="flex items-center space-x-3">
             <button
               id="admin-logout-btn"
-              onClick={() => setIsAuthenticated(false)}
+              onClick={() => {
+                setIsAuthenticated(false);
+                if (onCloseAdmin) onCloseAdmin();
+              }}
               className="px-3.5 py-2 rounded-none bg-white/5 border border-white/10 hover:bg-white/10 text-xs font-semibold flex items-center space-x-1.5 transition-colors cursor-pointer"
             >
-              <LogOut className="w-3.5 h-3.5" />
+              <LogOut className="w-3.5 h-3.5 text-gold-400" />
               <span>{lang === 'pt' ? 'Sair' : 'Logout'}</span>
             </button>
           </div>
