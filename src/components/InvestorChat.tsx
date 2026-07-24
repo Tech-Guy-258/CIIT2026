@@ -21,6 +21,8 @@ interface ChatMessage {
 export default function InvestorChat({ lang }: InvestorChatProps) {
   const t = TRANSLATIONS[lang];
   const chatBottomRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+  const isInitialMount = useRef(true);
 
   // Suggested questions based on local content
   const suggestedQuestions = lang === 'pt' ? [
@@ -85,9 +87,15 @@ export default function InvestorChat({ lang }: InvestorChatProps) {
   const [userInput, setUserInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
 
-  // Auto-scroll chat to bottom
+  // Auto-scroll chat internally to bottom without scrolling main window
   useEffect(() => {
-    chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
   }, [messages, isTyping]);
 
   const handleSendMessage = (text: string) => {
@@ -177,7 +185,7 @@ export default function InvestorChat({ lang }: InvestorChatProps) {
           </div>
 
           {/* Messages Body */}
-          <div className="flex-grow p-6 overflow-y-auto space-y-4 scrollbar-thin scrollbar-thumb-gold-600">
+          <div ref={chatContainerRef} className="flex-grow p-6 overflow-y-auto space-y-4 scrollbar-thin scrollbar-thumb-gold-600">
             {messages.map((msg) => (
               <div
                 key={msg.id}

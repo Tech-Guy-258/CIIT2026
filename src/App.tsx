@@ -30,6 +30,14 @@ export default function App() {
 
   const t = TRANSLATIONS[lang];
 
+  // Force page to start at top header on mount
+  useEffect(() => {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+  }, []);
+
   // Section Tracking via scroll handler
   useEffect(() => {
     const handleScroll = () => {
