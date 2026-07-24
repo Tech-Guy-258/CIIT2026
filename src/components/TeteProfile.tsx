@@ -4,6 +4,14 @@
  */
 
 import React, { useState } from 'react';
+import cahoraBassaDamImg from '../assets/images/HCB.jpg';
+import cahoraBassaLakeImg from '../assets/images/ABCB.jpg';
+import tchumaTchatoImg from '../assets/images/Area_de_Conservacao_Tchuma_Tchato.jpg';
+import samoraMachelBridgeImg from '../assets/images/ponte samora machel em tete.jpg';
+import kassuendeBridgeImg from '../assets/images/Ponte_Kassuende.jpg';
+import donaAnaBridgeImg from '../assets/images/Ponte dona ana.jpg';
+import magoeParkImg from '../assets/images/magoe_national_park_antelopes_1784878851948.jpg';
+import missaoBoromaImg from '../assets/images/BRM.jpg';
 import { 
   MapPin, 
   ExternalLink, 
@@ -46,7 +54,7 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
       category: 'nature_engineering',
       categoryLabel: lang === 'pt' ? 'Lago & Natureza' : 'Lake & Nature',
       location: 'Distrito de Cahora-Bassa',
-      image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=800',
+      image: cahoraBassaLakeImg,
       description: lang === 'pt'
         ? 'A maior albufeira artificial da África Austral, estendendo-se por mais de 270 km de comprimento. Um verdadeiro mar interior rodeado por desfiladeiros majestosos, ideal para cruzeiros, passeios de barco e turismo aquático.'
         : 'The largest artificial reservoir in Southern Africa, extending over 270 km long. An inland sea surrounded by majestic gorges, ideal for lake cruises and water tourism.',
@@ -62,7 +70,7 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
       category: 'nature_engineering',
       categoryLabel: lang === 'pt' ? 'Engenharia Monumental' : 'Engineering Marvel',
       location: 'Songo / Distrito de Cahora-Bassa',
-      image: 'https://images.unsplash.com/photo-1574943320219-553eb213f72d?auto=format&fit=crop&q=80&w=800',
+      image: cahoraBassaDamImg,
       description: lang === 'pt'
         ? 'Uma das maiores obras de engenharia do século XX e o motor energético da África Austral. Construída na garganta do Rio Zambeze, gera 2.075 MW de energia limpa com paredes de betão de 171 metros de altura.'
         : 'One of the greatest engineering feats of the 20th century. Built in the Zambezi River gorge, generating 2,075 MW of clean hydroelectric power with 171-meter high dam walls.',
@@ -78,7 +86,7 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
       category: 'wildlife',
       categoryLabel: lang === 'pt' ? 'Conservação Comunitária' : 'Community Conservation',
       location: 'Distritos de Mágoè e Zumbo',
-      image: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&q=80&w=800',
+      image: tchumaTchatoImg,
       description: lang === 'pt'
         ? 'Pioneiro projeto de gestão comunitária de recursos naturais nas margens do Rio Zambeze e de Cahora Bassa. Une o ecoturismo sustentável, safaris fotográficos e o desenvolvimento económico das comunidades locais.'
         : 'A pioneering community-based natural resource management project along the Zambezi River and Lake Cahora Bassa, combining sustainable ecotourism, photo safaris, and local development.',
@@ -94,7 +102,7 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
       category: 'bridges',
       categoryLabel: lang === 'pt' ? 'Ícone Urbano' : 'Suspension Bridge',
       location: 'Cidade de Tete',
-      image: 'https://images.unsplash.com/photo-1545558014-8692077e9b5c?auto=format&fit=crop&q=80&w=800',
+      image: samoraMachelBridgeImg,
       description: lang === 'pt'
         ? 'Inaugurada em 1973, é uma imponente ponte suspensa rodoviária com 762 metros de extensão sobre o Rio Zambeze. Considerada o cartão de visita e ex-libris arquitetónico mais emblemático da Cidade de Tete.'
         : 'Opened in 1973, this iconic 762-meter long suspension bridge spans the Zambezi River. It stands as Tete City\'s most famous architectural postcard landmark.',
@@ -110,7 +118,7 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
       category: 'bridges',
       categoryLabel: lang === 'pt' ? 'Engenharia Moderna' : 'Modern Bridge',
       location: 'Cidade de Tete / Moatize',
-      image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&q=80&w=800',
+      image: kassuendeBridgeImg,
       description: lang === 'pt'
         ? 'Inaugurada em 2014, é a segunda grande ponte rodoviária sobre o Zambeze em Tete, com 1.586 metros de comprimento. Crucial para o tráfego internacional de carga do Corredor da SADC.'
         : 'Inaugurated in 2014, this 1,586-meter modern bridge spans the Zambezi, serving as a critical international transit arterial for the SADC corridor.',
@@ -126,7 +134,7 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
       category: 'bridges',
       categoryLabel: lang === 'pt' ? 'Património Ferroviário' : 'Historic Rail Bridge',
       location: 'Distrito de Mutarara / Vila de Sena',
-      image: 'https://images.unsplash.com/photo-1474487548417-781cb71495f3?auto=format&fit=crop&q=80&w=800',
+      image: donaAnaBridgeImg,
       description: lang === 'pt'
         ? 'Uma das pontes ferroviárias mais longas de África, com 3,75 km de comprimento. Construída na década de 1930 para a linha do Dondo ao Malawi, cruza o baixo Zambeze unindo Tete a Sofala.'
         : 'One of the longest railway bridges in Africa, stretching 3.75 km across the lower Zambezi River. Built in the 1930s, it connects Tete to Sofala and Malawi.',
@@ -254,7 +262,7 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
       category: 'heritage',
       categoryLabel: lang === 'pt' ? 'Património Histórico' : 'Historic Heritage',
       location: 'Boroma (~30 km da Cidade de Tete)',
-      image: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&q=80&w=800',
+      image: missaoBoromaImg,
       description: lang === 'pt'
         ? 'Fundada em 1885 por padres Jesuítas, a Missão de Boroma é um tesouro arquitetónico em pedra no alto de uma colina sobre o Zambeze, com igreja monumental e antigo colégio.'
         : 'Founded in 1885 by Jesuit missionaries, Boroma Mission is a hilltop stone architectural treasure overlooking the Zambezi, with a grand church and historical college.',
@@ -382,7 +390,7 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
       category: 'wildlife',
       categoryLabel: lang === 'pt' ? 'Vida Selvagem & Safari' : 'Wildlife & Safari',
       location: 'Distrito de Mágoè (Margem Sul de Cahora Bassa)',
-      image: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&q=80&w=800',
+      image: magoeParkImg,
       description: lang === 'pt'
         ? 'Santuário de biodiversidade criado para proteger a fauna aquática e terrestre das margens de Cahora Bassa, com hipopótamos, crocodilos, elefantes e leões.'
         : 'A protected wilderness sanctuary along the southern shore of Lake Cahora Bassa, home to hippos, Nile crocodiles, elephants, and lions.',

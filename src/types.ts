@@ -46,6 +46,7 @@ export interface SectorDetail {
   investmentOpportunities: string[];
   keyData: string;
   iconName: string;
+  imageUrl?: string;
 }
 
 export interface HotelRecommendation {

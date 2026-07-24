@@ -275,13 +275,11 @@ export default function App() {
         <button
           id="btn-back-to-top"
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 z-40 px-3.5 py-3 bg-corporate-900/90 hover:bg-gold-500 text-gold-300 hover:text-corporate-950 border border-gold-500/50 hover:border-gold-400 shadow-2xl backdrop-blur-md transition-all duration-300 transform hover:scale-105 flex items-center space-x-2 group cursor-pointer"
+          className="fixed bottom-6 right-6 z-40 p-3 bg-corporate-900/90 hover:bg-gold-500 text-gold-300 hover:text-corporate-950 border border-gold-500/50 hover:border-gold-400 shadow-2xl backdrop-blur-md transition-all duration-300 transform hover:scale-110 flex items-center justify-center rounded-full group cursor-pointer"
           title={lang === 'pt' ? 'Voltar ao Início' : 'Back to Top'}
+          aria-label={lang === 'pt' ? 'Voltar ao Início' : 'Back to Top'}
         >
-          <ArrowUp className="w-4 h-4 text-gold-400 group-hover:text-corporate-950 transition-transform group-hover:-translate-y-1" />
-          <span className="hidden sm:inline text-xs font-mono font-bold uppercase tracking-wider">
-            {lang === 'pt' ? 'Voltar ao Início' : 'Back to Top'}
-          </span>
+          <ArrowUp className="w-5 h-5 text-gold-400 group-hover:text-corporate-950 transition-transform group-hover:-translate-y-1" />
         </button>
       )}
 

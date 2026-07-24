@@ -5,6 +5,13 @@
 
 import { Speaker, AgendaSession, SectorDetail, HotelRecommendation, Registration } from './types';
 
+import cahoraBassaImg from './assets/images/Cahora Bassa.jpg';
+import coalImg from './assets/images/moatize_coal_minerals_1784807272754.jpg';
+import caprinosImg from './assets/images/tete_caprinos_goats_1784807286233.jpg';
+import citrosImg from './assets/images/citrus_agriculture_tete_1784807298725.jpg';
+import cimentoImg from './assets/images/cement_bags_construction_1784807313963.jpg';
+import algodaoImg from './assets/images/cotton_harvest_commodities_1784807324034.jpg';
+
 export const SPEAKERS: Speaker[] = [
   {
     id: 'sp1',
@@ -80,7 +87,8 @@ export const THE_6_CS: SectorDetail[] = [
       'Desenvolvimento de mini-hídricas de suporte comunitário'
     ],
     keyData: '2.075 MW de Potência Instalada',
-    iconName: 'Zap'
+    iconName: 'Zap',
+    imageUrl: cahoraBassaImg
   },
   {
     id: 'c2',
@@ -93,7 +101,8 @@ export const THE_6_CS: SectorDetail[] = [
       'Mineração complementar de ferro, fosfatos e minerais industriais'
     ],
     keyData: 'Bacia de Moatize (Reservas Globais)',
-    iconName: 'Gem'
+    iconName: 'Gem',
+    imageUrl: coalImg
   },
   {
     id: 'c3',
@@ -106,7 +115,8 @@ export const THE_6_CS: SectorDetail[] = [
       'Exportação organizada para mercados do Médio Oriente'
     ],
     keyData: '+1.5M de Cabeças de Gado Caprino',
-    iconName: 'Beef'
+    iconName: 'Beef',
+    imageUrl: caprinosImg
   },
   {
     id: 'c4',
@@ -119,7 +129,8 @@ export const THE_6_CS: SectorDetail[] = [
       'Criação de marcas próprias de citrinos para o mercado regional'
     ],
     keyData: 'Milhares de hectares de solos férteis irrigáveis',
-    iconName: 'Sprout'
+    iconName: 'Sprout',
+    imageUrl: citrosImg
   },
   {
     id: 'c5',
@@ -132,7 +143,8 @@ export const THE_6_CS: SectorDetail[] = [
       'Materiais de construção pré-fabricados de alto desempenho'
     ],
     keyData: 'Proximidade estratégica com mercados SADC encravados',
-    iconName: 'Building'
+    iconName: 'Building',
+    imageUrl: cimentoImg
   },
   {
     id: 'c6',
@@ -145,7 +157,8 @@ export const THE_6_CS: SectorDetail[] = [
       'Unidades de processamento e refinação de castanha de caju'
     ],
     keyData: 'Minerais de transição e culturas de alto rendimento',
-    iconName: 'Cpu'
+    iconName: 'Cpu',
+    imageUrl: algodaoImg
   }
 ];
 

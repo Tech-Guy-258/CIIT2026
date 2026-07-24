@@ -63,44 +63,58 @@ export default function Sectors({ lang }: SectorsProps) {
                 key={sector.id}
                 id={`sector-card-${sector.id}`}
                 onClick={() => setSelectedSector(localizedSector)}
-                className="group relative bg-neutral-50 rounded-none p-8 border border-slate-200 hover:border-gold-500/50 hover:bg-corporate-950 hover:text-white shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col justify-between"
+                className="group relative bg-corporate-950 overflow-hidden rounded-none p-8 border border-slate-200/80 hover:border-gold-500 shadow-md hover:shadow-2xl transition-all duration-500 cursor-pointer flex flex-col justify-between min-h-[350px]"
               >
-                {/* Decorative floating letter/number background */}
-                <span className="absolute top-4 right-6 text-7xl font-display font-black text-gray-200/40 group-hover:text-white/5 select-none pointer-events-none transition-colors">
+                {/* Background Illustration / Image with Overlay */}
+                {sector.imageUrl && (
+                  <div className="absolute inset-0 z-0 overflow-hidden">
+                    <img
+                      src={sector.imageUrl}
+                      alt={sector.title}
+                      referrerPolicy="no-referrer"
+                      className="w-full h-full object-cover object-center opacity-30 group-hover:opacity-50 scale-100 group-hover:scale-110 transition-all duration-700 ease-out filter brightness-90 saturate-125"
+                    />
+                    {/* Dark Gradient Overlay for optimal legibility */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-corporate-950 via-corporate-950/85 to-corporate-950/40 group-hover:from-corporate-950 group-hover:via-corporate-950/75 group-hover:to-corporate-950/25 transition-all duration-500" />
+                  </div>
+                )}
+
+                {/* Decorative floating letter background */}
+                <span className="absolute top-4 right-6 text-7xl font-display font-black text-white/10 group-hover:text-gold-400/25 select-none pointer-events-none transition-colors z-10">
                   {sector.title.substring(0, 2).toUpperCase()}
                 </span>
 
-                <div>
+                <div className="relative z-10">
                   {/* Icon */}
-                  <div className="w-12 h-12 rounded-none bg-gold-500/10 group-hover:bg-gold-500/20 border border-gold-600/10 group-hover:border-gold-500/40 flex items-center justify-center mb-6 transition-all">
-                    {renderIcon(sector.iconName, "w-6 h-6 text-gold-600 group-hover:text-gold-400")}
+                  <div className="w-12 h-12 rounded-none bg-gold-500/20 group-hover:bg-gold-500 border border-gold-500/40 flex items-center justify-center mb-6 transition-all duration-300 shadow-lg">
+                    {renderIcon(sector.iconName, "w-6 h-6 text-gold-400 group-hover:text-corporate-950 transition-colors")}
                   </div>
 
                   {/* Title & Subtitle */}
-                  <h3 className="text-xl font-display font-bold text-corporate-950 group-hover:text-white tracking-tight uppercase">
+                  <h3 className="text-2xl font-display font-bold text-white tracking-tight uppercase group-hover:text-gold-300 transition-colors">
                     {sector.title}
                   </h3>
-                  <p className="text-xs font-mono font-medium text-gold-700 group-hover:text-gold-300 mt-1 uppercase tracking-wider">
+                  <p className="text-xs font-mono font-bold text-gold-400 mt-1 uppercase tracking-wider">
                     {sector.subtitle}
                   </p>
 
                   {/* Short Description */}
-                  <p className="text-sm text-gray-500 group-hover:text-gray-300 mt-4 line-clamp-3 leading-relaxed">
+                  <p className="text-sm text-gray-200 mt-4 line-clamp-3 leading-relaxed font-light">
                     {sector.description}
                   </p>
                 </div>
 
                 {/* Card Footer actions */}
-                <div className="mt-8 pt-4 border-t border-gray-100 group-hover:border-white/10 flex items-center justify-between text-xs font-semibold">
-                  <div className="text-gray-400 group-hover:text-gray-400">
-                    <span className="block text-[10px] uppercase tracking-widest font-mono">
+                <div className="relative z-10 mt-8 pt-4 border-t border-white/15 flex items-center justify-between text-xs font-semibold">
+                  <div>
+                    <span className="block text-[10px] uppercase tracking-widest font-mono text-gray-300">
                       {t.sectDataLabel}
                     </span>
-                    <span className="text-corporate-950 group-hover:text-gold-300 font-bold block mt-0.5">
+                    <span className="text-gold-300 font-bold block mt-0.5 text-sm">
                       {sector.keyData}
                     </span>
                   </div>
-                  <div className="p-2 rounded-none bg-gold-500/10 text-gold-700 group-hover:bg-gold-500 group-hover:text-corporate-950 transition-all">
+                  <div className="p-2.5 rounded-none bg-gold-500/20 text-gold-300 group-hover:bg-gold-500 group-hover:text-corporate-950 transition-all duration-300 border border-gold-500/40">
                     <ArrowRight className="w-4 h-4" />
                   </div>
                 </div>
@@ -113,38 +127,52 @@ export default function Sectors({ lang }: SectorsProps) {
         {selectedSector && (
           <div
             id="sector-details-modal"
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-opacity"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm transition-opacity"
             onClick={() => setSelectedSector(null)}
           >
             <div
-              className="bg-white rounded-none max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-gold-600/20 relative animate-scale-in"
+              className="bg-white rounded-none max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-gold-600/30 relative animate-scale-in"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Modal header with colored badge */}
-              <div className="bg-corporate-950 text-white p-8 relative">
-                <button
-                  id="close-sector-modal-btn"
-                  onClick={() => setSelectedSector(null)}
-                  className="absolute top-6 right-6 p-2 rounded-none bg-white/10 text-white hover:bg-white/20 transition-all cursor-pointer"
-                >
-                  <X className="w-5 h-5" />
-                </button>
- 
-                <div className="flex items-center space-x-3 mb-3">
-                  <div className="p-2 rounded-none bg-gold-500/20 border border-gold-500/40">
-                    {renderIcon(selectedSector.iconName, "w-6 h-6 text-gold-400")}
+              {/* Modal header with illustration background */}
+              <div className="bg-corporate-950 text-white p-8 relative overflow-hidden">
+                {selectedSector.imageUrl && (
+                  <div className="absolute inset-0 z-0">
+                    <img
+                      src={selectedSector.imageUrl}
+                      alt={selectedSector.title}
+                      referrerPolicy="no-referrer"
+                      className="w-full h-full object-cover opacity-40 filter brightness-75"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-corporate-950 via-corporate-950/80 to-transparent" />
                   </div>
-                  <span className="text-xs font-mono text-gold-400 tracking-widest uppercase font-bold">
-                    Pilar {selectedSector.title}
-                  </span>
-                </div>
+                )}
 
-                <h3 className="text-3xl font-display font-light text-white uppercase tracking-tight">
-                  {selectedSector.title}
-                </h3>
-                <p className="text-sm font-mono text-gold-300 uppercase tracking-widest mt-1">
-                  {selectedSector.subtitle}
-                </p>
+                <div className="relative z-10">
+                  <button
+                    id="close-sector-modal-btn"
+                    onClick={() => setSelectedSector(null)}
+                    className="absolute top-0 right-0 p-2 rounded-none bg-black/40 hover:bg-gold-500 hover:text-corporate-950 border border-white/20 text-white transition-all cursor-pointer"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+
+                  <div className="flex items-center space-x-3 mb-3">
+                    <div className="p-2 rounded-none bg-gold-500/20 border border-gold-500/40 backdrop-blur-md">
+                      {renderIcon(selectedSector.iconName, "w-6 h-6 text-gold-400")}
+                    </div>
+                    <span className="text-xs font-mono text-gold-400 tracking-widest uppercase font-bold">
+                      Pilar {selectedSector.title}
+                    </span>
+                  </div>
+
+                  <h3 className="text-3xl font-display font-light text-white uppercase tracking-tight">
+                    {selectedSector.title}
+                  </h3>
+                  <p className="text-sm font-mono text-gold-300 uppercase tracking-widest mt-1">
+                    {selectedSector.subtitle}
+                  </p>
+                </div>
               </div>
 
               {/* Modal Content */}
