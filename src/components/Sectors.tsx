@@ -5,7 +5,7 @@
 
 import React, { useState } from 'react';
 import { THE_6_CS, TRANSLATIONS } from '../data';
-import { Zap, Gem, Milk, Sprout, Building, Cpu, ArrowRight, X, TrendingUp } from 'lucide-react';
+import { Zap, Flame, Sun, UtensilsCrossed, Fish, Waves, Gem, Milk, Building, Cpu, ArrowRight, X, TrendingUp } from 'lucide-react';
 import { SectorDetail } from '../types';
 
 interface SectorsProps {
@@ -19,14 +19,22 @@ export default function Sectors({ lang }: SectorsProps) {
   // Map icon names to lucide icons
   const renderIcon = (name: string, className: string) => {
     switch (name) {
+      case 'Flame':
+        return <Flame className={className} />;
       case 'Zap':
         return <Zap className={className} />;
+      case 'Sun':
+        return <Sun className={className} />;
+      case 'UtensilsCrossed':
+        return <UtensilsCrossed className={className} />;
+      case 'Fish':
+        return <Fish className={className} />;
+      case 'Waves':
+        return <Waves className={className} />;
       case 'Gem':
         return <Gem className={className} />;
       case 'Beef':
-        return <Milk className={className} />; // Goat is represented beautifully by Milk (livestock) or custom premium animal icon representation.
-      case 'Sprout':
-        return <Sprout className={className} />;
+        return <Milk className={className} />;
       case 'Building':
         return <Building className={className} />;
       case 'Cpu':

@@ -4,9 +4,11 @@
  */
 
 import React, { useState, useRef } from 'react';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 import { TRANSLATIONS } from '../data';
 import { Registration } from '../types';
-import { Check, Download, AlertCircle, FileText, User, Mail, Phone, Globe, Briefcase, ChevronRight, RefreshCw, Printer } from 'lucide-react';
+import { Check, Download, AlertCircle, FileText, User, Mail, Phone, Globe, Briefcase, ChevronRight, RefreshCw, Printer, Loader2 } from 'lucide-react';
 
 interface RegistrationFormProps {
   lang: 'pt' | 'en';
@@ -30,23 +32,24 @@ export default function RegistrationForm({ lang, onRegisterSuccess }: Registrati
   // Error & Status states
   const [errorMsg, setErrorMsg] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDownloadingPDF, setIsDownloadingPDF] = useState(false);
   const [generatedPass, setGeneratedPass] = useState<Registration | null>(null);
 
-  // Sector list based on Tete characteristics
+  // Sector list based on Tete characteristics (Os 6C's)
   const sectors = lang === 'pt' ? [
-    'Energia & Recursos Hídricos (Cahora Bassa)',
-    'Mineração & Recursos Minerais (Carvão/Metais)',
-    'Pecuária de Excelência (Cabrito de Tete)',
-    'Agronegócio & Citrinos',
-    'Indústria Civil & Cimento',
-    'Infraestruturas & Diversificação de Negócios'
+    'Carvão (Mineração & Riqueza Mineral)',
+    'Cahora Bassa (Hidroelétrica & Energia Vital)',
+    'Calor / Crocodilo (Energia Solar & Tradição do Zambeze)',
+    'Cabrito (Gastronomia & Pecuária de Excelência)',
+    'Chicoa (Peixe Seco Tradicional & Região Histórica)',
+    'Capenta (Pesca no Zambeze & Aquacultura)'
   ] : [
-    'Energy & Water Resources (Cahora Bassa)',
-    'Mining & Mineral Resources (Coal/Metals)',
-    'Elite Livestock (Tete Goat)',
-    'Agribusiness & Citrus',
-    'Civil Construction & Cement',
-    'Infrastructures & Business Diversification'
+    'Carvão / Coal (Mining & Mineral Wealth)',
+    'Cahora Bassa (Hydropower & Vital Energy)',
+    'Calor / Crocodilo (Solar Energy & Zambezi Legacy)',
+    'Cabrito (Local Gastronomy & Elite Livestock)',
+    'Chicoa (Traditional Dried Fish & Heritage)',
+    'Capenta (Zambezi Fisheries & Aquaculture)'
   ];
 
   const participantTypes = [
@@ -106,8 +109,136 @@ export default function RegistrationForm({ lang, onRegisterSuccess }: Registrati
     }, 1200);
   };
 
-  const handlePrintBadge = () => {
-    window.print();
+  // Helper to convert oklch(...), oklab(...), light-dark(...), color(...) colors to rgb/hex
+  const sanitizeCssString = (css: string): string => {
+    if (!css) return '';
+    let result = css;
+    // Replace complex oklab/oklch/light-dark/color functions with nested parens
+    result = result.replace(/(oklab|oklch|color-mix|light-dark|color)\s*\((?:[^()]+|\([^()]*\))*\)/gi, 'rgb(15, 23, 42)');
+    // Fallback replace any remaining oklab or oklch occurrences
+    return result
+      .replace(/oklab\([^)]*\)/gi, 'rgb(15, 23, 42)')
+      .replace(/oklch\([^)]*\)/gi, 'rgb(15, 23, 42)')
+      .replace(/color-mix\([^)]*\)/gi, 'rgb(15, 23, 42)')
+      .replace(/light-dark\([^)]*\)/gi, 'rgb(15, 23, 42)')
+      .replace(/color\([^)]*\)/gi, 'rgb(15, 23, 42)');
+  };
+
+  const colorToRgb = (colorStr: string): string => {
+    if (!colorStr) return 'transparent';
+    if (!/(oklch|oklab|light-dark|color)/i.test(colorStr)) return colorStr;
+    try {
+      const canvas = document.createElement('canvas');
+      canvas.width = 1;
+      canvas.height = 1;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.fillStyle = colorStr;
+        const converted = ctx.fillStyle;
+        if (converted && !/(oklch|oklab|light-dark|color)/i.test(converted)) {
+          return converted;
+        }
+      }
+    } catch (e) {
+      // ignore
+    }
+    return sanitizeCssString(colorStr);
+  };
+
+  const handleDownloadPDF = async () => {
+    const badgeElement = document.getElementById('print-section-badge');
+    if (!badgeElement || !generatedPass) return;
+
+    try {
+      setIsDownloadingPDF(true);
+
+      const canvas = await html2canvas(badgeElement, {
+        scale: 3,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        logging: false,
+        onclone: (clonedDoc) => {
+          // 1. Sanitize all <style> elements in clonedDoc
+          clonedDoc.querySelectorAll('style').forEach((styleEl) => {
+            if (styleEl.textContent) {
+              styleEl.textContent = sanitizeCssString(styleEl.textContent);
+            }
+          });
+
+          // 2. Sanitize all styleSheets rules if accessible
+          Array.from(clonedDoc.styleSheets).forEach((sheet) => {
+            try {
+              const rules = sheet.cssRules || sheet.rules;
+              if (rules) {
+                for (let i = 0; i < rules.length; i++) {
+                  const rule = rules[i] as CSSStyleRule;
+                  if (rule.style && rule.style.cssText && /(oklch|oklab|light-dark|color)/i.test(rule.style.cssText)) {
+                    rule.style.cssText = sanitizeCssString(rule.style.cssText);
+                  }
+                }
+              }
+            } catch (e) {
+              // Ignore cross-origin stylesheet errors
+            }
+          });
+
+          // 3. Convert inline and computed styles on badge elements specifically
+          const origBadge = document.getElementById('print-section-badge');
+          const clonedBadge = clonedDoc.getElementById('print-section-badge');
+
+          if (origBadge && clonedBadge) {
+            const origNodes = [origBadge, ...Array.from(origBadge.querySelectorAll('*'))] as HTMLElement[];
+            const clonedNodes = [clonedBadge, ...Array.from(clonedBadge.querySelectorAll('*'))] as HTMLElement[];
+
+            origNodes.forEach((origNode, idx) => {
+              const clonedNode = clonedNodes[idx];
+              if (!clonedNode) return;
+
+              try {
+                const computed = window.getComputedStyle(origNode);
+                const props = [
+                  'color', 'backgroundColor', 'borderColor', 'borderTopColor',
+                  'borderRightColor', 'borderBottomColor', 'borderLeftColor',
+                  'outlineColor', 'fill', 'stroke'
+                ];
+                props.forEach((prop) => {
+                  const val = computed.getPropertyValue(prop);
+                  if (val && /(oklch|oklab|light-dark|color)/i.test(val)) {
+                    clonedNode.style.setProperty(prop, colorToRgb(val), 'important');
+                  }
+                });
+              } catch (e) {
+                // ignore
+              }
+
+              if (clonedNode.style && clonedNode.style.cssText && /(oklch|oklab|light-dark|color)/i.test(clonedNode.style.cssText)) {
+                clonedNode.style.cssText = sanitizeCssString(clonedNode.style.cssText);
+              }
+            });
+          }
+        }
+      });
+
+      const imgData = canvas.toDataURL('image/png');
+
+      const imgWidth = 105;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: [imgWidth, imgHeight]
+      });
+
+      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+
+      const cleanName = generatedPass.fullName.trim().replace(/[^a-zA-Z0-9_\-]/g, '_');
+      pdf.save(`Credencial_CIIT2026_${cleanName}_${generatedPass.id}.pdf`);
+    } catch (err) {
+      console.error('Error generating PDF:', err);
+    } finally {
+      setIsDownloadingPDF(false);
+    }
   };
 
   const resetForm = () => {
@@ -511,44 +642,52 @@ export default function RegistrationForm({ lang, onRegisterSuccess }: Registrati
 
                     {/* Simulated High-Fidelity QR Code */}
                     <div className="flex flex-col items-center space-y-2 py-2 relative z-10">
-                      <div className="bg-neutral-50 p-4 border border-slate-200 rounded-none shadow-inner">
+                      <div className="bg-white p-4 border border-slate-200 rounded-none shadow-sm">
                         {/* Elegant custom Vector QR grid representation */}
-                        <svg width="100" height="100" viewBox="0 0 100 100" className="text-corporate-950 fill-current">
-                          {/* Corner Squares */}
-                          <rect x="0" y="0" width="30" height="30" rx="0" />
-                          <rect x="5" y="5" width="20" height="20" fill="white" rx="0" />
-                          <rect x="10" y="10" width="10" height="10" rx="0" />
+                        <svg width="100" height="100" viewBox="0 0 100 100" style={{ backgroundColor: '#ffffff' }} className="rounded-none">
+                          {/* Explicit White Background */}
+                          <rect x="0" y="0" width="100" height="100" fill="#ffffff" />
 
-                          <rect x="70" y="0" width="30" height="30" rx="0" />
-                          <rect x="75" y="5" width="20" height="20" fill="white" rx="0" />
-                          <rect x="80" y="10" width="10" height="10" rx="0" />
+                          {/* QR Code Elements in Vibrant Blue */}
+                          <g fill="#1d4ed8">
+                            {/* Outer Corner Finder Squares */}
+                            <rect x="0" y="0" width="30" height="30" />
+                            <rect x="70" y="0" width="30" height="30" />
+                            <rect x="0" y="70" width="30" height="30" />
 
-                          <rect x="0" y="70" width="30" height="30" rx="0" />
-                          <rect x="5" y="75" width="20" height="20" fill="white" rx="0" />
-                          <rect x="10" y="80" width="10" height="10" rx="0" />
+                            {/* Inner Finder Center Dots */}
+                            <rect x="10" y="10" width="10" height="10" />
+                            <rect x="80" y="10" width="10" height="10" />
+                            <rect x="10" y="80" width="10" height="10" />
 
-                          {/* Dummy bits */}
-                          <rect x="40" y="5" width="10" height="5" />
-                          <rect x="40" y="15" width="15" height="10" />
-                          <rect x="40" y="30" width="5" height="10" />
-                          <rect x="50" y="30" width="10" height="5" />
-                          
-                          <rect x="15" y="40" width="15" height="5" />
-                          <rect x="5" y="50" width="10" height="10" />
-                          <rect x="20" y="55" width="10" height="5" />
+                            {/* Dummy Data Bits */}
+                            <rect x="40" y="5" width="10" height="5" />
+                            <rect x="40" y="15" width="15" height="10" />
+                            <rect x="40" y="30" width="5" height="10" />
+                            <rect x="50" y="30" width="10" height="5" />
+                            
+                            <rect x="15" y="40" width="15" height="5" />
+                            <rect x="5" y="50" width="10" height="10" />
+                            <rect x="20" y="55" width="10" height="5" />
 
-                          <rect x="70" y="40" width="25" height="5" />
-                          <rect x="80" y="50" width="10" height="15" />
-                          <rect x="70" y="60" width="5" height="5" />
+                            <rect x="70" y="40" width="25" height="5" />
+                            <rect x="80" y="50" width="10" height="15" />
+                            <rect x="70" y="60" width="5" height="5" />
 
-                          <rect x="40" y="50" width="15" height="15" />
-                          <rect x="40" y="75" width="15" height="5" />
-                          <rect x="45" y="85" width="5" height="10" />
-                          <rect x="55" y="80" width="10" height="15" />
-                          
-                          <rect x="70" y="75" width="20" height="5" />
-                          <rect x="80" y="85" width="15" height="10" />
-                          <rect x="70" y="90" width="5" height="5" />
+                            <rect x="40" y="50" width="15" height="15" />
+                            <rect x="40" y="75" width="15" height="5" />
+                            <rect x="45" y="85" width="5" height="10" />
+                            <rect x="55" y="80" width="10" height="15" />
+                            
+                            <rect x="70" y="75" width="20" height="5" />
+                            <rect x="80" y="85" width="15" height="10" />
+                            <rect x="70" y="90" width="5" height="5" />
+                          </g>
+
+                          {/* White Cutout Frames for Corner Finders */}
+                          <rect x="5" y="5" width="20" height="20" fill="#ffffff" />
+                          <rect x="75" y="5" width="20" height="20" fill="#ffffff" />
+                          <rect x="5" y="75" width="20" height="20" fill="#ffffff" />
                         </svg>
                       </div>
                       <span className="text-[10px] font-mono tracking-widest font-black text-corporate-950">
@@ -567,11 +706,21 @@ export default function RegistrationForm({ lang, onRegisterSuccess }: Registrati
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto">
                   <button
                     id="print-badge-btn"
-                    onClick={handlePrintBadge}
-                    className="w-full sm:w-auto px-6 py-3 rounded-none bg-corporate-950 text-white hover:bg-corporate-900 text-xs font-bold uppercase tracking-widest flex items-center justify-center space-x-2 transition-colors cursor-pointer"
+                    onClick={handleDownloadPDF}
+                    disabled={isDownloadingPDF}
+                    className="w-full sm:w-auto px-6 py-3 rounded-none bg-corporate-950 text-white hover:bg-corporate-900 text-xs font-bold uppercase tracking-widest flex items-center justify-center space-x-2 transition-colors cursor-pointer disabled:opacity-70"
                   >
-                    <Printer className="w-4 h-4 text-gold-400" />
-                    <span>{t.badgeDownload}</span>
+                    {isDownloadingPDF ? (
+                      <>
+                        <Loader2 className="w-4 h-4 text-gold-400 animate-spin" />
+                        <span>{lang === 'pt' ? 'A gerar PDF...' : 'Generating PDF...'}</span>
+                      </>
+                    ) : (
+                      <>
+                        <Download className="w-4 h-4 text-gold-400" />
+                        <span>{t.badgeDownload}</span>
+                      </>
+                    )}
                   </button>
 
                   <button

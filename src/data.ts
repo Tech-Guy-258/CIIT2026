@@ -8,9 +8,9 @@ import { Speaker, AgendaSession, SectorDetail, HotelRecommendation, Registration
 import cahoraBassaImg from './assets/images/Cahora Bassa.jpg';
 import coalImg from './assets/images/moatize_coal_minerals_1784807272754.jpg';
 import caprinosImg from './assets/images/tete_caprinos_goats_1784807286233.jpg';
-import citrosImg from './assets/images/citrus_agriculture_tete_1784807298725.jpg';
-import cimentoImg from './assets/images/cement_bags_construction_1784807313963.jpg';
-import algodaoImg from './assets/images/cotton_harvest_commodities_1784807324034.jpg';
+import albufeiraImg from './assets/images/Albufeira de cahora bassa.jpg';
+import tchumaTchatoImg from './assets/images/Area_de_Conservacao_Tchuma_Tchato.jpg';
+import cahoraLakeImg from './assets/images/cahora_bassa_lake_1784808062238.jpg';
 
 export const SPEAKERS: Speaker[] = [
   {
@@ -96,21 +96,44 @@ export const SPEAKERS: Speaker[] = [
 export const THE_6_CS: SectorDetail[] = [
   {
     id: 'c1',
-    title: 'Cahora Bassa',
-    titleEn: 'Cahora Bassa',
-    subtitle: 'Energia & Recursos Hídricos',
-    subtitleEn: 'Energy & Water Resources',
-    description: 'A maior central hidroelétrica da África Austral, gerando mais de 2.075 MW de energia limpa. Tete assume-se como o hub energético regional, exportando energia para a África do Sul, Zimbábue e toda a região SADC.',
-    descriptionEn: 'The largest hydroelectric station in Southern Africa, producing over 2,075 MW of clean power. Tete is the regional energy powerhouse, exporting electricity to South Africa, Zimbabwe, and SADC grids.',
+    title: 'Carvão',
+    titleEn: 'Coal',
+    subtitle: 'Riqueza Mineral & Mineração',
+    subtitleEn: 'Mineral Wealth & Mining',
+    description: 'Riqueza mineral abundante que impulsiona a economia e a mineração na região. A bacia carbonífera de Moatize em Tete acolhe reservas de classe mundial de carvão metalúrgico e térmico, ligadas por corredores ferroviários estratégicos aos portos de Nacala e da Beira.',
+    descriptionEn: 'Abundant mineral wealth that drives the economy and mining across the region. The Moatize coal basin in Tete hosts world-class metallurgical and thermal coal deposits, connected via strategic railway corridors to Nacala and Beira ports.',
     investmentOpportunities: [
-      'Projetos de energia solar flutuante na albufeira',
-      'Redes de transmissão de média e alta tensão',
-      'Desenvolvimento de mini-hídricas de suporte comunitário'
+      'Beneficiação de carvão, coque e subprodutos industriais',
+      'Tecnologias de mineração verde, segurança e reabilitação ambiental',
+      'Logística de transporte ferroviário e infraestruturas industriais'
     ],
     investmentOpportunitiesEn: [
-      'Floating solar power installations on the reservoir',
-      'Medium and high-voltage transmission grid expansion',
-      'Off-grid mini-hydro developments for local industries'
+      'Coal washing, coke processing, and industrial by-products',
+      'Green mining technologies, industrial safety, and site restoration',
+      'Rail transport logistics and dedicated industrial infrastructure'
+    ],
+    keyData: 'Bacia de Moatize (Reservas Globais)',
+    keyDataEn: 'Moatize World-Class Coal Reserve',
+    iconName: 'Flame',
+    imageUrl: coalImg
+  },
+  {
+    id: 'c2',
+    title: 'Cahora Bassa',
+    titleEn: 'Cahora Bassa',
+    subtitle: 'Hidroelétrica & Energia Vital',
+    subtitleEn: 'Hydropower & Vital Energy Source',
+    description: 'A grande hidroelétrica e barragem no rio Zambeze, fonte de energia vital. É a maior central geradora da África Austral com 2.075 MW de capacidade instalada, estabelecendo Tete como o coração da matriz energética nacional e o polo exportador de eletricidade para toda a região SADC.',
+    descriptionEn: 'The massive hydroelectric dam on the Zambezi River, a vital energy source. It is Southern Africa\'s largest power facility with 2,075 MW of installed capacity, cementing Tete as the core of Mozambique\'s energy matrix and prime electricity exporter for the SADC region.',
+    investmentOpportunities: [
+      'Instalação de parques solares flutuantes na albufeira de Cahora Bassa',
+      'Expansão de linhas de transmissão e subestações de alta tensão',
+      'Desenvolvimento de indústrias electro-intensivas e data centers sustentáveis'
+    ],
+    investmentOpportunitiesEn: [
+      'Floating solar PV installations on the Cahora Bassa reservoir',
+      'Expansion of high-voltage transmission interconnectors and substations',
+      'Development of clean electro-intensive manufacturing and sustainable data centers'
     ],
     keyData: '2.075 MW de Potência Instalada',
     keyDataEn: '2,075 MW Installed Hydropower',
@@ -118,119 +141,96 @@ export const THE_6_CS: SectorDetail[] = [
     imageUrl: cahoraBassaImg
   },
   {
-    id: 'c2',
-    title: 'Carvão',
-    titleEn: 'Coal',
-    subtitle: 'Mineração & Recursos Minerais',
-    subtitleEn: 'Mining & Mineral Resources',
-    description: 'Tete alberga uma das maiores bacias de carvão metalúrgico e térmico não exploradas do mundo (bacia de Moatize). Atualmente, a mineração é um dos principais pilares das exportações de Moçambique, ligada por ferrovia ao Porto de Nacala e Porto da Beira.',
-    descriptionEn: 'Tete hosts one of the largest metallurgical and thermal coal basins in the world (Moatize Basin). Mining serves as a cornerstone of Mozambican exports, connected via railway corridors to Nacala and Beira deepwater ports.',
-    investmentOpportunities: [
-      'Beneficiação de carvão e subprodutos',
-      'Tecnologias de mineração verde e reabilitação ambiental',
-      'Mineração complementar de ferro, fosfatos e minerais industriais'
-    ],
-    investmentOpportunitiesEn: [
-      'Coal washing, beneficiation, and by-product processing',
-      'Green mining technologies and environmental rehabilitation',
-      'Extraction of iron ore, phosphate, and critical industrial minerals'
-    ],
-    keyData: 'Bacia de Moatize (Reservas Globais)',
-    keyDataEn: 'Moatize World-Class Coal Reserve',
-    iconName: 'Gem',
-    imageUrl: coalImg
-  },
-  {
     id: 'c3',
-    title: 'Cabrito',
-    titleEn: 'Tete Goat',
-    subtitle: 'Pecuária de Excelência',
-    subtitleEn: 'Elite Livestock & Goat Meat',
-    description: 'O famoso "Cabrito de Tete" é reconhecido nacionalmente pela sua qualidade gastronómica única, impulsionada pelo pasto natural específico da província. Uma marca com indicação geográfica protegida em desenvolvimento.',
-    descriptionEn: 'The famous "Tete Goat" (Cabrito de Tete) is nationally celebrated for its organic flavor derived from acacia brush feeding. A trademark with protected geographical indication currently undergoing global expansion.',
+    title: 'Calor (ou Crocodilo)',
+    titleEn: 'Calor (Heat) / Crocodilo',
+    subtitle: 'Clima Radiante, Solar & Tradição Oral',
+    subtitleEn: 'Radiant Climate, Solar & Zambezi Legacy',
+    description: 'O clima muito quente que caracteriza a província (algumas versões tradicionais referem o crocodilo do rio Zambeze). O elevado índice de insolação anual confere a Tete um potencial extraordinário para energia solar fotovoltaica, enquanto a emblemática presença do crocodilo do Zambeze simboliza a mística, fauna e património natural da região.',
+    descriptionEn: 'The high-temperature climate characterizing the province (with folklore traditions referencing the majestic Zambezi crocodile). Abundant year-round sunshine offers immense photovoltaic solar generation capacity, while the Zambezi crocodile represents the untamed biodiversity, fauna, and oral legacy of Tete.',
     investmentOpportunities: [
-      'Matadouros industriais modernos com certificação Halal',
-      'Unidades de processamento de carne e cadeias de frio',
-      'Exportação organizada para mercados do Médio Oriente'
+      'Grandes centrais solares fotovoltaicas e sistemas de armazenamento em bateria (BESS)',
+      'Arquitetura bioclimática, materiais térmicos e sistemas eficientes de climatização',
+      'Conservação da fauna aquática, parques zoológicos e centros de ecoturismo sustentável'
     ],
     investmentOpportunitiesEn: [
-      'Modern industrial Halal-certified abattoirs',
-      'Meat packaging, processing plants, and cold-chain facilities',
-      'Export channels tailored for Middle Eastern markets'
+      'Utility-scale solar farms and Battery Energy Storage Systems (BESS)',
+      'Bioclimatic architecture, thermal building materials, and efficient HVAC systems',
+      'Aquatic wildlife preservation, conservation parks, and sustainable ecotourism'
     ],
-    keyData: '+1.5M de Cabeças de Gado Caprino',
-    keyDataEn: '+1.5 Million Goat Livestock Herd',
-    iconName: 'Beef',
-    imageUrl: caprinosImg
+    keyData: '+2.200 kWh/m²/ano de Radiação Solar',
+    keyDataEn: '+2,200 kWh/m²/year Solar Irradiance',
+    iconName: 'Sun',
+    imageUrl: tchumaTchatoImg
   },
   {
     id: 'c4',
-    title: 'Citrinos',
-    titleEn: 'Citrus',
-    subtitle: 'Agronegócio & Culturas de Rendimento',
-    subtitleEn: 'Agribusiness & Cash Crops',
-    description: 'Com condições climáticas excecionais e as águas do majestoso Rio Zambeze, Tete apresenta um solo altamente fértil ideal para a produção em larga escala de laranjas, limões e outras frutas cítricas de qualidade superior.',
-    descriptionEn: 'Blessed with sunny weather and abundant water from the Zambezi River, Tete features fertile soils perfectly suited for large-scale production of high-grade oranges, lemons, and citrus fruits.',
+    title: 'Cabrito',
+    titleEn: 'Cabrito (Tete Goat)',
+    subtitle: 'Iguaria Gastronómica & Pecuária',
+    subtitleEn: 'Gastronomic Delicacy & Livestock',
+    description: 'Uma iguaria gastronómica muito famosa e apreciada na culinária local. O prestigiado "Cabrito de Tete" é reconhecido nacional e regionalmente pela textura tenra e sabor inconfundível, proporcionado pelas pastagens de acácias e arbustos do bioma semiárido da província.',
+    descriptionEn: 'A celebrated culinary delicacy highly cherished in local gastronomy. The prestigious "Cabrito de Tete" (Tete Goat) is nationally celebrated for its tender texture and exquisite flavor, shaped by natural acacia pastures and indigenous shrubs across the province.',
     investmentOpportunities: [
-      'Sistemas de irrigação de alta eficiência',
-      'Fábricas de sumos, polpas e embalamento para exportação',
-      'Criação de marcas próprias de citrinos para o mercado regional'
+      'Matadouros industriais modernos com certificação Halal e normas sanitárias ISO',
+      'Centros de processamento de carnes, embalamento a vácuo e logística de cadeia de frio',
+      'Promoção da Indicação Geográfica Protegida (IGP) e exportação organizada para o Médio Oriente'
     ],
     investmentOpportunitiesEn: [
-      'High-efficiency commercial drip irrigation systems',
-      'Fruit juice concentrating, pulping, and export packing plants',
-      'Regional citrus branding for SADC consumer markets'
+      'Modern industrial Halal-certified abattoirs and ISO sanitary facilities',
+      'Meat packaging plants, vacuum processing, and temperature-controlled cold chains',
+      'Protected Geographical Indication (PGI) branding and structured Middle East exports'
     ],
-    keyData: 'Milhares de hectares de solos férteis irrigáveis',
-    keyDataEn: 'Thousands of Hectares Irrigable Farmland',
-    iconName: 'Sprout',
-    imageUrl: citrosImg
+    keyData: '+1.5M de Cabeças de Gado Caprino',
+    keyDataEn: '+1.5 Million Goat Livestock Herd',
+    iconName: 'UtensilsCrossed',
+    imageUrl: caprinosImg
   },
   {
     id: 'c5',
-    title: 'Cimento',
-    titleEn: 'Cement',
-    subtitle: 'Indústria Civil & Construção',
-    subtitleEn: 'Construction & Civil Industry',
-    description: 'Ricas jazidas de calcário e gesso alimentam uma indústria de cimento e cal em forte expansão, servindo não apenas os megaprojetos locais mas também as necessidades de infraestrutura dos países vizinhos como Malawi e Zimbábue.',
-    descriptionEn: 'Rich limestone and gypsum deposits power a rapidly expanding cement and lime manufacturing industry, supplying both local megaprojects and landlocked SADC neighbor nations like Malawi and Zimbabwe.',
+    title: 'Chicoa',
+    titleEn: 'Chicoa',
+    subtitle: 'Peixe Seco & Região Histórica',
+    subtitleEn: 'Traditional Dried Fish & Heritage',
+    description: 'O peixe seco tradicional ou a região histórica ligada à identidade local. Famoso produto de conservação artesanal comercializado em todo o país e na África Austral, com raízes na histórica vila de Chicoa às margens do Zambeze, célebre pela sua herança cultural e tradicional.',
+    descriptionEn: 'The traditional cured dried fish or the historic region deeply tied to local identity. A famous artisanal preserved staple traded across Mozambique and Southern Africa, originating from the historic riverside town of Chicoa along the Zambezi.',
     investmentOpportunities: [
-      'Fábricas de clínquer e aditivos sustentáveis',
-      'Expansão da capacidade de fornecimento regional de cal industrial',
-      'Materiais de construção pré-fabricados de alto desempenho'
+      'Modernização de unidades de secagem solar, cura higiénica e entrepostos de pescado',
+      'Embalamento comercial, certificação alimentar e distribuição para redes de retalho',
+      'Projetos de valorização histórico-turística e rotas culturais da vila de Chicoa'
     ],
     investmentOpportunitiesEn: [
-      'Clinker and sustainable cement additives production',
-      'Industrial lime manufacturing for regional export',
-      'High-performance pre-fabricated building materials'
+      'Modernization of solar fish dryers, hygienic curing units, and fisheries logistics',
+      'Commercial packaging, quality certification, and formal retail supply contracts',
+      'Heritage tourism development, museum curation, and cultural trails in historic Chicoa'
     ],
-    keyData: 'Proximidade estratégica com mercados SADC encravados',
-    keyDataEn: 'Strategic Access to Landlocked SADC Markets',
-    iconName: 'Building',
-    imageUrl: cimentoImg
+    keyData: 'Tradição Centenária de Cura & Comércio',
+    keyDataEn: 'Centuries-Old Artisan Curing & Trade',
+    iconName: 'Fish',
+    imageUrl: albufeiraImg
   },
   {
     id: 'c6',
-    title: 'Cobre & Algodão',
-    titleEn: 'Copper & Cotton',
-    subtitle: 'Metais Críticos & Têxteis (Diversificação)',
-    subtitleEn: 'Critical Metals & Textiles (Diversification)',
-    description: 'Tete diversifica o seu portfólio de exportação com reservas comprovadas de cobre e ferro, bem como uma tradição agrícola vibrante na produção de algodão (o "ouro branco"), tabaco e castanha de caju.',
-    descriptionEn: 'Tete expands its export portfolio with confirmed copper and iron deposits alongside a vibrant agricultural legacy in cotton ("white gold"), tobacco, and cashew nut processing.',
+    title: 'Capenta',
+    titleEn: 'Capenta',
+    subtitle: 'Pesca Abundante no Zambeze',
+    subtitleEn: 'Abundant Zambezi Fishery',
+    description: 'O pequeno peixe pescado em abundância nas águas do Zambeze e da vasta albufeira de Cahora Bassa. A pesca de capenta sustenta uma próspera indústria pesqueira noturna com frotas de candeios luminosos, sendo fonte primária de nutrição, dinamismo comercial e postos de trabalho.',
+    descriptionEn: 'The nutritious small fish caught in great abundance across the waters of the Zambezi River and Lake Cahora Bassa. Capenta fishing powers a thriving nocturnal fishery with light rigs, serving as a pillar of regional protein supply, trade, and community livelihoods.',
     investmentOpportunities: [
-      'Pesquisa e extração de cobre e minerais críticos para transição energética',
-      'Processamento local de algodão e indústria de fiação/têxtil',
-      'Unidades de processamento e refinação de castanha de caju'
+      'Modernização de embarcações de pesca com energia solar e sistemas de refrigeração de bordo',
+      'Fábricas de processamento, secagem industrial e enlatamento de capenta para exportação',
+      'Investimento em projetos de aquacultura sustentável e produção de rações na bacia do Zambeze'
     ],
     investmentOpportunitiesEn: [
-      'Copper exploration and energy transition critical minerals mining',
-      'Local cotton ginning, spinning, and textile manufacturing',
-      'Cashew nut processing and oil refining units'
+      'Modernization of fishing rigs with solar power and onboard cooling systems',
+      'Industrial processing, rapid solar dehydration, and canning lines for export markets',
+      'Sustainable aquaculture projects, hatcheries, and feed production in the Zambezi basin'
     ],
-    keyData: 'Minerais de transição e culturas de alto rendimento',
-    keyDataEn: 'Transition Minerals & High-Yield Crops',
-    iconName: 'Cpu',
-    imageUrl: algodaoImg
+    keyData: 'Dezenas de Milhares de Toneladas / Ano',
+    keyDataEn: 'Tens of Thousands of Tonnes / Year',
+    iconName: 'Waves',
+    imageUrl: cahoraLakeImg
   }
 ];
 
