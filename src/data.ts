@@ -8,9 +8,11 @@ import { Speaker, AgendaSession, SectorDetail, HotelRecommendation, Registration
 import cahoraBassaImg from './assets/images/Cahora Bassa.jpg';
 import coalImg from './assets/images/moatize_coal_minerals_1784807272754.jpg';
 import caprinosImg from './assets/images/tete_caprinos_goats_1784807286233.jpg';
-import albufeiraImg from './assets/images/Albufeira de cahora bassa.jpg';
 import tchumaTchatoImg from './assets/images/Area_de_Conservacao_Tchuma_Tchato.jpg';
-import cahoraLakeImg from './assets/images/cahora_bassa_lake_1784808062238.jpg';
+import chicoaImg from './assets/images/Chicoa (2).jpg';
+import kapentaImg from './assets/images/KAPENTA.jpg';
+
+
 
 export const SPEAKERS: Speaker[] = [
   {
@@ -207,7 +209,7 @@ export const THE_6_CS: SectorDetail[] = [
     keyData: 'Tradição Centenária de Cura & Comércio',
     keyDataEn: 'Centuries-Old Artisan Curing & Trade',
     iconName: 'Fish',
-    imageUrl: albufeiraImg
+    imageUrl: chicoaImg
   },
   {
     id: 'c6',
@@ -230,7 +232,7 @@ export const THE_6_CS: SectorDetail[] = [
     keyData: 'Dezenas de Milhares de Toneladas / Ano',
     keyDataEn: 'Tens of Thousands of Tonnes / Year',
     iconName: 'Waves',
-    imageUrl: cahoraLakeImg
+    imageUrl: kapentaImg
   }
 ];
 
