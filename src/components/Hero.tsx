@@ -6,6 +6,7 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, MapPin, ChevronRight, Clock } from 'lucide-react';
 import { TRANSLATIONS } from '../data';
+import ciit2026Logo from "../assets/images/ciit_2026_logo_1787657793393.png";
 
 interface HeroProps {
   lang: 'pt' | 'en';
@@ -88,10 +89,21 @@ export default function Hero({ lang, onRegisterClick, onExploreClick }: HeroProp
           </div>
         </div>
 
-        {/* Brand Main Title */}
+        {/*
+        / Brand Main Title /
         <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-black tracking-tight text-slate-950 mb-2 uppercase leading-[1.1]">
           CIIT<span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-amber-500 to-amber-700 font-black">2026</span>
         </h1>
+        */}
+
+        {/* Brand Main Logo */}
+        <div className="mb-2">
+          <img
+            src={ciit2026Logo}
+            alt="CIIT 2026"
+            className="w-auto h-16 sm:h-24 md:h-28 lg:h-32 object-contain"
+          />
+        </div>
 
         <p className="text-xs sm:text-sm md:text-base font-mono font-bold tracking-wider sm:tracking-widest text-slate-700 uppercase mb-6 sm:mb-8 max-w-2xl px-2">
           {lang === 'pt' ? 'Conferência Internacional de Investimentos de Tete' : 'International Conference on Tete Investments'}
