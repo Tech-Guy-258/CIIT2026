@@ -49,43 +49,43 @@ export default function About({ lang }: AboutProps) {
   ];
 
   return (
-    <section id="about" className="py-24 bg-neutral-50 border-b border-gray-200">
+    <section id="about" className="py-20 sm:py-24 bg-white border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-gold-700 bg-gold-500/5 border border-gold-500/20 px-4 py-1.5 rounded-none">
+        <div className="text-center max-w-3xl mx-auto mb-14 sm:mb-16">
+          <span className="text-xs font-bold uppercase tracking-widest text-amber-900 bg-amber-100 border border-amber-300 px-4 py-1.5 rounded-none inline-block shadow-xs">
             {t.aboutTitle}
           </span>
-          <h2 className="text-3xl md:text-5xl font-display font-light text-corporate-950 mt-4 tracking-tight leading-tight">
+          <h2 className="text-3xl md:text-5xl font-display font-bold text-slate-950 mt-4 tracking-tight leading-tight">
             {t.aboutSubtitle}
           </h2>
-          <div className="w-16 h-[2px] bg-gold-600 mx-auto mt-4" />
+          <div className="w-20 h-1 bg-amber-500 mx-auto mt-4" />
         </div>
 
         {/* Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
           
           {/* Text block */}
           <div className="lg:col-span-7 space-y-6">
-            <p className="text-lg text-gray-700 leading-relaxed font-light">
+            <p className="text-lg sm:text-xl text-slate-800 leading-relaxed font-normal">
               {t.aboutText1}
             </p>
-            <p className="text-base text-gray-600 leading-relaxed">
+            <p className="text-base sm:text-lg text-slate-700 leading-relaxed">
               {t.aboutText2}
             </p>
 
             {/* Micro pillars of the conference */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 pt-4">
               {pillars.map((p, idx) => (
-                <div key={idx} className="bg-white p-6 rounded-none border border-slate-200 shadow-sm hover:border-gold-500/40 transition-colors flex flex-col space-y-3">
-                  <div className="p-2 bg-gold-500/10 rounded-none w-max">
+                <div key={idx} className="bg-slate-50 p-6 rounded-none border border-slate-300 shadow-xs hover:border-amber-500 transition-colors flex flex-col space-y-3">
+                  <div className="p-2.5 bg-amber-100 border border-amber-300 rounded-none w-max">
                     {p.icon}
                   </div>
-                  <h3 className="font-display font-bold text-xs text-corporate-950 uppercase tracking-wider">
+                  <h3 className="font-display font-bold text-sm text-slate-950 uppercase tracking-wider">
                     {p.title}
                   </h3>
-                  <p className="text-xs text-gray-500 leading-relaxed">
+                  <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">
                     {p.desc}
                   </p>
                 </div>
@@ -95,48 +95,48 @@ export default function About({ lang }: AboutProps) {
 
           {/* Visual Presentation Card */}
           <div className="lg:col-span-5">
-            <div className="relative rounded-none overflow-hidden shadow-2xl bg-corporate-900 text-white p-8 md:p-10 border border-gold-500/20">
+            <div className="relative rounded-none shadow-xl bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 text-white p-8 md:p-10 border-2 border-amber-500/40">
               
               {/* Decorative light elements */}
-              <div className="absolute top-0 right-0 w-48 h-48 bg-gold-500/5 rounded-full blur-2xl pointer-events-none" />
-              <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-corporate-500/10 rounded-full blur-2xl pointer-events-none" />
+              <div className="absolute top-0 right-0 w-48 h-48 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
+              <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-slate-700/20 rounded-full blur-2xl pointer-events-none" />
 
-              <span className="text-[9px] tracking-widest font-mono text-gold-400 block uppercase mb-2 font-bold">
+              <span className="text-xs tracking-widest font-mono text-amber-400 block uppercase mb-2 font-black">
                 {lang === 'pt' ? 'Factores de Atração' : 'Key Attractions'}
               </span>
-              <h3 className="text-2xl font-display font-light text-white mb-6 uppercase tracking-wide">
-                Tete: <span className="font-serif italic text-gold-400">{lang === 'pt' ? 'O Coração Económico' : 'The Economic Engine'}</span>
+              <h3 className="text-2xl sm:text-3xl font-display font-bold text-white mb-6 uppercase tracking-wide">
+                Tete: <span className="font-serif italic text-amber-400 font-bold">{lang === 'pt' ? 'O Coração Económico' : 'The Economic Engine'}</span>
               </h3>
 
               <div className="space-y-6">
-                <div className="flex items-start space-x-4 border-l-2 border-gold-500 pl-4">
+                <div className="flex items-start space-x-4 border-l-4 border-amber-500 pl-4">
                   <div>
-                    <h4 className="font-mono text-xs text-gold-400 uppercase tracking-widest">
+                    <h4 className="font-mono text-xs sm:text-sm text-amber-400 uppercase tracking-wider font-bold">
                       {lang === 'pt' ? 'Localização Central SADC' : 'Strategic SADC Central Hub'}
                     </h4>
-                    <p className="text-xs text-gray-300 mt-1">
+                    <p className="text-xs sm:text-sm text-slate-200 mt-1 leading-relaxed">
                       {lang === 'pt' ? 'Tete faz fronteira com Malawi, Zimbábue e Zâmbia. É a porta de entrada lógica para o comércio regional da África Central e Austral.' : 'Tete shares land boundaries with Malawi, Zimbabwe, and Zambia, offering logical ingress to inland trade.'}
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-start space-x-4 border-l-2 border-gold-500 pl-4">
+                <div className="flex items-start space-x-4 border-l-4 border-amber-500 pl-4">
                   <div>
-                    <h4 className="font-mono text-xs text-gold-400 uppercase tracking-widest">
+                    <h4 className="font-mono text-xs sm:text-sm text-amber-400 uppercase tracking-wider font-bold">
                       {lang === 'pt' ? 'O Corredor do Zambeze' : 'The Zambezi River Lifeline'}
                     </h4>
-                    <p className="text-xs text-gray-300 mt-1">
+                    <p className="text-xs sm:text-sm text-slate-200 mt-1 leading-relaxed">
                       {lang === 'pt' ? 'Mais do que uma bacia hídrica comercial, fornece irrigação contínua para agronegócio de alta produtividade e geração massiva de energia limpa.' : 'More than a waterway, it offers secure commercial water irrigation and massive clean hydroelectric power generation.'}
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-start space-x-4 border-l-2 border-gold-500 pl-4">
+                <div className="flex items-start space-x-4 border-l-4 border-amber-500 pl-4">
                   <div>
-                    <h4 className="font-mono text-xs text-gold-400 uppercase tracking-widest">
+                    <h4 className="font-mono text-xs sm:text-sm text-amber-400 uppercase tracking-wider font-bold">
                       {lang === 'pt' ? 'Riqueza Mineral de Classe Mundial' : 'World-Class Mineral Endowment'}
                     </h4>
-                    <p className="text-xs text-gray-300 mt-1">
+                    <p className="text-xs sm:text-sm text-slate-200 mt-1 leading-relaxed">
                       {lang === 'pt' ? 'Contém algumas das maiores reservas de carvão de alta qualidade do mundo, juntamente com minerais industriais críticos como cobre, ferro, fosfato e calcário.' : 'Boasts some of the largest metallurgical coal reserves on earth, alongside critical minerals like copper and iron.'}
                     </p>
                   </div>
@@ -144,9 +144,9 @@ export default function About({ lang }: AboutProps) {
               </div>
 
               {/* Small stamp at bottom */}
-              <div className="mt-8 pt-6 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-gray-400">
-                <span>{lang === 'pt' ? 'Investe em Tete' : 'Invest in Tete'}</span>
-                <span className="text-gold-500">CIIT 2026</span>
+              <div className="mt-8 pt-6 border-t border-white/20 flex items-center justify-between text-xs font-mono text-slate-300">
+                <span className="font-semibold">{lang === 'pt' ? 'Investe em Tete' : 'Invest in Tete'}</span>
+                <span className="text-amber-400 font-bold">CIIT 2026</span>
               </div>
             </div>
           </div>

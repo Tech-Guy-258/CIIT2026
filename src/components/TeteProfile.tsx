@@ -441,88 +441,88 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
     : attractions.filter(a => a.category === filterType);
 
   return (
-    <section id="tete-profile" className="py-20 bg-neutral-900 text-white relative border-b border-gold-600/20 overflow-hidden">
+    <section id="tete-profile" className="py-20 bg-slate-50 text-slate-900 relative border-b border-slate-200 overflow-hidden">
       {/* Background Decorative Pattern */}
-      <div className="absolute inset-0 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:32px_32px] opacity-5 pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(#d97706_1px,transparent_1px)] [background-size:32px_32px] opacity-10 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <div className="inline-flex items-center space-x-2 bg-gold-500/10 border border-gold-500/30 px-4 py-1.5 rounded-none mb-4">
-            <Sparkles className="w-4 h-4 text-gold-400" />
-            <span className="text-[10px] font-mono text-gold-300 font-bold uppercase tracking-widest">
+          <div className="inline-flex items-center space-x-2 bg-amber-100 border border-amber-300 px-4 py-1.5 rounded-none mb-4 shadow-xs">
+            <Sparkles className="w-4 h-4 text-amber-700" />
+            <span className="text-xs font-mono text-amber-950 font-black uppercase tracking-widest">
               {lang === 'pt' ? 'Perfil Oficial da Província' : 'Official Province Profile'}
             </span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-light uppercase tracking-wider text-white">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold uppercase tracking-wider text-slate-950">
             {lang === 'pt' ? 'Província de Tete' : 'Tete Province'}
           </h2>
 
-          <p className="text-gray-400 text-sm md:text-base mt-3 font-light leading-relaxed">
+          <p className="text-slate-700 text-base md:text-lg mt-3 font-normal leading-relaxed">
             {lang === 'pt'
               ? 'Conheça os dados demográficos, divisão geográfica, riqueza económica e os pontos turísticos imperdíveis da "Capital da Energia" de Moçambique.'
               : 'Discover demography, geography, economic prowess, and must-visit tourist attractions in Mozambique\'s Energy Capital.'}
           </p>
 
-          <div className="w-20 h-[2px] bg-gold-500 mx-auto mt-5" />
+          <div className="w-20 h-1 bg-amber-500 mx-auto mt-5" />
         </div>
 
         {/* Quick Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-12">
-          <div className="bg-corporate-950/80 border border-white/10 p-4 rounded-none text-center hover:border-gold-500/40 transition-colors">
-            <MapPin className="w-5 h-5 text-gold-400 mx-auto mb-1.5" />
-            <span className="text-[9px] font-mono text-gray-400 uppercase tracking-widest block">{lang === 'pt' ? 'Área Territorial' : 'Territorial Area'}</span>
-            <span className="text-base font-display font-bold text-white block mt-0.5">100.724 km²</span>
-            <span className="text-[9px] text-gray-500 block mt-0.5">Wiki / INE</span>
+          <div className="bg-white border-2 border-slate-200 p-4 rounded-none text-center shadow-xs hover:border-amber-500 transition-colors">
+            <MapPin className="w-6 h-6 text-amber-600 mx-auto mb-1.5" />
+            <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest font-bold block">{lang === 'pt' ? 'Área Territorial' : 'Territorial Area'}</span>
+            <span className="text-lg font-display font-black text-slate-900 block mt-0.5">100.724 km²</span>
+            <span className="text-[10px] text-slate-500 font-medium block mt-0.5">Wiki / INE</span>
           </div>
 
-          <div className="bg-corporate-950/80 border border-white/10 p-4 rounded-none text-center hover:border-gold-500/40 transition-colors">
-            <Users className="w-5 h-5 text-gold-400 mx-auto mb-1.5" />
-            <span className="text-[9px] font-mono text-gray-400 uppercase tracking-widest block">{lang === 'pt' ? 'População Est.' : 'Est. Population'}</span>
-            <span className="text-base font-display font-bold text-white block mt-0.5">{lang === 'pt' ? '~2.76 Milhões' : '~2.76 Million'}</span>
-            <span className="text-[9px] text-gray-500 block mt-0.5">{lang === 'pt' ? 'Habitantes' : 'Inhabitants'}</span>
+          <div className="bg-white border-2 border-slate-200 p-4 rounded-none text-center shadow-xs hover:border-amber-500 transition-colors">
+            <Users className="w-6 h-6 text-amber-600 mx-auto mb-1.5" />
+            <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest font-bold block">{lang === 'pt' ? 'População Est.' : 'Est. Population'}</span>
+            <span className="text-lg font-display font-black text-slate-900 block mt-0.5">{lang === 'pt' ? '~2.76 Milhões' : '~2.76 Million'}</span>
+            <span className="text-[10px] text-slate-500 font-medium block mt-0.5">{lang === 'pt' ? 'Habitantes' : 'Inhabitants'}</span>
           </div>
 
-          <div className="bg-corporate-950/80 border border-white/10 p-4 rounded-none text-center hover:border-gold-500/40 transition-colors">
-            <Building2 className="w-5 h-5 text-gold-400 mx-auto mb-1.5" />
-            <span className="text-[9px] font-mono text-gray-400 uppercase tracking-widest block">{lang === 'pt' ? 'Capital' : 'Capital'}</span>
-            <span className="text-base font-display font-bold text-white block mt-0.5">{lang === 'pt' ? 'Cidade de Tete' : 'Tete City'}</span>
-            <span className="text-[9px] text-gray-500 block mt-0.5">{lang === 'pt' ? 'Margens do Zambeze' : 'Zambezi Banks'}</span>
+          <div className="bg-white border-2 border-slate-200 p-4 rounded-none text-center shadow-xs hover:border-amber-500 transition-colors">
+            <Building2 className="w-6 h-6 text-amber-600 mx-auto mb-1.5" />
+            <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest font-bold block">{lang === 'pt' ? 'Capital' : 'Capital'}</span>
+            <span className="text-lg font-display font-black text-slate-900 block mt-0.5">{lang === 'pt' ? 'Cidade de Tete' : 'Tete City'}</span>
+            <span className="text-[10px] text-slate-500 font-medium block mt-0.5">{lang === 'pt' ? 'Margens do Zambeze' : 'Zambezi Banks'}</span>
           </div>
 
-          <div className="bg-corporate-950/80 border border-white/10 p-4 rounded-none text-center hover:border-gold-500/40 transition-colors">
-            <Sun className="w-5 h-5 text-gold-400 mx-auto mb-1.5" />
-            <span className="text-[9px] font-mono text-gray-400 uppercase tracking-widest block">{lang === 'pt' ? 'Clima Predominante' : 'Climate'}</span>
-            <span className="text-base font-display font-bold text-white block mt-0.5">{lang === 'pt' ? 'Tropical Seco' : 'Tropical Dry'}</span>
-            <span className="text-[9px] text-gray-500 block mt-0.5">{lang === 'pt' ? 'Calor & Sol constante' : 'Warm & Sunny'}</span>
+          <div className="bg-white border-2 border-slate-200 p-4 rounded-none text-center shadow-xs hover:border-amber-500 transition-colors">
+            <Sun className="w-6 h-6 text-amber-600 mx-auto mb-1.5" />
+            <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest font-bold block">{lang === 'pt' ? 'Clima Predominante' : 'Climate'}</span>
+            <span className="text-lg font-display font-black text-slate-900 block mt-0.5">{lang === 'pt' ? 'Tropical Seco' : 'Tropical Dry'}</span>
+            <span className="text-[10px] text-slate-500 font-medium block mt-0.5">{lang === 'pt' ? 'Calor & Sol constante' : 'Warm & Sunny'}</span>
           </div>
 
-          <div className="bg-corporate-950/80 border border-white/10 p-4 rounded-none text-center hover:border-gold-500/40 transition-colors">
-            <Layers className="w-5 h-5 text-gold-400 mx-auto mb-1.5" />
-            <span className="text-[9px] font-mono text-gray-400 uppercase tracking-widest block">{lang === 'pt' ? 'Divisão' : 'Division'}</span>
-            <span className="text-base font-display font-bold text-white block mt-0.5">{lang === 'pt' ? '15 Distritos' : '15 Districts'}</span>
-            <span className="text-[9px] text-gray-500 block mt-0.5">{lang === 'pt' ? 'Municípios & Vilas' : 'Municipalities & Towns'}</span>
+          <div className="bg-white border-2 border-slate-200 p-4 rounded-none text-center shadow-xs hover:border-amber-500 transition-colors">
+            <Layers className="w-6 h-6 text-amber-600 mx-auto mb-1.5" />
+            <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest font-bold block">{lang === 'pt' ? 'Divisão' : 'Division'}</span>
+            <span className="text-lg font-display font-black text-slate-900 block mt-0.5">{lang === 'pt' ? '15 Distritos' : '15 Districts'}</span>
+            <span className="text-[10px] text-slate-500 font-medium block mt-0.5">{lang === 'pt' ? 'Municípios & Vilas' : 'Municipalities & Towns'}</span>
           </div>
 
-          <div className="bg-corporate-950/80 border border-white/10 p-4 rounded-none text-center hover:border-gold-500/40 transition-colors">
-            <Award className="w-5 h-5 text-gold-400 mx-auto mb-1.5" />
-            <span className="text-[9px] font-mono text-gray-400 uppercase tracking-widest block">{lang === 'pt' ? 'Especialidade' : 'Specialty'}</span>
-            <span className="text-base font-display font-bold text-gold-400 block mt-0.5">{lang === 'pt' ? 'Cabrito & Energia' : 'Goat Meat & Energy'}</span>
-            <span className="text-[9px] text-gray-500 block mt-0.5">{lang === 'pt' ? 'Marca de Origem' : 'Origin Designation'}</span>
+          <div className="bg-white border-2 border-slate-200 p-4 rounded-none text-center shadow-xs hover:border-amber-500 transition-colors">
+            <Award className="w-6 h-6 text-amber-600 mx-auto mb-1.5" />
+            <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest font-bold block">{lang === 'pt' ? 'Especialidade' : 'Specialty'}</span>
+            <span className="text-lg font-display font-black text-amber-700 block mt-0.5">{lang === 'pt' ? 'Cabrito & Energia' : 'Goat Meat & Energy'}</span>
+            <span className="text-[10px] text-slate-500 font-medium block mt-0.5">{lang === 'pt' ? 'Marca de Origem' : 'Origin Designation'}</span>
           </div>
         </div>
 
         {/* Tab Navigation Controls */}
-        <div className="flex flex-wrap items-center justify-center gap-2 mb-10 border-b border-white/10 pb-4">
+        <div className="flex flex-wrap items-center justify-center gap-2 mb-10 border-b border-slate-200 pb-4">
           <button
             id="tab-btn-attractions"
             onClick={() => setActiveTab('attractions')}
-            className={`px-5 py-2.5 text-xs font-bold uppercase tracking-widest transition-all cursor-pointer border flex items-center space-x-2 ${
+            className={`px-5 py-3 text-xs sm:text-sm font-bold uppercase tracking-wider transition-all cursor-pointer border flex items-center space-x-2 shadow-xs ${
               activeTab === 'attractions'
-                ? 'bg-gold-500 text-corporate-950 border-gold-500'
-                : 'bg-corporate-950/80 text-gray-300 border-white/10 hover:border-gold-500/50'
+                ? 'bg-amber-500 text-slate-950 border-amber-600 font-black'
+                : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100 hover:text-slate-900'
             }`}
           >
             <Camera className="w-4 h-4" />
@@ -532,10 +532,10 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
           <button
             id="tab-btn-geography"
             onClick={() => setActiveTab('geography')}
-            className={`px-5 py-2.5 text-xs font-bold uppercase tracking-widest transition-all cursor-pointer border flex items-center space-x-2 ${
+            className={`px-5 py-3 text-xs sm:text-sm font-bold uppercase tracking-wider transition-all cursor-pointer border flex items-center space-x-2 shadow-xs ${
               activeTab === 'geography'
-                ? 'bg-gold-500 text-corporate-950 border-gold-500'
-                : 'bg-corporate-950/80 text-gray-300 border-white/10 hover:border-gold-500/50'
+                ? 'bg-amber-500 text-slate-950 border-amber-600 font-black'
+                : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100 hover:text-slate-900'
             }`}
           >
             <BookOpen className="w-4 h-4" />
@@ -545,10 +545,10 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
           <button
             id="tab-btn-districts"
             onClick={() => setActiveTab('districts')}
-            className={`px-5 py-2.5 text-xs font-bold uppercase tracking-widest transition-all cursor-pointer border flex items-center space-x-2 ${
+            className={`px-5 py-3 text-xs sm:text-sm font-bold uppercase tracking-wider transition-all cursor-pointer border flex items-center space-x-2 shadow-xs ${
               activeTab === 'districts'
-                ? 'bg-gold-500 text-corporate-950 border-gold-500'
-                : 'bg-corporate-950/80 text-gray-300 border-white/10 hover:border-gold-500/50'
+                ? 'bg-amber-500 text-slate-950 border-amber-600 font-black'
+                : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100 hover:text-slate-900'
             }`}
           >
             <Compass className="w-4 h-4" />
@@ -558,10 +558,10 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
           <button
             id="tab-btn-sources"
             onClick={() => setActiveTab('sources')}
-            className={`px-5 py-2.5 text-xs font-bold uppercase tracking-widest transition-all cursor-pointer border flex items-center space-x-2 ${
+            className={`px-5 py-3 text-xs sm:text-sm font-bold uppercase tracking-wider transition-all cursor-pointer border flex items-center space-x-2 shadow-xs ${
               activeTab === 'sources'
-                ? 'bg-gold-500 text-corporate-950 border-gold-500'
-                : 'bg-corporate-950/80 text-gray-300 border-white/10 hover:border-gold-500/50'
+                ? 'bg-amber-500 text-slate-950 border-amber-600 font-black'
+                : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100 hover:text-slate-900'
             }`}
           >
             <Info className="w-4 h-4" />
@@ -573,9 +573,9 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
         {activeTab === 'attractions' && (
           <div className="space-y-8 animate-fade-in">
             {/* Filter Pills */}
-            <div className="flex flex-wrap items-center justify-between gap-4 bg-corporate-950/60 p-4 border border-white/5">
-              <span className="text-xs font-mono text-gold-400 font-bold uppercase tracking-wider flex items-center space-x-1.5">
-                <Compass className="w-4 h-4" />
+            <div className="flex flex-wrap items-center justify-between gap-4 bg-white p-4 border border-slate-200 shadow-xs">
+              <span className="text-xs font-mono text-slate-900 font-bold uppercase tracking-wider flex items-center space-x-1.5">
+                <Compass className="w-4 h-4 text-amber-600" />
                 <span>{lang === 'pt' ? 'Guia de Atrações Visit Mozambique:' : 'Visit Mozambique Attractions:'}</span>
               </span>
 
@@ -596,10 +596,10 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
                       setFilterType(f.id);
                       setIsExpanded(false);
                     }}
-                    className={`px-3 py-1 text-[10px] uppercase font-mono tracking-wider transition-colors cursor-pointer border ${
+                    className={`px-3 py-1.5 text-xs uppercase font-mono tracking-wider transition-colors cursor-pointer border font-bold ${
                       filterType === f.id
-                        ? 'bg-gold-500/20 text-gold-300 border-gold-500/50 font-bold'
-                        : 'bg-white/5 text-gray-400 border-white/10 hover:text-white'
+                        ? 'bg-amber-500 text-slate-950 border-amber-600'
+                        : 'bg-slate-50 text-slate-700 border-slate-300 hover:bg-slate-100 hover:text-slate-950'
                     }`}
                   >
                     {f.label}
@@ -613,12 +613,12 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
               {(isExpanded ? filteredAttractions : filteredAttractions.slice(0, 3)).map((item, index) => (
                 <div
                   key={item.id}
-                  className={`bg-corporate-950 border border-white/10 hover:border-gold-500/40 transition-all flex-col group overflow-hidden ${
+                  className={`bg-white border-2 border-slate-200 hover:border-amber-500 shadow-xs hover:shadow-md transition-all flex-col group overflow-hidden ${
                     !isExpanded && index > 0 ? 'hidden md:flex' : 'flex'
                   }`}
                 >
                   {/* Card Image */}
-                  <div className="relative aspect-video overflow-hidden bg-corporate-900">
+                  <div className="relative aspect-video overflow-hidden bg-slate-100">
                     <img
                       src={item.image}
                       alt={item.title}
@@ -628,7 +628,7 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
                         e.currentTarget.src = 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=800';
                       }}
                     />
-                    <div className="absolute top-3 left-3 bg-corporate-950/90 backdrop-blur-sm px-2.5 py-1 border border-gold-500/30 text-gold-400 text-[10px] font-mono font-bold uppercase">
+                    <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-sm px-3 py-1 border border-slate-300 text-slate-900 text-xs font-mono font-bold uppercase shadow-xs">
                       {item.categoryLabel}
                     </div>
                   </div>
@@ -636,28 +636,28 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
                   {/* Card Body */}
                   <div className="p-6 flex flex-col flex-grow justify-between space-y-4">
                     <div>
-                      <div className="flex items-center space-x-1.5 text-xs text-gold-400 font-mono mb-2">
+                      <div className="flex items-center space-x-1.5 text-xs text-amber-700 font-mono font-bold mb-2">
                         <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
                         <span>{item.location}</span>
                       </div>
 
-                      <h3 className="text-xl font-display font-light text-white tracking-wide group-hover:text-gold-400 transition-colors">
+                      <h3 className="text-xl font-display font-bold text-slate-950 tracking-wide group-hover:text-amber-700 transition-colors">
                         {item.title}
                       </h3>
 
-                      <p className="text-gray-400 text-xs mt-2 leading-relaxed font-light">
+                      <p className="text-slate-700 text-sm mt-2 leading-relaxed font-normal">
                         {item.description}
                       </p>
                     </div>
 
                     {/* Highlights bullet points */}
-                    <div className="pt-3 border-t border-white/10 space-y-1.5">
-                      <span className="text-[10px] font-mono text-gray-400 uppercase tracking-widest block mb-1">
+                    <div className="pt-3 border-t border-slate-200 space-y-2">
+                      <span className="text-xs font-mono text-slate-500 uppercase tracking-wider font-bold block mb-1">
                         {lang === 'pt' ? 'Destaques da Visita:' : 'Visit Highlights:'}
                       </span>
                       {item.highlights.map((hl, i) => (
-                        <div key={i} className="flex items-center space-x-2 text-[11px] text-gray-300">
-                          <CheckCircle2 className="w-3 h-3 text-gold-500 flex-shrink-0" />
+                        <div key={i} className="flex items-center space-x-2 text-xs sm:text-sm text-slate-800 font-medium">
+                          <CheckCircle2 className="w-4 h-4 text-amber-600 flex-shrink-0" />
                           <span>{hl}</span>
                         </div>
                       ))}
@@ -673,7 +673,7 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
                 <button
                   id="btn-toggle-attractions-expand"
                   onClick={() => setIsExpanded(!isExpanded)}
-                  className="group relative inline-flex items-center space-x-3 px-8 py-3.5 bg-gradient-to-r from-corporate-900 via-corporate-950 to-corporate-900 border border-gold-500/40 hover:border-gold-400 text-gold-300 hover:text-white text-xs uppercase font-mono font-bold tracking-widest transition-all cursor-pointer shadow-lg hover:shadow-gold-500/10 active:scale-95"
+                  className="group relative inline-flex items-center space-x-3 px-8 py-3.5 bg-slate-900 hover:bg-slate-800 border border-slate-900 text-amber-400 hover:text-white text-xs sm:text-sm uppercase font-mono font-bold tracking-widest transition-all cursor-pointer shadow-md active:scale-95"
                 >
                   <span>
                     {isExpanded
@@ -683,13 +683,13 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
                           : `Show More (${filteredAttractions.length} Total Attractions)`)}
                   </span>
                   {isExpanded ? (
-                    <ChevronUp className="w-4 h-4 text-gold-400 group-hover:-translate-y-0.5 transition-transform" />
+                    <ChevronUp className="w-4 h-4 text-amber-400 group-hover:-translate-y-0.5 transition-transform" />
                   ) : (
-                    <ChevronDown className="w-4 h-4 text-gold-400 group-hover:translate-y-0.5 transition-transform" />
+                    <ChevronDown className="w-4 h-4 text-amber-400 group-hover:translate-y-0.5 transition-transform" />
                   )}
                 </button>
                 {!isExpanded && (
-                  <p className="text-[10px] font-mono text-gray-400 mt-2 tracking-wider uppercase text-center">
+                  <p className="text-xs font-mono text-slate-600 mt-2 tracking-wider uppercase text-center font-semibold">
                     {lang === 'pt'
                       ? `✦ A exibir 1 no telemóvel e 3 no computador do total de ${filteredAttractions.length} atrações`
                       : `✦ Displaying 1 on mobile and 3 on desktop out of ${filteredAttractions.length} total attractions`}
@@ -699,14 +699,14 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
             )}
 
             {/* Visit Mozambique Mention Banner */}
-            <div className="bg-gold-500/10 border border-gold-500/30 p-5 rounded-none flex flex-col sm:flex-row items-center justify-between gap-4 mt-8">
-              <div className="flex items-center space-x-3">
-                <Landmark className="w-6 h-6 text-gold-400 flex-shrink-0" />
+            <div className="bg-amber-100/90 border border-amber-300 p-5 sm:p-6 rounded-none flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 shadow-xs">
+              <div className="flex items-center space-x-3.5">
+                <Landmark className="w-7 h-7 text-amber-700 flex-shrink-0" />
                 <div>
-                  <h4 className="text-sm font-bold text-white uppercase tracking-wider">
+                  <h4 className="text-base font-bold text-slate-950 uppercase tracking-wider">
                     {lang === 'pt' ? 'Fonte Oficial dos Pontos Turísticos "Não Deixe de Visitar"' : 'Official Source for "Must-Visit" Tourist Attractions'}
                   </h4>
-                  <p className="text-xs text-gray-400 font-light mt-0.5">
+                  <p className="text-xs sm:text-sm text-slate-700 font-normal mt-0.5">
                     {lang === 'pt'
                       ? 'Informações e roteiros turísticos compilados diretamente do Portal Oficial de Turismo do Governo de Moçambique.'
                       : 'Tourism information and itineraries compiled directly from the Official Tourism Portal of the Government of Mozambique.'}
@@ -718,10 +718,10 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
                 href="https://www.visitmozambique.gov.mz/onde-ir/provincias/tete/"
                 target="_blank"
                 rel="noreferrer"
-                className="px-4 py-2 bg-gold-600 hover:bg-gold-500 text-corporate-950 font-bold uppercase text-[10px] tracking-widest flex items-center space-x-2 transition-colors flex-shrink-0"
+                className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-amber-400 hover:text-white font-bold uppercase text-xs tracking-widest flex items-center space-x-2 transition-colors flex-shrink-0 shadow-xs"
               >
                 <span>{lang === 'pt' ? 'Aceder Visit Mozambique' : 'Access Visit Mozambique'}</span>
-                <ExternalLink className="w-3.5 h-3.5" />
+                <ExternalLink className="w-4 h-4" />
               </a>
             </div>
           </div>
@@ -731,24 +731,24 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
         {activeTab === 'geography' && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-fade-in">
             {/* Geography & Boundaries */}
-            <div className="bg-corporate-950 border border-white/10 p-6 space-y-4">
-              <div className="flex items-center space-x-2 border-b border-gold-500/20 pb-3">
-                <MapPin className="w-5 h-5 text-gold-400" />
-                <h3 className="text-lg font-display font-light uppercase text-white tracking-wider">
+            <div className="bg-white border-2 border-slate-200 p-6 space-y-4 shadow-xs">
+              <div className="flex items-center space-x-2 border-b border-slate-200 pb-3">
+                <MapPin className="w-5 h-5 text-amber-600" />
+                <h3 className="text-lg font-display font-bold uppercase text-slate-950 tracking-wider">
                   {lang === 'pt' ? 'Localização & Geografia (Dados Wikipédia)' : 'Location & Geography (Wikipedia Data)'}
                 </h3>
               </div>
 
-              <p className="text-gray-300 text-xs md:text-sm leading-relaxed font-light">
+              <p className="text-slate-800 text-sm md:text-base leading-relaxed font-normal">
                 {lang === 'pt' ? (
-                  <>A <strong className="text-gold-400">Província de Tete</strong> situa-se no interior da região centro de Moçambique, cobrindo uma área de <strong>100.724 km²</strong>. É atravessada pelo majestoso Rio Zambeze, que a divide em duas regiões geográficas distintas.</>
+                  <>A <strong className="text-amber-800 font-bold">Província de Tete</strong> situa-se no interior da região centro de Moçambique, cobrindo uma área de <strong>100.724 km²</strong>. É atravessada pelo majestoso Rio Zambeze, que a divide em duas regiões geográficas distintas.</>
                 ) : (
-                  <>The <strong className="text-gold-400">Tete Province</strong> is located in central Mozambique, covering an area of <strong>100,724 km²</strong>. It is traversed by the majestic Zambezi River, dividing it into two distinct geographical regions.</>
+                  <>The <strong className="text-amber-800 font-bold">Tete Province</strong> is located in central Mozambique, covering an area of <strong>100,724 km²</strong>. It is traversed by the majestic Zambezi River, dividing it into two distinct geographical regions.</>
                 )}
               </p>
 
-              <div className="space-y-2 bg-corporate-900/60 p-4 border border-white/5 text-xs text-gray-300">
-                <h4 className="font-mono text-gold-400 uppercase tracking-wider font-bold mb-2">
+              <div className="space-y-2 bg-slate-50 p-4 border border-slate-200 text-sm text-slate-800">
+                <h4 className="font-mono text-amber-900 uppercase tracking-wider font-bold mb-2">
                   {lang === 'pt' ? 'Fronteiras Nacionais e Internacionais:' : 'National & International Borders:'}
                 </h4>
                 <ul className="space-y-1.5 list-disc list-inside">
@@ -759,7 +759,7 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
                 </ul>
               </div>
 
-              <p className="text-gray-300 text-xs md:text-sm leading-relaxed font-light">
+              <p className="text-slate-700 text-sm md:text-base leading-relaxed font-normal">
                 {lang === 'pt'
                   ? 'O clima é predominantemente tropical seco/semiárido ao longo do vale do Zambeze, com temperaturas elevadas durante a maior parte do ano, e mais ameno nas zonas planálticas de alta altitude como a Angónia e Tsangano.'
                   : 'The climate is predominantly dry tropical/semi-arid along the Zambezi valley, with warm temperatures year-round, and milder in high-altitude plateaus like Angónia and Tsangano.'}
@@ -767,48 +767,48 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
             </div>
 
             {/* Economy & Resources */}
-            <div className="bg-corporate-950 border border-white/10 p-6 space-y-4">
-              <div className="flex items-center space-x-2 border-b border-gold-500/20 pb-3">
-                <Award className="w-5 h-5 text-gold-400" />
-                <h3 className="text-lg font-display font-light uppercase text-white tracking-wider">
+            <div className="bg-white border-2 border-slate-200 p-6 space-y-4 shadow-xs">
+              <div className="flex items-center space-x-2 border-b border-slate-200 pb-3">
+                <Award className="w-5 h-5 text-amber-600" />
+                <h3 className="text-lg font-display font-bold uppercase text-slate-950 tracking-wider">
                   {lang === 'pt' ? 'Economia & Potencial de Tete (Dados Wikipédia)' : 'Economy & Potential of Tete (Wikipedia Data)'}
                 </h3>
               </div>
 
-              <p className="text-gray-300 text-xs md:text-sm leading-relaxed font-light">
+              <p className="text-slate-800 text-sm md:text-base leading-relaxed font-normal">
                 {lang === 'pt'
                   ? 'A economia de Tete destaca-se no cenário nacional e internacional por integrar alguns dos maiores megaprojetos industriais e energéticos do continente africano:'
                   : 'Tete\'s economy stands out nationally and internationally by hosting major industrial and energy megaprojects on the African continent:'}
               </p>
 
               <div className="space-y-3">
-                <div className="bg-corporate-900/60 p-3.5 border border-white/5">
-                  <span className="text-xs font-bold text-gold-400 uppercase tracking-wider block">
+                <div className="bg-slate-50 p-4 border border-slate-200">
+                  <span className="text-sm font-bold text-amber-800 uppercase tracking-wider block">
                     {lang === 'pt' ? '⚡ Potência Energética de Cahora Bassa' : '⚡ Cahora Bassa Power Powerhouse'}
                   </span>
-                  <p className="text-[11px] text-gray-400 mt-1">
+                  <p className="text-xs sm:text-sm text-slate-700 mt-1 leading-relaxed">
                     {lang === 'pt'
                       ? 'Sede da Hidroeléctrica de Cahora Bassa (HCB), com capacidade instalada de 2.075 MW, abastecendo Moçambique e exportando eletricidade para África do Sul e Zimbábue.'
                       : 'Home to the Cahora Bassa Hydroelectric plant (HCB), with an installed capacity of 2,075 MW, powering Mozambique and exporting electricity to South Africa and Zimbabwe.'}
                   </p>
                 </div>
 
-                <div className="bg-corporate-900/60 p-3.5 border border-white/5">
-                  <span className="text-xs font-bold text-gold-400 uppercase tracking-wider block">
+                <div className="bg-slate-50 p-4 border border-slate-200">
+                  <span className="text-sm font-bold text-amber-800 uppercase tracking-wider block">
                     {lang === 'pt' ? '⛏️ Bacia Carbonífera de Moatize' : '⛏️ Moatize Coal Basin'}
                   </span>
-                  <p className="text-[11px] text-gray-400 mt-1">
+                  <p className="text-xs sm:text-sm text-slate-700 mt-1 leading-relaxed">
                     {lang === 'pt'
                       ? 'Alberga uma das maiores reservas mundiais de carvão mineral (coke e térmico), ligada por corredores férreos aos portos oceânicos da Beira e Nacala.'
                       : 'Hosts vast coal mineral reserves (coking and thermal), connected by heavy-haul railways to deepwater ports in Beira and Nacala.'}
                   </p>
                 </div>
 
-                <div className="bg-corporate-900/60 p-3.5 border border-white/5">
-                  <span className="text-xs font-bold text-gold-400 uppercase tracking-wider block">
+                <div className="bg-slate-50 p-4 border border-slate-200">
+                  <span className="text-sm font-bold text-amber-800 uppercase tracking-wider block">
                     {lang === 'pt' ? '🐐 Pecuária & Agronegócio Tradicional' : '🐐 Livestock & Traditional Agribusiness'}
                   </span>
-                  <p className="text-[11px] text-gray-400 mt-1">
+                  <p className="text-xs sm:text-sm text-slate-700 mt-1 leading-relaxed">
                     {lang === 'pt'
                       ? 'Referência na criação de gado caprino (Cabrito de Tete), bovino, produção de tabaco, milho, feijão e fruteiras cítricas.'
                       : 'Renowned for goat farming (Tete Goat), cattle livestock, tobacco cultivation, corn, beans, and citrus fruits.'}
@@ -822,12 +822,12 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
         {/* TAB 3: THE 15 DISTRICTS */}
         {activeTab === 'districts' && (
           <div className="space-y-6 animate-fade-in">
-            <div className="bg-corporate-950 border border-white/10 p-5">
-              <h3 className="text-lg font-display font-light text-white uppercase tracking-wider flex items-center space-x-2">
-                <Compass className="w-5 h-5 text-gold-400" />
+            <div className="bg-white border-2 border-slate-200 p-5 shadow-xs">
+              <h3 className="text-lg font-display font-bold text-slate-950 uppercase tracking-wider flex items-center space-x-2">
+                <Compass className="w-5 h-5 text-amber-600" />
                 <span>{lang === 'pt' ? 'Divisão Administrativa: Os 15 Distritos da Província de Tete' : 'Administrative Division: The 15 Districts of Tete Province'}</span>
               </h3>
-              <p className="text-xs text-gray-400 font-light mt-1">
+              <p className="text-xs sm:text-sm text-slate-700 font-normal mt-1">
                 {lang === 'pt'
                   ? 'Conforme documentado pela Wikipédia e pelo Instituto Nacional de Estatística de Moçambique.'
                   : 'As documented by Wikipedia and Mozambique\'s National Institute of Statistics.'}
@@ -836,12 +836,12 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {districtsList.map((d, i) => (
-                <div key={i} className="bg-corporate-950 border border-white/10 p-4 hover:border-gold-500/40 transition-colors">
-                  <div className="flex items-center justify-between border-b border-white/10 pb-2 mb-2">
-                    <span className="text-sm font-bold text-gold-400">{d.name}</span>
-                    <span className="text-[9px] font-mono text-gray-400 uppercase bg-white/5 px-2 py-0.5">{d.capital}</span>
+                <div key={i} className="bg-white border-2 border-slate-200 p-4 shadow-xs hover:border-amber-500 transition-colors">
+                  <div className="flex items-center justify-between border-b border-slate-200 pb-2 mb-2">
+                    <span className="text-sm font-bold text-slate-950">{d.name}</span>
+                    <span className="text-xs font-mono text-amber-900 font-bold uppercase bg-amber-100 px-2 py-0.5">{d.capital}</span>
                   </div>
-                  <p className="text-[11px] text-gray-300 font-light leading-relaxed">
+                  <p className="text-xs sm:text-sm text-slate-700 font-normal leading-relaxed">
                     {d.detail}
                   </p>
                 </div>
@@ -852,14 +852,14 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
 
         {/* TAB 4: OFFICIAL SOURCES MENTION */}
         {activeTab === 'sources' && (
-          <div className="max-w-4xl mx-auto bg-corporate-950 border border-gold-600/30 p-8 space-y-6 animate-fade-in">
-            <div className="flex items-center space-x-3 border-b border-gold-500/20 pb-4">
-              <Info className="w-6 h-6 text-gold-400 flex-shrink-0" />
+          <div className="max-w-4xl mx-auto bg-white border-2 border-amber-300 p-8 space-y-6 animate-fade-in shadow-md">
+            <div className="flex items-center space-x-3 border-b border-slate-200 pb-4">
+              <Info className="w-7 h-7 text-amber-600 flex-shrink-0" />
               <div>
-                <h3 className="text-xl font-display font-light text-white uppercase tracking-wider">
+                <h3 className="text-xl font-display font-bold text-slate-950 uppercase tracking-wider">
                   {lang === 'pt' ? 'Declaração de Transparência & Fontes das Informações' : 'Transparency Statement & Sources of Information'}
                 </h3>
-                <p className="text-xs text-gray-400 font-light mt-0.5">
+                <p className="text-xs sm:text-sm text-slate-700 font-normal mt-0.5">
                   {lang === 'pt'
                     ? 'Conforme solicitado, todos os dados estatísticos, demográficos, geográficos e turísticos apresentados neste espaço foram rigorosamente extraídos e compilados das fontes oficiais abaixo.'
                     : 'All statistical, demographic, geographical, and tourist information presented in this section has been compiled from official public citations below.'}
@@ -869,20 +869,20 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
 
             <div className="space-y-4">
               {/* Source 1: Wikipedia */}
-              <div className="bg-corporate-900/80 border border-white/10 p-5 flex flex-col sm:flex-row items-start justify-between gap-4">
+              <div className="bg-slate-50 border border-slate-200 p-5 flex flex-col sm:flex-row items-start justify-between gap-4">
                 <div className="space-y-1">
                   <div className="flex items-center space-x-2">
-                    <BookOpen className="w-4 h-4 text-gold-400" />
-                    <span className="text-sm font-bold text-white uppercase tracking-wider">
+                    <BookOpen className="w-4 h-4 text-amber-600" />
+                    <span className="text-sm font-bold text-slate-950 uppercase tracking-wider">
                       {lang === 'pt' ? '1. Wikipédia em Português' : '1. Wikipedia (Portuguese)'}
                     </span>
                   </div>
-                  <p className="text-xs text-gray-300 font-light">
+                  <p className="text-xs sm:text-sm text-slate-700 font-normal leading-relaxed">
                     {lang === 'pt'
                       ? 'Artigo principal sobre a Província de Tete: Dados de área (100.724 km²), limites geográficos, rios, história, demografia e lista completa dos 15 distritos administrativos.'
                       : 'Main article on Tete Province: Area data (100,724 km²), geographical boundaries, rivers, history, demography, and complete list of the 15 administrative districts.'}
                   </p>
-                  <span className="text-[10px] font-mono text-gold-400 block pt-1">
+                  <span className="text-xs font-mono text-amber-800 font-bold block pt-1">
                     URL: https://pt.wikipedia.org/wiki/Tete_(prov%C3%ADncia)
                   </span>
                 </div>
@@ -891,7 +891,7 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
                   href="https://pt.wikipedia.org/wiki/Tete_(prov%C3%ADncia)"
                   target="_blank"
                   rel="noreferrer"
-                  className="px-4 py-2 bg-white/10 hover:bg-gold-500 hover:text-corporate-950 text-white font-bold uppercase text-[10px] tracking-widest flex items-center space-x-1.5 transition-colors flex-shrink-0 cursor-pointer"
+                  className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold uppercase text-xs tracking-wider flex items-center space-x-1.5 transition-colors flex-shrink-0 cursor-pointer shadow-xs"
                 >
                   <span>{lang === 'pt' ? 'Abrir Wikipédia' : 'Open Wikipedia'}</span>
                   <ExternalLink className="w-3.5 h-3.5" />
@@ -899,20 +899,20 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
               </div>
 
               {/* Source 2: Visit Mozambique */}
-              <div className="bg-corporate-900/80 border border-white/10 p-5 flex flex-col sm:flex-row items-start justify-between gap-4">
+              <div className="bg-slate-50 border border-slate-200 p-5 flex flex-col sm:flex-row items-start justify-between gap-4">
                 <div className="space-y-1">
                   <div className="flex items-center space-x-2">
-                    <Compass className="w-4 h-4 text-gold-400" />
-                    <span className="text-sm font-bold text-white uppercase tracking-wider">
+                    <Compass className="w-4 h-4 text-amber-600" />
+                    <span className="text-sm font-bold text-slate-950 uppercase tracking-wider">
                       {lang === 'pt' ? '2. Visit Mozambique (Portal Oficial de Turismo)' : '2. Visit Mozambique (Official Tourism Portal)'}
                     </span>
                   </div>
-                  <p className="text-xs text-gray-300 font-light">
+                  <p className="text-xs sm:text-sm text-slate-700 font-normal leading-relaxed">
                     {lang === 'pt'
                       ? 'Portal do Ministério da Cultura e Turismo de Moçambique: Guia de atrações "Não deixe de visitar" da Província de Tete (Cahora Bassa, Songo, Pontes sobre o Zambeze, Parque Nacional do Mágoè, Missão de Boroma, Zumbo e Gastronomia de Cabrito/Matemba).'
                       : 'Ministry of Culture and Tourism of Mozambique portal: "Must-Visit" attraction guide for Tete Province (Cahora Bassa, Songo, Zambezi Bridges, Mágoè National Park, Boroma Mission, Zumbo, and Local Cuisine).'}
                   </p>
-                  <span className="text-[10px] font-mono text-gold-400 block pt-1">
+                  <span className="text-xs font-mono text-amber-800 font-bold block pt-1">
                     URL: https://www.visitmozambique.gov.mz/onde-ir/provincias/tete/
                   </span>
                 </div>
@@ -921,7 +921,7 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
                   href="https://www.visitmozambique.gov.mz/onde-ir/provincias/tete/"
                   target="_blank"
                   rel="noreferrer"
-                  className="px-4 py-2 bg-white/10 hover:bg-gold-500 hover:text-corporate-950 text-white font-bold uppercase text-[10px] tracking-widest flex items-center space-x-1.5 transition-colors flex-shrink-0 cursor-pointer"
+                  className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold uppercase text-xs tracking-wider flex items-center space-x-1.5 transition-colors flex-shrink-0 cursor-pointer shadow-xs"
                 >
                   <span>{lang === 'pt' ? 'Abrir Visit Mozambique' : 'Open Visit Mozambique'}</span>
                   <ExternalLink className="w-3.5 h-3.5" />
@@ -929,7 +929,7 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
               </div>
             </div>
 
-            <div className="text-center pt-2 text-[11px] text-gray-500 italic">
+            <div className="text-center pt-2 text-xs text-slate-600 font-medium italic">
               {lang === 'pt'
                 ? 'Governo da Província de Tete • Conferência Internacional de Investimentos de Tete (CIIT2026)'
                 : 'Government of Tete Province • International Conference on Tete Investments (CIIT2026)'}

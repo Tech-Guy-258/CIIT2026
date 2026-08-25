@@ -196,15 +196,15 @@ export default function BancoMocFinancialSuite({ lang }: BancoMocFinancialSuiteP
   return (
     <>
       {/* 1. TICKER CAROUSEL BAR (RIGHT AFTER HEADER NAVBAR) */}
-      <div className="bg-corporate-950 border-b border-gold-500/30 text-white overflow-hidden select-none relative z-30 shadow-xl">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex flex-col md:flex-row items-center justify-between gap-3">
+      <div className="bg-slate-100/95 border-b border-slate-200 text-slate-900 overflow-hidden select-none relative z-30 shadow-xs">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex flex-col md:flex-row items-center justify-between gap-2.5">
           
           {/* Label Badge */}
-          <div className="h-8 flex items-center space-x-2 flex-shrink-0 bg-gold-500/10 border border-gold-500/40 px-2.5 text-[10px] sm:text-xs font-mono tracking-wider text-gold-300 font-bold uppercase">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse flex-shrink-0"></span>
+          <div className="h-7 sm:h-8 flex items-center space-x-2 flex-shrink-0 bg-amber-100 border border-amber-300 px-2.5 text-[11px] sm:text-xs font-mono tracking-wider text-amber-900 font-bold uppercase">
+            <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse flex-shrink-0"></span>
             <span>{lang === 'pt' ? 'BANCO DE MOÇAMBIQUE' : 'BANK OF MOZAMBIQUE'}</span>
-            <span className="hidden sm:inline text-gray-400">|</span>
-            <span className="hidden sm:inline text-gray-300 font-normal">
+            <span className="hidden sm:inline text-slate-400">|</span>
+            <span className="hidden sm:inline text-slate-700 font-medium">
               {lang === 'pt' ? 'Câmbio Oficial MZN' : 'Official MZN Rates'}
             </span>
           </div>
@@ -216,14 +216,14 @@ export default function BancoMocFinancialSuite({ lang }: BancoMocFinancialSuiteP
             onMouseLeave={() => setIsPaused(false)}
           >
             <div
-              className={`flex items-center space-x-6 whitespace-nowrap ${
+              className={`flex items-center space-x-4 sm:space-x-6 whitespace-nowrap ${
                 isPaused ? '' : 'animate-marquee'
               }`}
             >
               {[...rates, ...rates].map((item, idx) => (
                 <div
                   key={`${item.code}-${idx}`}
-                  className="h-8 inline-flex items-center space-x-2 text-xs font-mono bg-white/5 border border-white/10 px-3 hover:border-gold-500/40 transition-colors cursor-pointer"
+                  className="h-7 sm:h-8 inline-flex items-center space-x-2 text-xs sm:text-[13px] font-mono bg-white border border-slate-300 px-3 hover:border-amber-500 shadow-xs transition-colors cursor-pointer"
                   onClick={() => {
                     setFromCurrency(item.code);
                     setToCurrency('MZN');
@@ -233,13 +233,13 @@ export default function BancoMocFinancialSuite({ lang }: BancoMocFinancialSuiteP
                   title={lang === 'pt' ? 'Clique para abrir no conversor' : 'Click to open in converter'}
                 >
                   <span className="text-base">{item.flag}</span>
-                  <span className="font-bold text-white">{item.code}/MZN</span>
-                  <span className="text-gray-300">
+                  <span className="font-bold text-slate-900">{item.code}/MZN</span>
+                  <span className="text-slate-800 font-semibold">
                     {item.mid.toFixed(2)}
                   </span>
                   <span
-                    className={`text-[10px] font-bold ${
-                      item.change24h >= 0 ? 'text-emerald-400' : 'text-rose-400'
+                    className={`text-[11px] font-bold ${
+                      item.change24h >= 0 ? 'text-emerald-700' : 'text-rose-700'
                     }`}
                   >
                     {item.change24h >= 0 ? `+${item.change24h}%` : `${item.change24h}%`}
@@ -250,21 +250,21 @@ export default function BancoMocFinancialSuite({ lang }: BancoMocFinancialSuiteP
           </div>
 
           {/* Action Quick Links & Controls */}
-          <div className="flex items-center space-x-2 flex-shrink-0 text-[11px] font-mono">
+          <div className="flex items-center space-x-2 flex-shrink-0 text-xs font-mono">
             <button
               id="btn-refresh-bm-rates"
               onClick={handleRefreshData}
               disabled={isRefreshing}
-              className="h-8 w-8 flex items-center justify-center bg-white/5 hover:bg-gold-500/20 border border-white/10 hover:border-gold-500/50 text-gray-300 hover:text-gold-300 transition-colors cursor-pointer flex-shrink-0"
+              className="h-7 sm:h-8 w-8 flex items-center justify-center bg-white hover:bg-amber-100 border border-slate-300 hover:border-amber-500 text-slate-700 hover:text-amber-900 transition-colors cursor-pointer flex-shrink-0 shadow-xs"
               title={lang === 'pt' ? 'Atualizar Cotações' : 'Refresh Rates'}
             >
-              <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-gold-400' : ''}`} />
+              <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-amber-600' : ''}`} />
             </button>
 
             <button
               id="btn-open-sidebar-market"
               onClick={() => setIsSidebarOpen(true)}
-              className="h-8 px-3.5 bg-gradient-to-r from-gold-600 to-gold-500 hover:from-gold-500 hover:to-gold-400 text-corporate-950 text-[11px] font-bold uppercase tracking-wider flex items-center space-x-2 transition-all shadow-md cursor-pointer whitespace-nowrap flex-shrink-0"
+              className="h-7 sm:h-8 px-3.5 bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-bold uppercase tracking-wider flex items-center space-x-2 transition-all shadow-xs cursor-pointer whitespace-nowrap flex-shrink-0"
             >
               <ArrowRightLeft className="w-3.5 h-3.5 flex-shrink-0" />
               <span>{lang === 'pt' ? 'Mercado & Conversor' : 'Market & Converter'}</span>
@@ -278,14 +278,14 @@ export default function BancoMocFinancialSuite({ lang }: BancoMocFinancialSuiteP
       <button
         id="btn-float-sidebar-toggle"
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        className="fixed right-0 top-1/2 -translate-y-1/2 z-40 bg-corporate-900 hover:bg-corporate-950 border-l-2 border-y border-gold-500 text-gold-300 hover:text-white px-2 py-4 shadow-2xl flex flex-col items-center space-y-2 cursor-pointer transition-all group hover:pr-3"
+        className="fixed right-0 top-1/2 -translate-y-1/2 z-40 bg-white hover:bg-slate-50 border-l-4 border-y border-amber-500 text-slate-900 px-2 py-4 shadow-xl flex flex-col items-center space-y-2 cursor-pointer transition-all group hover:pr-3"
         title={lang === 'pt' ? 'Abrir Mercado Financeiro & Conversor (Banco de Moçambique)' : 'Open Financial Market & Converter'}
       >
-        <Building2 className="w-4 h-4 text-gold-400 group-hover:scale-110 transition-transform" />
-        <span className="text-[10px] font-mono uppercase font-bold tracking-widest [writing-mode:vertical-lr] rotate-180 py-1 text-gold-200">
+        <Building2 className="w-4 h-4 text-amber-600 group-hover:scale-110 transition-transform" />
+        <span className="text-[11px] font-mono uppercase font-bold tracking-widest [writing-mode:vertical-lr] rotate-180 py-1 text-slate-800">
           {lang === 'pt' ? 'MERCADO FINANCEIRO BM' : 'BM FINANCIAL MARKET'}
         </span>
-        <ChevronRight className={`w-3.5 h-3.5 text-gold-400 transition-transform ${isSidebarOpen ? 'rotate-180' : ''}`} />
+        <ChevronRight className={`w-3.5 h-3.5 text-amber-600 transition-transform ${isSidebarOpen ? 'rotate-180' : ''}`} />
       </button>
 
       {/* 3. DEDICATED SLIDE-OVER SIDEBAR FOR FINANCIAL & MONETARY MARKET */}
@@ -293,25 +293,25 @@ export default function BancoMocFinancialSuite({ lang }: BancoMocFinancialSuiteP
         <div className="fixed inset-0 z-50 overflow-hidden">
           {/* Backdrop */}
           <div
-            className="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity animate-fade-in"
+            className="absolute inset-0 bg-slate-900/50 backdrop-blur-xs transition-opacity animate-fade-in"
             onClick={() => setIsSidebarOpen(false)}
           />
 
           <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
-            <div className="pointer-events-auto w-screen max-w-md sm:max-w-lg bg-corporate-950 border-l border-gold-500/40 text-white shadow-2xl flex flex-col justify-between overflow-y-auto animate-slide-in-right">
+            <div className="pointer-events-auto w-screen max-w-md sm:max-w-lg bg-white border-l border-slate-300 text-slate-900 shadow-2xl flex flex-col justify-between overflow-y-auto animate-slide-in-right">
               
               {/* Sidebar Header */}
-              <div className="p-5 bg-gradient-to-r from-corporate-950 via-corporate-900 to-corporate-950 border-b border-white/10 sticky top-0 z-20 backdrop-blur-md">
+              <div className="p-5 bg-slate-50 border-b border-slate-200 sticky top-0 z-20 backdrop-blur-md">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center space-x-2.5">
-                    <div className="p-2 bg-gold-500/20 text-gold-400 border border-gold-500/30">
+                    <div className="p-2 bg-amber-100 text-amber-900 border border-amber-300">
                       <Building2 className="w-5 h-5" />
                     </div>
                     <div>
-                      <h3 className="font-display text-lg font-light text-white tracking-wide">
+                      <h3 className="font-display text-lg font-bold text-slate-900 tracking-wide">
                         {lang === 'pt' ? 'Mercado Financeiro' : 'Financial Market'}
                       </h3>
-                      <p className="text-[10px] font-mono text-gold-400 uppercase tracking-wider">
+                      <p className="text-xs font-mono text-amber-800 uppercase tracking-wider font-bold">
                         {lang === 'pt' ? 'Banco de Moçambique (BM)' : 'Bank of Mozambique'}
                       </p>
                     </div>
@@ -319,47 +319,47 @@ export default function BancoMocFinancialSuite({ lang }: BancoMocFinancialSuiteP
 
                   <button
                     onClick={() => setIsSidebarOpen(false)}
-                    className="p-1.5 text-gray-400 hover:text-white bg-white/5 border border-white/10 hover:border-gold-500/50 cursor-pointer transition-colors"
+                    className="p-1.5 text-slate-600 hover:text-slate-900 bg-white border border-slate-300 hover:border-amber-500 cursor-pointer transition-colors"
                   >
                     <X className="w-5 h-5" />
                   </button>
                 </div>
 
                 {/* Sidebar Navigation Tabs */}
-                <div className="grid grid-cols-3 gap-1 bg-corporate-950 p-1 border border-white/10 text-[10px] font-mono uppercase font-bold">
+                <div className="grid grid-cols-3 gap-1 bg-slate-200 p-1 border border-slate-300 text-xs font-mono uppercase font-bold">
                   <button
                     onClick={() => setSidebarTab('converter')}
-                    className={`py-1.5 flex items-center justify-center space-x-1.5 transition-colors cursor-pointer ${
+                    className={`py-2 flex items-center justify-center space-x-1.5 transition-colors cursor-pointer ${
                       sidebarTab === 'converter'
-                        ? 'bg-gold-500/20 text-gold-300 border border-gold-500/50'
-                        : 'text-gray-400 hover:text-white'
+                        ? 'bg-amber-500 text-slate-950 shadow-xs'
+                        : 'text-slate-700 hover:bg-slate-300'
                     }`}
                   >
-                    <Calculator className="w-3 h-3" />
+                    <Calculator className="w-3.5 h-3.5" />
                     <span>{lang === 'pt' ? 'Conversor' : 'Converter'}</span>
                   </button>
 
                   <button
                     onClick={() => setSidebarTab('indicators')}
-                    className={`py-1.5 flex items-center justify-center space-x-1.5 transition-colors cursor-pointer ${
+                    className={`py-2 flex items-center justify-center space-x-1.5 transition-colors cursor-pointer ${
                       sidebarTab === 'indicators'
-                        ? 'bg-gold-500/20 text-gold-300 border border-gold-500/50'
-                        : 'text-gray-400 hover:text-white'
+                        ? 'bg-amber-500 text-slate-950 shadow-xs'
+                        : 'text-slate-700 hover:bg-slate-300'
                     }`}
                   >
-                    <Percent className="w-3 h-3" />
+                    <Percent className="w-3.5 h-3.5" />
                     <span>{lang === 'pt' ? 'Indicadores' : 'Rates & GDP'}</span>
                   </button>
 
                   <button
                     onClick={() => setSidebarTab('table')}
-                    className={`py-1.5 flex items-center justify-center space-x-1.5 transition-colors cursor-pointer ${
+                    className={`py-2 flex items-center justify-center space-x-1.5 transition-colors cursor-pointer ${
                       sidebarTab === 'table'
-                        ? 'bg-gold-500/20 text-gold-300 border border-gold-500/50'
-                        : 'text-gray-400 hover:text-white'
+                        ? 'bg-amber-500 text-slate-950 shadow-xs'
+                        : 'text-slate-700 hover:bg-slate-300'
                     }`}
                   >
-                    <Coins className="w-3 h-3" />
+                    <Coins className="w-3.5 h-3.5" />
                     <span>{lang === 'pt' ? 'Cotações' : 'Rates Table'}</span>
                   </button>
                 </div>
@@ -372,12 +372,12 @@ export default function BancoMocFinancialSuite({ lang }: BancoMocFinancialSuiteP
                 {sidebarTab === 'converter' && (
                   <div className="space-y-5 animate-fade-in">
                     
-                    <div className="bg-corporate-900 border border-gold-500/30 p-4">
+                    <div className="bg-slate-50 border border-slate-300 p-4 shadow-xs">
                       <div className="flex items-center justify-between mb-2">
-                        <label className="text-xs font-mono text-gray-300 uppercase font-bold">
+                        <label className="text-xs font-mono text-slate-800 uppercase font-bold">
                           {lang === 'pt' ? 'Montante a Converter:' : 'Amount to Convert:'}
                         </label>
-                        <span className="text-[10px] font-mono text-gold-400 font-bold">
+                        <span className="text-xs font-mono text-amber-800 font-bold">
                           {fromCurrency}
                         </span>
                       </div>
@@ -386,7 +386,7 @@ export default function BancoMocFinancialSuite({ lang }: BancoMocFinancialSuiteP
                         min="1"
                         value={amount || ''}
                         onChange={(e) => setAmount(parseFloat(e.target.value) || 0)}
-                        className="w-full bg-corporate-950 border border-white/20 focus:border-gold-500 px-3.5 py-2.5 text-lg font-mono font-bold text-white focus:outline-none"
+                        className="w-full bg-white border-2 border-slate-300 focus:border-amber-500 px-3.5 py-2.5 text-lg font-mono font-bold text-slate-900 focus:outline-none"
                         placeholder="1000"
                       />
                     </div>
@@ -394,13 +394,13 @@ export default function BancoMocFinancialSuite({ lang }: BancoMocFinancialSuiteP
                     {/* From/To Selection */}
                     <div className="grid grid-cols-11 gap-2 items-center">
                       <div className="col-span-5">
-                        <label className="block text-[10px] font-mono text-gray-400 mb-1 uppercase">
+                        <label className="block text-xs font-mono text-slate-700 mb-1 uppercase font-bold">
                           {lang === 'pt' ? 'De (Origem):' : 'From:'}
                         </label>
                         <select
                           value={fromCurrency}
                           onChange={(e) => setFromCurrency(e.target.value)}
-                          className="w-full bg-corporate-900 border border-white/20 focus:border-gold-500 p-2 text-xs font-mono font-bold text-white cursor-pointer"
+                          className="w-full bg-white border-2 border-slate-300 focus:border-amber-500 p-2 text-xs sm:text-sm font-mono font-bold text-slate-900 cursor-pointer"
                         >
                           <option value="MZN">🇲🇿 MZN</option>
                           {rates.map((r) => (
@@ -414,21 +414,21 @@ export default function BancoMocFinancialSuite({ lang }: BancoMocFinancialSuiteP
                       <div className="col-span-1 flex justify-center pt-4">
                         <button
                           onClick={handleSwapCurrencies}
-                          className="p-1.5 bg-white/10 hover:bg-gold-500 text-gray-300 hover:text-corporate-950 transition-colors cursor-pointer border border-white/10"
+                          className="p-2 bg-slate-100 hover:bg-amber-500 text-slate-800 hover:text-slate-950 transition-colors cursor-pointer border border-slate-300 shadow-xs"
                           title={lang === 'pt' ? 'Inverter Moedas' : 'Swap Currencies'}
                         >
-                          <ArrowRightLeft className="w-3.5 h-3.5" />
+                          <ArrowRightLeft className="w-4 h-4" />
                         </button>
                       </div>
 
                       <div className="col-span-5">
-                        <label className="block text-[10px] font-mono text-gray-400 mb-1 uppercase">
+                        <label className="block text-xs font-mono text-slate-700 mb-1 uppercase font-bold">
                           {lang === 'pt' ? 'Para (Destino):' : 'To:'}
                         </label>
                         <select
                           value={toCurrency}
                           onChange={(e) => setToCurrency(e.target.value)}
-                          className="w-full bg-corporate-900 border border-white/20 focus:border-gold-500 p-2 text-xs font-mono font-bold text-white cursor-pointer"
+                          className="w-full bg-white border-2 border-slate-300 focus:border-amber-500 p-2 text-xs sm:text-sm font-mono font-bold text-slate-900 cursor-pointer"
                         >
                           <option value="MZN">🇲🇿 MZN</option>
                           {rates.map((r) => (
@@ -442,18 +442,18 @@ export default function BancoMocFinancialSuite({ lang }: BancoMocFinancialSuiteP
 
                     {/* Rate type selection */}
                     <div>
-                      <label className="block text-[10px] font-mono text-gray-400 mb-1 uppercase">
+                      <label className="block text-xs font-mono text-slate-700 mb-1 uppercase font-bold">
                         {lang === 'pt' ? 'Cotação de Referência BM:' : 'BM Exchange Rate:'}
                       </label>
-                      <div className="grid grid-cols-3 gap-1.5 text-[10px] font-mono">
+                      <div className="grid grid-cols-3 gap-1.5 text-xs font-mono">
                         {(['mid', 'buy', 'sell'] as const).map((mode) => (
                           <button
                             key={mode}
                             onClick={() => setRateType(mode)}
-                            className={`py-1 uppercase font-bold border transition-colors cursor-pointer ${
+                            className={`py-1.5 uppercase font-bold border transition-colors cursor-pointer ${
                               rateType === mode
-                                ? 'bg-gold-500/20 text-gold-300 border-gold-500'
-                                : 'bg-corporate-900 text-gray-400 border-white/10'
+                                ? 'bg-amber-500 text-slate-950 border-amber-600 font-bold'
+                                : 'bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200'
                             }`}
                           >
                             {mode === 'mid' ? (lang === 'pt' ? 'Média' : 'Mid') : mode === 'buy' ? (lang === 'pt' ? 'Compra' : 'Buy') : (lang === 'pt' ? 'Venda' : 'Sell')}
@@ -463,22 +463,22 @@ export default function BancoMocFinancialSuite({ lang }: BancoMocFinancialSuiteP
                     </div>
 
                     {/* Conversion Result Box */}
-                    <div className="bg-gradient-to-r from-corporate-900 via-corporate-950 to-corporate-900 border-2 border-gold-500/50 p-4 relative">
-                      <div className="text-[10px] font-mono text-gray-400 uppercase">
+                    <div className="bg-amber-50 border-2 border-amber-400 p-4 relative shadow-xs">
+                      <div className="text-xs font-mono text-amber-900 uppercase font-bold">
                         {lang === 'pt' ? 'Resultado Estimado:' : 'Estimated Result:'}
                       </div>
-                      <div className="font-mono text-2xl font-bold text-gold-300 mt-1">
+                      <div className="font-mono text-2xl sm:text-3xl font-bold text-slate-950 mt-1">
                         {convertedValue.toLocaleString('pt-MZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {' '}
-                        <span className="text-base text-white font-normal">{toCurrency}</span>
+                        <span className="text-lg text-amber-900 font-bold">{toCurrency}</span>
                       </div>
-                      <p className="text-[10px] font-mono text-gray-400 mt-1.5">
+                      <p className="text-xs font-mono text-slate-700 mt-1.5 font-medium">
                         1 {fromCurrency} = {(convertedValue / (amount || 1)).toFixed(4)} {toCurrency}
                       </p>
                     </div>
 
                     {/* Quick Presets */}
                     <div>
-                      <span className="text-[10px] font-mono text-gray-400 block mb-1.5 uppercase">
+                      <span className="text-xs font-mono text-slate-700 block mb-1.5 uppercase font-bold">
                         {lang === 'pt' ? 'Atalhos Rápidos:' : 'Quick Shortcuts:'}
                       </span>
                       <div className="flex flex-wrap gap-1.5">
@@ -495,7 +495,7 @@ export default function BancoMocFinancialSuite({ lang }: BancoMocFinancialSuiteP
                               setFromCurrency(p.from);
                               setToCurrency(p.to);
                             }}
-                            className="px-2 py-1 bg-white/5 hover:bg-gold-500/20 border border-white/10 text-[10px] font-mono text-gray-300 hover:text-gold-300 transition-colors cursor-pointer"
+                            className="px-2.5 py-1.5 bg-slate-100 hover:bg-amber-200 border border-slate-300 text-xs font-mono text-slate-800 font-semibold transition-colors cursor-pointer"
                           >
                             {p.label}
                           </button>
@@ -511,59 +511,59 @@ export default function BancoMocFinancialSuite({ lang }: BancoMocFinancialSuiteP
                   <div className="space-y-5 animate-fade-in">
                     
                     {/* Interest Rates Box */}
-                    <div className="bg-corporate-900 border border-gold-500/40 p-4">
-                      <div className="flex items-center space-x-2 mb-3 pb-2 border-b border-white/10">
-                        <Percent className="w-4 h-4 text-gold-400" />
-                        <h4 className="text-xs font-mono uppercase text-gold-300 font-bold">
+                    <div className="bg-slate-50 border border-slate-300 p-4 shadow-xs">
+                      <div className="flex items-center space-x-2 mb-3 pb-2 border-b border-slate-200">
+                        <Percent className="w-4 h-4 text-amber-700" />
+                        <h4 className="text-xs font-mono uppercase text-slate-900 font-bold">
                           {lang === 'pt' ? 'Taxas de Juros do Banco de Moçambique' : 'Bank of Mozambique Interest Rates'}
                         </h4>
                       </div>
 
                       <div className="grid grid-cols-2 gap-2.5">
-                        <div className="bg-corporate-950 p-2.5 border border-gold-500/40">
-                          <span className="text-[9px] font-mono text-gold-300 uppercase block font-bold">
+                        <div className="bg-white p-3 border-2 border-amber-400">
+                          <span className="text-xs font-mono text-amber-900 uppercase block font-bold">
                             {lang === 'pt' ? 'Prime Rate' : 'Prime Rate'}
                           </span>
-                          <span className="font-mono text-xl font-bold text-gold-300 block">
+                          <span className="font-mono text-2xl font-bold text-slate-950 block">
                             {ECONOMIC_INDICATORS.rates.primeRate}%
                           </span>
-                          <span className="text-[9px] text-gray-400 block font-mono">
+                          <span className="text-[11px] text-slate-600 block font-mono font-medium">
                             {lang === 'pt' ? 'Banca Nacional' : 'Commercial Banking'}
                           </span>
                         </div>
 
-                        <div className="bg-corporate-950 p-2.5 border border-white/10">
-                          <span className="text-[9px] font-mono text-gray-300 uppercase block font-bold">
+                        <div className="bg-white p-3 border border-slate-300">
+                          <span className="text-xs font-mono text-slate-800 uppercase block font-bold">
                             {lang === 'pt' ? 'Taxa MIMO' : 'MIMO Rate'}
                           </span>
-                          <span className="font-mono text-xl font-bold text-white block">
+                          <span className="font-mono text-2xl font-bold text-slate-900 block">
                             {ECONOMIC_INDICATORS.rates.mimo}%
                           </span>
-                          <span className="text-[9px] text-gray-400 block font-mono">
+                          <span className="text-[11px] text-slate-600 block font-mono font-medium">
                             {lang === 'pt' ? 'Política Monetária' : 'Monetary Policy'}
                           </span>
                         </div>
 
-                        <div className="bg-corporate-950 p-2.5 border border-white/10">
-                          <span className="text-[9px] font-mono text-gray-300 uppercase block font-bold">
+                        <div className="bg-white p-3 border border-slate-300">
+                          <span className="text-xs font-mono text-slate-800 uppercase block font-bold">
                             {lang === 'pt' ? 'Taxa FPC' : 'FPC Rate'}
                           </span>
-                          <span className="font-mono text-lg font-bold text-white block">
+                          <span className="font-mono text-xl font-bold text-slate-900 block">
                             {ECONOMIC_INDICATORS.rates.fpc}%
                           </span>
-                          <span className="text-[9px] text-gray-400 block font-mono">
+                          <span className="text-[11px] text-slate-600 block font-mono font-medium">
                             {lang === 'pt' ? 'Cedência Liquidez' : 'Lending Facility'}
                           </span>
                         </div>
 
-                        <div className="bg-corporate-950 p-2.5 border border-white/10">
-                          <span className="text-[9px] font-mono text-gray-300 uppercase block font-bold">
+                        <div className="bg-white p-3 border border-slate-300">
+                          <span className="text-xs font-mono text-slate-800 uppercase block font-bold">
                             {lang === 'pt' ? 'Taxa FPD' : 'FPD Rate'}
                           </span>
-                          <span className="font-mono text-lg font-bold text-white block">
+                          <span className="font-mono text-xl font-bold text-slate-900 block">
                             {ECONOMIC_INDICATORS.rates.fpd}%
                           </span>
-                          <span className="text-[9px] text-gray-400 block font-mono">
+                          <span className="text-[11px] text-slate-600 block font-mono font-medium">
                             {lang === 'pt' ? 'Depósito Permanente' : 'Deposit Facility'}
                           </span>
                         </div>
@@ -572,44 +572,44 @@ export default function BancoMocFinancialSuite({ lang }: BancoMocFinancialSuiteP
 
                     {/* Macro Economic Metrics */}
                     <div className="space-y-2.5">
-                      <div className="bg-corporate-900 p-3.5 border border-white/10 flex items-center justify-between">
+                      <div className="bg-slate-50 p-3.5 border border-slate-300 flex items-center justify-between">
                         <div>
-                          <span className="text-[10px] font-mono text-gray-400 uppercase block">
+                          <span className="text-xs font-mono text-slate-700 uppercase block font-bold">
                             {lang === 'pt' ? 'Inflação Mensal (INE/BM)' : 'Monthly Inflation'}
                           </span>
-                          <span className="text-xs font-mono text-gray-300 mt-0.5 block">
+                          <span className="text-xs font-mono text-slate-600 mt-0.5 block">
                             {lang === 'pt' ? 'Variação mensal de preços' : 'Monthly CPI variation'}
                           </span>
                         </div>
-                        <span className="font-mono text-xl font-bold text-white">
+                        <span className="font-mono text-xl font-bold text-slate-950">
                           +{ECONOMIC_INDICATORS.inflationMonthly}%
                         </span>
                       </div>
 
-                      <div className="bg-corporate-900 p-3.5 border border-white/10 flex items-center justify-between">
+                      <div className="bg-slate-50 p-3.5 border border-slate-300 flex items-center justify-between">
                         <div>
-                          <span className="text-[10px] font-mono text-gray-400 uppercase block">
+                          <span className="text-xs font-mono text-slate-700 uppercase block font-bold">
                             {lang === 'pt' ? 'Inflação Homóloga' : 'Annual Inflation'}
                           </span>
-                          <span className="text-xs font-mono text-gray-300 mt-0.5 block">
+                          <span className="text-xs font-mono text-slate-600 mt-0.5 block">
                             {lang === 'pt' ? 'Taxa anual acumulada' : 'Annual cumulative rate'}
                           </span>
                         </div>
-                        <span className="font-mono text-xl font-bold text-emerald-400">
+                        <span className="font-mono text-xl font-bold text-emerald-700">
                           {ECONOMIC_INDICATORS.inflationAnnual}%
                         </span>
                       </div>
 
-                      <div className="bg-corporate-900 p-3.5 border border-white/10 flex items-center justify-between">
+                      <div className="bg-slate-50 p-3.5 border border-slate-300 flex items-center justify-between">
                         <div>
-                          <span className="text-[10px] font-mono text-gray-400 uppercase block">
+                          <span className="text-xs font-mono text-slate-700 uppercase block font-bold">
                             {lang === 'pt' ? 'Variação Trimestral PIB' : 'Real GDP Growth'}
                           </span>
-                          <span className="text-xs font-mono text-gray-300 mt-0.5 block">
+                          <span className="text-xs font-mono text-slate-600 mt-0.5 block">
                             {lang === 'pt' ? 'Crescimento real da economia' : 'Real economic growth'}
                           </span>
                         </div>
-                        <span className="font-mono text-xl font-bold text-emerald-400">
+                        <span className="font-mono text-xl font-bold text-emerald-700">
                           +{ECONOMIC_INDICATORS.gdpQuarterly}%
                         </span>
                       </div>
@@ -622,23 +622,23 @@ export default function BancoMocFinancialSuite({ lang }: BancoMocFinancialSuiteP
                 {sidebarTab === 'table' && (
                   <div className="space-y-4 animate-fade-in">
                     <div className="flex items-center justify-between text-xs font-mono">
-                      <span className="text-gold-400 font-bold uppercase">
+                      <span className="text-amber-800 font-bold uppercase">
                         {lang === 'pt' ? 'Cotações Oficiais MZN' : 'Official MZN Rates'}
                       </span>
-                      <span className="text-[10px] text-gray-400">{lastUpdatedTime}</span>
+                      <span className="text-xs text-slate-600 font-semibold">{lastUpdatedTime}</span>
                     </div>
 
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-left text-xs font-mono">
+                    <div className="overflow-x-auto bg-slate-50 border border-slate-300 p-2">
+                      <table className="w-full text-left text-xs sm:text-sm font-mono">
                         <thead>
-                          <tr className="border-b border-white/10 text-gray-400">
-                            <th className="pb-2 font-normal">{lang === 'pt' ? 'Moeda' : 'Currency'}</th>
-                            <th className="pb-2 font-normal text-right">{lang === 'pt' ? 'Compra' : 'Buy'}</th>
-                            <th className="pb-2 font-normal text-right">{lang === 'pt' ? 'Venda' : 'Sell'}</th>
-                            <th className="pb-2 font-normal text-right">{lang === 'pt' ? 'Média' : 'Mid'}</th>
+                          <tr className="border-b border-slate-300 text-slate-700">
+                            <th className="pb-2 font-bold">{lang === 'pt' ? 'Moeda' : 'Currency'}</th>
+                            <th className="pb-2 font-bold text-right">{lang === 'pt' ? 'Compra' : 'Buy'}</th>
+                            <th className="pb-2 font-bold text-right">{lang === 'pt' ? 'Venda' : 'Sell'}</th>
+                            <th className="pb-2 font-bold text-right">{lang === 'pt' ? 'Média' : 'Mid'}</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-white/5">
+                        <tbody className="divide-y divide-slate-200">
                           {rates.map((r) => (
                             <tr
                               key={r.code}
@@ -647,23 +647,23 @@ export default function BancoMocFinancialSuite({ lang }: BancoMocFinancialSuiteP
                                 setToCurrency('MZN');
                                 setSidebarTab('converter');
                               }}
-                              className="hover:bg-white/5 transition-colors cursor-pointer"
+                              className="hover:bg-amber-100/50 transition-colors cursor-pointer"
                               title={lang === 'pt' ? 'Clique para converter' : 'Click to convert'}
                             >
-                              <td className="py-2 font-bold text-white flex items-center space-x-1.5">
+                              <td className="py-2.5 font-bold text-slate-950 flex items-center space-x-1.5">
                                 <span className="text-base">{r.flag}</span>
-                                <span className="text-gold-300">{r.code}</span>
+                                <span className="text-amber-900 font-bold">{r.code}</span>
                               </td>
-                              <td className="py-2 text-right text-gray-300">{r.buy.toFixed(2)}</td>
-                              <td className="py-2 text-right text-gray-300">{r.sell.toFixed(2)}</td>
-                              <td className="py-2 text-right font-bold text-white">{r.mid.toFixed(2)}</td>
+                              <td className="py-2.5 text-right text-slate-800 font-medium">{r.buy.toFixed(2)}</td>
+                              <td className="py-2.5 text-right text-slate-800 font-medium">{r.sell.toFixed(2)}</td>
+                              <td className="py-2.5 text-right font-bold text-slate-950">{r.mid.toFixed(2)}</td>
                             </tr>
                           ))}
                         </tbody>
                       </table>
                     </div>
 
-                    <p className="text-[10px] font-mono text-gray-400">
+                    <p className="text-xs font-mono text-slate-600">
                       * {lang === 'pt' ? 'Clique em qualquer moeda para efetuar cálculos no conversor.' : 'Click on any currency to convert.'}
                     </p>
                   </div>
@@ -672,19 +672,19 @@ export default function BancoMocFinancialSuite({ lang }: BancoMocFinancialSuiteP
               </div>
 
               {/* Sidebar Footer */}
-              <div className="p-4 bg-corporate-900 border-t border-white/10 sticky bottom-0 z-20 text-[10px] font-mono text-gray-400 flex items-center justify-between">
+              <div className="p-4 bg-slate-100 border-t border-slate-300 sticky bottom-0 z-20 text-xs font-mono text-slate-700 flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
-                  <span>{lang === 'pt' ? 'Fonte: bancomoc.mz' : 'Source: bancomoc.mz'}</span>
+                  <CheckCircle2 className="w-4 h-4 text-emerald-700 flex-shrink-0" />
+                  <span className="font-semibold">{lang === 'pt' ? 'Fonte: bancomoc.mz' : 'Source: bancomoc.mz'}</span>
                 </div>
                 <a
                   href="https://www.bancomoc.mz"
                   target="_blank"
                   rel="noreferrer"
-                  className="text-gold-400 hover:text-white flex items-center space-x-1 transition-colors"
+                  className="text-amber-800 hover:text-amber-950 font-bold flex items-center space-x-1 transition-colors"
                 >
                   <span>{lang === 'pt' ? 'Portal BM' : 'BM Portal'}</span>
-                  <ExternalLink className="w-3 h-3" />
+                  <ExternalLink className="w-3.5 h-3.5" />
                 </a>
               </div>
 

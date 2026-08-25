@@ -20,6 +20,7 @@ import BancoMocFinancialSuite from './components/BancoMocFinancialSuite';
 import { INITIAL_REGISTRATIONS, TRANSLATIONS, SPONSORS } from './data';
 import { Registration } from './types';
 import { Mail, Phone, MapPin, ExternalLink, Calendar, ChevronRight, ArrowUp } from 'lucide-react';
+import ciitLogoImg from './assets/images/ciit_2026_logo_1787657793393.png';
 
 export default function App() {
   const [lang, setLang] = useState<'pt' | 'en'>('pt');
@@ -198,9 +199,18 @@ export default function App() {
             
             {/* Column 1: Info and Motto */}
             <div className="space-y-4 md:col-span-2">
-              <span className="font-display font-black text-2xl tracking-wider text-white">
-                CIIT<span className="text-gold-500">2026</span>
-              </span>
+              <button
+                onClick={scrollToTop}
+                className="block text-left group focus:outline-none transition-transform hover:opacity-95"
+                title="Voltar ao Início"
+              >
+                <img
+                  src={ciitLogoImg}
+                  alt="CIIT 2026 Logo"
+                  className="h-12 sm:h-14 w-auto object-contain drop-shadow-[0_2px_12px_rgba(234,179,8,0.3)] transition-transform group-hover:scale-105"
+                  referrerPolicy="no-referrer"
+                />
+              </button>
               <p className="text-xs text-gray-400 leading-relaxed font-light">
                 {lang === 'pt'
                   ? 'A Conferência Internacional de Investimentos de Tete impulsiona o desenvolvimento de Moçambique promovendo conexões seguras de investimento privado.'
