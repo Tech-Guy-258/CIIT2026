@@ -45,6 +45,7 @@ export default function Navbar({
     { label: t.nav6cs, href: '#sectors' },
     { label: t.navSpeakers, href: '#speakers' },
     { label: t.navAgenda, href: '#agenda' },
+    { label: t.navGallery || (lang === 'pt' ? 'Galeria' : 'Gallery'), href: '#gallery' },
     { label: t.navTravel, href: '#travel' }
   ];
 

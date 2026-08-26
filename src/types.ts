@@ -15,19 +15,34 @@ export interface Speaker {
   nationality: string;
   nationalityEn?: string;
   featured?: boolean;
+  institution?: string;
+  institutionEn?: string;
+  education?: string[];
+  educationEn?: string[];
+  previousRoles?: string[];
+  previousRolesEn?: string[];
+  experience?: string[];
+  experienceEn?: string[];
+  keyTopics?: string[];
+  keyTopicsEn?: string[];
 }
 
 export interface AgendaSession {
   id: string;
   time: string;
+  activity: string;
+  activityEn?: string;
   title: string;
   titleEn?: string;
   description?: string;
   descriptionEn?: string;
   speakerIds?: string[];
-  location: string;
-  locationEn?: string;
-  category: 'energy' | 'mining' | 'agriculture' | 'infrastructure' | 'plenary' | 'networking';
+  theme?: string;
+  themeEn?: string;
+  location: string; // "PLENÁRIA"
+  locationEn?: string; // "PLENARY HALL"
+  category: 'plenary' | 'energy' | 'mining' | 'agriculture' | 'infrastructure' | 'networking' | 'economy';
+  isPreliminary?: boolean;
 }
 
 export interface Registration {
@@ -60,14 +75,68 @@ export interface SectorDetail {
   imageUrl?: string;
 }
 
-export interface HotelRecommendation {
+export interface HotelAmenity {
   name: string;
-  stars: number;
+  icon: string;
+}
+
+export interface HotelRecommendation {
+  id: string;
+  name: string;
+  stars?: number; // only if officially confirmed
+  categoryTag: string;
+  categoryTagEn: string;
   description: string;
   descriptionEn?: string;
+  location: string;
+  locationEn?: string;
   address: string;
   addressEn?: string;
+  roomsInfo?: string;
+  roomsInfoEn?: string;
   phone: string;
+  email?: string;
   website: string;
-  image: string;
+  images: string[];
+  amenities: {
+    pool: boolean;
+    restaurant: boolean;
+    gym: boolean;
+    conferenceRooms: boolean;
+    wifi: boolean;
+    parking: boolean;
+    airportShuttle?: boolean;
+    bar?: boolean;
+  };
+  highlights: string[];
+  highlightsEn?: string[];
+}
+
+export interface InstitutionalPartner {
+  id: string;
+  name: string;
+  acronym?: string;
+  fullName: string;
+  role: string;
+  roleEn: string;
+  website: string;
+  description: string;
+  descriptionEn: string;
+  logoType: 'agencia_zambeze' | 'hcb' | 'mphanda_nkuwa' | 'apiex' | 'cta';
+  logoImg?: string;
+}
+
+export interface GalleryItem {
+  id: string;
+  filename: string;
+  title: string;
+  titleEn: string;
+  category: 'plenary' | 'leadership' | 'speeches' | 'delegates' | 'protocol';
+  categoryLabel: string;
+  categoryLabelEn: string;
+  description: string;
+  descriptionEn: string;
+  imageUrl: string;
+  aspectRatio?: string;
+  featured?: boolean;
 }

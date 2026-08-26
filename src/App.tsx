@@ -12,6 +12,8 @@ import Speakers from './components/Speakers';
 import Agenda from './components/Agenda';
 import RegistrationForm from './components/RegistrationForm';
 import TravelGuide from './components/TravelGuide';
+import Partners from './components/Partners';
+import { Gallery } from './components/Gallery';
 import AdminDashboard from './components/AdminDashboard';
 import InvestorChat from './components/InvestorChat';
 import TeteProfile from './components/TeteProfile';
@@ -42,7 +44,7 @@ export default function App() {
   // Section Tracking via scroll handler
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['home', 'about', 'tete-profile', 'sectors', 'speakers', 'agenda', 'registration', 'travel', 'admin'];
+      const sections = ['home', 'about', 'tete-profile', 'sectors', 'speakers', 'agenda', 'gallery', 'registration', 'travel', 'admin'];
       const scrollPosition = window.scrollY + 200;
 
       for (const section of sections) {
@@ -136,6 +138,9 @@ export default function App() {
         {/* INTERACTIVE TIMETABLE AGENDA */}
         <Agenda lang={lang} />
 
+        {/* OFFICIAL PHOTOGRAPHIC GALLERY & INTERACTIVE CAROUSEL */}
+        <Gallery lang={lang} />
+
         {/* CLIENT REGISTRATION FORM & PASS BADGE CARD GENERATOR */}
         <RegistrationForm
           lang={lang}
@@ -144,6 +149,9 @@ export default function App() {
 
         {/* VISITORS TRAVEL GUIDE & HOTELS */}
         <TravelGuide lang={lang} />
+
+        {/* STRATEGIC INSTITUTIONAL PARTNERS & SPONSORS */}
+        <Partners lang={lang} />
 
         {/* INTERACTIVE INTEGRATED INVESTOR CHATBOT */}
         <InvestorChat lang={lang} />
@@ -160,36 +168,6 @@ export default function App() {
         )}
 
       </main>
-
-      {/* Sponsor / Partnership logos grid */}
-      <section className="bg-white py-16 border-t border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-[10px] font-mono tracking-widest text-gray-400 uppercase mb-8">
-            {lang === 'pt' ? 'Parceiros Institucionais & Patrocinadores' : 'Institutional Partners & Sponsors'}
-          </p>
-          
-          <div className="flex flex-wrap items-center justify-center gap-12 opacity-75 grayscale hover:grayscale-0 transition-all duration-500">
-            {SPONSORS.platinum.map((item, idx) => (
-              <div key={idx} className="flex flex-col items-center">
-                <span className="font-display font-black text-gray-500 text-sm tracking-tight">{item.name}</span>
-                <span className="text-[8px] font-mono text-gold-600 font-bold uppercase mt-1">Platinum Partner</span>
-              </div>
-            ))}
-            {SPONSORS.gold.map((item, idx) => (
-              <div key={idx} className="flex flex-col items-center">
-                <span className="font-display font-bold text-gray-400 text-xs tracking-tight">{item.name}</span>
-                <span className="text-[8px] font-mono text-gray-400 font-bold uppercase mt-1">Gold Partner</span>
-              </div>
-            ))}
-            {SPONSORS.institutional.map((item, idx) => (
-              <div key={idx} className="flex flex-col items-center">
-                <span className="font-display font-semibold text-gray-400 text-xs tracking-tight">{item.name}</span>
-                <span className="text-[8px] font-mono text-emerald-600 font-bold uppercase mt-1">Institutional</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* FOOTER */}
       <footer id="footer" className="bg-corporate-950 text-white pt-16 pb-12 border-t border-gold-600/20">
@@ -240,6 +218,11 @@ export default function App() {
                 <li>
                   <button onClick={() => scrollToSection('agenda')} className="hover:text-white transition-colors cursor-pointer text-left">
                     {t.navAgenda}
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => scrollToSection('gallery')} className="hover:text-white transition-colors cursor-pointer text-left">
+                    {t.navGallery || (lang === 'pt' ? 'Galeria' : 'Gallery')}
                   </button>
                 </li>
                 <li>
