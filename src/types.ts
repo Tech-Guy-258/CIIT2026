@@ -57,6 +57,66 @@ export interface Registration {
   registrationType: 'delegate' | 'investor' | 'speaker' | 'sponsor' | 'government';
   registeredAt: string;
   ticketStatus: 'Confirmed' | 'Pending Review';
+  isCheckedIn?: boolean;
+  checkedInAt?: string;
+  checkInHistory?: Array<{ timestamp: string; deviceId?: string }>;
+  qrToken?: string;
+  isDemo?: boolean;
+}
+
+export type CheckInStatus = 'VALIDO_NAO_UTILIZADO' | 'PRESENTE' | 'INVALIDO' | 'DUPLICADO';
+
+export interface CheckInRecord {
+  id: string;
+  registrationId: string;
+  participantName: string;
+  jobTitle?: string;
+  company?: string;
+  registrationType?: string;
+  country?: string;
+  sectorOfInterest?: string;
+  checkedInAt: string;
+  formattedTime: string;
+  scannerDeviceId?: string;
+  scannerOperator?: string;
+  status: 'PRESENTE' | 'DUPLICADO' | 'INVALIDO';
+  isSynced: boolean;
+}
+
+export interface CategoryAttendanceBreakdown {
+  type: 'delegate' | 'investor' | 'government' | 'speaker' | 'sponsor';
+  label: string;
+  labelEn: string;
+  total: number;
+  present: number;
+  pending: number; // quantos ainda estão a caminho
+  rate: number; // percentage
+  color: string;
+  badgeBg: string;
+  badgeBorder: string;
+  textColor: string;
+  iconName: string;
+}
+
+export interface AttendanceMetrics {
+  totalRegistered: number;
+  totalPresent: number;
+  totalPending: number;
+  attendancePercentage: number;
+  categoryBreakdown?: CategoryAttendanceBreakdown[];
+  lastCheckIn?: CheckInRecord | null;
+  lastRegistered?: Registration | null;
+  totalCheckInActions: number;
+}
+
+export interface QrScanResult {
+  success: boolean;
+  status: CheckInStatus;
+  participant?: Registration;
+  checkInRecord?: CheckInRecord;
+  message: string;
+  messageEn: string;
+  previousCheckInTime?: string;
 }
 
 export interface SectorDetail {

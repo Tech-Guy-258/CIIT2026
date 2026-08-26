@@ -17,11 +17,14 @@ import {
   ChevronRight,
   Calculator,
   Layers,
-  Coins
+  Coins,
+  Lock
 } from 'lucide-react';
 
 interface BancoMocFinancialSuiteProps {
   lang: 'pt' | 'en';
+  onAdminToggle?: () => void;
+  showAdmin?: boolean;
 }
 
 export interface ExchangeRateItem {
@@ -121,7 +124,11 @@ export const ECONOMIC_INDICATORS = {
   lastUpdate: '2026-07-22'
 };
 
-export default function BancoMocFinancialSuite({ lang }: BancoMocFinancialSuiteProps) {
+export default function BancoMocFinancialSuite({
+  lang,
+  onAdminToggle,
+  showAdmin
+}: BancoMocFinancialSuiteProps) {
   const [rates, setRates] = useState<ExchangeRateItem[]>(INITIAL_RATES);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [lastUpdatedTime, setLastUpdatedTime] = useState<string>('Hoje, 09:30 (Hora de Maputo)');
@@ -250,7 +257,7 @@ export default function BancoMocFinancialSuite({ lang }: BancoMocFinancialSuiteP
           </div>
 
           {/* Action Quick Links & Controls */}
-          <div className="flex items-center space-x-2 flex-shrink-0 text-xs font-mono">
+          <div className="flex items-center space-x-1.5 sm:space-x-2 flex-shrink-0 text-xs font-mono">
             <button
               id="btn-refresh-bm-rates"
               onClick={handleRefreshData}
@@ -269,6 +276,23 @@ export default function BancoMocFinancialSuite({ lang }: BancoMocFinancialSuiteP
               <ArrowRightLeft className="w-3.5 h-3.5 flex-shrink-0" />
               <span>{lang === 'pt' ? 'Mercado & Conversor' : 'Market & Converter'}</span>
             </button>
+
+            {/* Admin Lock Button directly to the right of Mercado & Conversor */}
+            {onAdminToggle && (
+              <button
+                id="btn-cambio-admin-lock"
+                onClick={onAdminToggle}
+                title={lang === 'pt' ? 'Painel Administrativo CIIT 2026' : 'CIIT 2026 Admin Panel'}
+                aria-label={lang === 'pt' ? 'Painel Administrativo' : 'Admin Panel'}
+                className={`h-7 sm:h-8 w-8 flex items-center justify-center border transition-all duration-200 cursor-pointer flex-shrink-0 shadow-xs active:scale-95 ${
+                  showAdmin
+                    ? 'bg-amber-500 text-slate-950 border-amber-600 font-bold'
+                    : 'bg-white hover:bg-amber-100 border-slate-300 hover:border-amber-500 text-slate-700 hover:text-amber-900'
+                }`}
+              >
+                <Lock className="w-3.5 h-3.5 text-amber-700" />
+              </button>
+            )}
           </div>
 
         </div>

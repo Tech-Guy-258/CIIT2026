@@ -125,15 +125,16 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isLightboxOpen, handleLightboxPrev, handleLightboxNext]);
 
-  // Auto scroll active thumbnail into view
+  // Auto scroll active thumbnail inside the horizontal strip ONLY (does not scroll window)
   useEffect(() => {
-    if (!thumbnailsContainerRef.current) return;
-    const activeThumbnail = thumbnailsContainerRef.current.children[currentIndex] as HTMLElement;
+    const container = thumbnailsContainerRef.current;
+    if (!container) return;
+    const activeThumbnail = container.children[currentIndex] as HTMLElement;
     if (activeThumbnail) {
-      activeThumbnail.scrollIntoView({
-        behavior: 'smooth',
-        inline: 'center',
-        block: 'nearest'
+      const scrollLeft = activeThumbnail.offsetLeft - (container.clientWidth / 2) + (activeThumbnail.clientWidth / 2);
+      container.scrollTo({
+        left: Math.max(0, scrollLeft),
+        behavior: 'smooth'
       });
     }
   }, [currentIndex]);

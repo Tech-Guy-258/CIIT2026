@@ -3,9 +3,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
+import QRCode from 'qrcode';
 import { TRANSLATIONS } from '../data';
 import { Registration } from '../types';
 import { Check, Download, AlertCircle, FileText, User, Mail, Phone, Globe, Briefcase, ChevronRight, RefreshCw, Printer, Loader2 } from 'lucide-react';
@@ -34,6 +35,32 @@ export default function RegistrationForm({ lang, onRegisterSuccess }: Registrati
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDownloadingPDF, setIsDownloadingPDF] = useState(false);
   const [generatedPass, setGeneratedPass] = useState<Registration | null>(null);
+  const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string>('');
+
+  useEffect(() => {
+    if (generatedPass) {
+      QRCode.toDataURL(
+        JSON.stringify({
+          ciitId: generatedPass.id,
+          name: generatedPass.fullName,
+          type: generatedPass.registrationType,
+          event: 'CIIT-2026-TETE'
+        }),
+        {
+          width: 160,
+          margin: 1,
+          color: {
+            dark: '#0f172a',
+            light: '#ffffff'
+          }
+        }
+      ).then((url) => {
+        setQrCodeDataUrl(url);
+      }).catch((err) => {
+        console.error('Error generating QR code data URL:', err);
+      });
+    }
+  }, [generatedPass]);
 
   // Sector list based on Tete characteristics (Os 6C's)
   const sectors = lang === 'pt' ? [
@@ -640,55 +667,21 @@ export default function RegistrationForm({ lang, onRegisterSuccess }: Registrati
                       </div>
                     </div>
 
-                    {/* Simulated High-Fidelity QR Code */}
+                    {/* Real High-Fidelity Scannable QR Code */}
                     <div className="flex flex-col items-center space-y-2 py-2 relative z-10">
-                      <div className="bg-white p-4 border border-slate-200 rounded-none shadow-sm">
-                        {/* Elegant custom Vector QR grid representation */}
-                        <svg width="100" height="100" viewBox="0 0 100 100" style={{ backgroundColor: '#ffffff' }} className="rounded-none">
-                          {/* Explicit White Background */}
-                          <rect x="0" y="0" width="100" height="100" fill="#ffffff" />
-
-                          {/* QR Code Elements in Vibrant Blue */}
-                          <g fill="#1d4ed8">
-                            {/* Outer Corner Finder Squares */}
-                            <rect x="0" y="0" width="30" height="30" />
-                            <rect x="70" y="0" width="30" height="30" />
-                            <rect x="0" y="70" width="30" height="30" />
-
-                            {/* Inner Finder Center Dots */}
-                            <rect x="10" y="10" width="10" height="10" />
-                            <rect x="80" y="10" width="10" height="10" />
-                            <rect x="10" y="80" width="10" height="10" />
-
-                            {/* Dummy Data Bits */}
-                            <rect x="40" y="5" width="10" height="5" />
-                            <rect x="40" y="15" width="15" height="10" />
-                            <rect x="40" y="30" width="5" height="10" />
-                            <rect x="50" y="30" width="10" height="5" />
-                            
-                            <rect x="15" y="40" width="15" height="5" />
-                            <rect x="5" y="50" width="10" height="10" />
-                            <rect x="20" y="55" width="10" height="5" />
-
-                            <rect x="70" y="40" width="25" height="5" />
-                            <rect x="80" y="50" width="10" height="15" />
-                            <rect x="70" y="60" width="5" height="5" />
-
-                            <rect x="40" y="50" width="15" height="15" />
-                            <rect x="40" y="75" width="15" height="5" />
-                            <rect x="45" y="85" width="5" height="10" />
-                            <rect x="55" y="80" width="10" height="15" />
-                            
-                            <rect x="70" y="75" width="20" height="5" />
-                            <rect x="80" y="85" width="15" height="10" />
-                            <rect x="70" y="90" width="5" height="5" />
-                          </g>
-
-                          {/* White Cutout Frames for Corner Finders */}
-                          <rect x="5" y="5" width="20" height="20" fill="#ffffff" />
-                          <rect x="75" y="5" width="20" height="20" fill="#ffffff" />
-                          <rect x="5" y="75" width="20" height="20" fill="#ffffff" />
-                        </svg>
+                      <div className="bg-white p-3 border border-slate-200 rounded-none shadow-sm flex items-center justify-center">
+                        {qrCodeDataUrl ? (
+                          <img
+                            src={qrCodeDataUrl}
+                            alt={`QR Code ${generatedPass.id}`}
+                            className="w-28 h-28 object-contain"
+                            referrerPolicy="no-referrer"
+                          />
+                        ) : (
+                          <div className="w-28 h-28 bg-slate-100 flex items-center justify-center font-mono text-[10px] text-slate-400">
+                            {generatedPass.id}
+                          </div>
+                        )}
                       </div>
                       <span className="text-[10px] font-mono tracking-widest font-black text-corporate-950">
                         {generatedPass.id}

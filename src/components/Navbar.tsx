@@ -4,26 +4,20 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Globe, Lock } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { TRANSLATIONS } from '../data';
 import ciitLogoImg from '../assets/images/ciit_2026_logo_1787657793393.png';
 
 interface NavbarProps {
   lang: 'pt' | 'en';
-  setLang: (lang: 'pt' | 'en') => void;
   activeSection: string;
   onRegisterClick: () => void;
-  onAdminToggle: () => void;
-  showAdminLink: boolean;
 }
 
 export default function Navbar({
   lang,
-  setLang,
   activeSection,
-  onRegisterClick,
-  onAdminToggle,
-  showAdminLink
+  onRegisterClick
 }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -41,11 +35,12 @@ export default function Navbar({
     { label: t.navHome, href: '#home' },
     { label: lang === 'pt' ? 'Câmbio & Mercado' : 'Market & Rates', href: '#banco-moc-economic-dashboard' },
     { label: t.navAbout, href: '#about' },
-    { label: (t as any).navProfile || 'Perfil de Tete', href: '#tete-profile' },
+    { label: (t as any).navProfile || (lang === 'pt' ? 'Perfil de Tete' : 'Tete Profile'), href: '#tete-profile' },
     { label: t.nav6cs, href: '#sectors' },
     { label: t.navSpeakers, href: '#speakers' },
     { label: t.navAgenda, href: '#agenda' },
     { label: t.navGallery || (lang === 'pt' ? 'Galeria' : 'Gallery'), href: '#gallery' },
+    { label: (t as any).navAttendance || (lang === 'pt' ? 'Presenças LIVE' : 'Live Attendance'), href: '#attendance' },
     { label: t.navTravel, href: '#travel' }
   ];
 
@@ -68,154 +63,126 @@ export default function Navbar({
   return (
     <nav
       id="navbar"
-      className="relative w-full transition-all duration-300 bg-white/95 backdrop-blur-md border-b border-slate-200 py-1.5 sm:py-2 shadow-xs z-50"
+      className="sticky top-0 w-full transition-all duration-300 bg-white/95 backdrop-blur-md border-b border-slate-200 py-1.5 shadow-xs z-50"
     >
-      <div className="max-w-[1400px] mx-auto px-3 sm:px-6 lg:px-8">
+      <div className="w-full max-w-[1720px] mx-auto px-3 sm:px-6 lg:px-8">
+        
+        {/* BALANCED 3-ZONE LAYOUT: LEFT BRAND | PERFECTLY CENTERED NAVIGATION | RIGHT REGISTER CTA */}
         <div className="flex items-center justify-between h-14 sm:h-16 gap-2">
-          {/* Official CIIT 2026 Logo as Home Button */}
-          <div className="flex-shrink-0 flex items-center">
+          
+          {/* ZONE 1: BRAND / LOGO (LEFT-ALIGNED) */}
+          <div className="flex-shrink-0 flex items-center min-w-0">
             <a
               href="#home"
               id="navbar-brand-home-btn"
               onClick={(e) => handleNavClick(e, '#home')}
-              className="group flex items-center py-1 transition-all duration-300 hover:opacity-95 active:scale-95 focus:outline-none"
-              title={lang === 'pt' ? 'CIIT 2026 - Voltar ao Início' : 'CIIT 2026 - Return to Home'}
+              className="group flex items-center py-0.5 transition-all duration-300 hover:opacity-95 active:scale-95 focus:outline-none"
+              title={lang === 'pt' ? 'CIIT 2026 - Início' : 'CIIT 2026 - Home'}
               aria-label="CIIT 2026 Home"
             >
               <img
                 src={ciitLogoImg}
                 alt="CIIT 2026 - Conferência Internacional de Investimentos de Tete"
-                className="h-10 sm:h-12 md:h-14 w-auto max-w-[200px] sm:max-w-[240px] md:max-w-[280px] object-contain drop-shadow-sm transition-transform duration-200 group-hover:scale-105"
+                className="h-9 sm:h-10 md:h-11 xl:h-12 w-auto max-w-[150px] sm:max-w-[190px] xl:max-w-[220px] object-contain drop-shadow-xs transition-transform duration-200 group-hover:scale-102"
                 referrerPolicy="no-referrer"
               />
             </a>
           </div>
 
-          {/* Desktop Navigation (visible on lg+ screens) */}
-          <div className="hidden lg:flex items-center justify-center space-x-1 xl:space-x-2 2xl:space-x-3 flex-1 px-2">
-            {navItems.map((item) => {
-              const isActive = activeSection === item.href.substring(1);
-              return (
-                <a
-                  key={item.href}
-                  href={item.href}
-                  id={`nav-item-${item.href.substring(1)}`}
-                  onClick={(e) => handleNavClick(e, item.href)}
-                  className={`px-1.5 xl:px-2.5 2xl:px-3 py-1.5 text-[11px] lg:text-xs xl:text-[13px] 2xl:text-sm font-semibold tracking-tight uppercase transition-all duration-200 whitespace-nowrap ${
-                    isActive
-                      ? 'text-amber-700 border-b-2 border-amber-500 font-bold bg-amber-50/60'
-                      : 'text-slate-700 hover:text-amber-700 hover:bg-slate-50'
-                  }`}
-                >
-                  {item.label}
-                </a>
-              );
-            })}
+          {/* ZONE 2: PERFECTLY CENTERED NAVIGATION LINKS (DESKTOP) */}
+          <div className="hidden lg:flex items-center justify-center flex-1 mx-auto px-2">
+            <div className="flex items-center justify-center flex-nowrap gap-1 xl:gap-1.5 2xl:gap-2 whitespace-nowrap">
+              {navItems.map((item) => {
+                const isActive = activeSection === item.href.substring(1);
+                const isAttendance = item.href === '#attendance';
+                return (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    id={`nav-item-${item.href.substring(1)}`}
+                    onClick={(e) => handleNavClick(e, item.href)}
+                    className={`px-2 xl:px-2.5 2xl:px-3 py-1.5 text-[11px] xl:text-[12px] 2xl:text-[13px] font-semibold tracking-tight uppercase transition-all duration-200 whitespace-nowrap rounded-none flex items-center space-x-1 flex-shrink-0 ${
+                      isActive
+                        ? 'text-amber-800 border-b-2 border-amber-600 font-bold bg-amber-50/80 shadow-2xs'
+                        : isAttendance
+                        ? 'text-emerald-700 hover:text-emerald-800 hover:bg-emerald-50/60 font-bold'
+                        : 'text-slate-700 hover:text-amber-700 hover:bg-slate-50/80'
+                    }`}
+                  >
+                    {isAttendance && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse mr-0.5" />
+                    )}
+                    <span>{item.label}</span>
+                  </a>
+                );
+              })}
+            </div>
           </div>
 
-          {/* Actions: Lang, Admin, Register (visible on md+ screens) */}
-          <div className="hidden md:flex items-center space-x-1.5 lg:space-x-2 xl:space-x-3 flex-shrink-0">
-            {/* Lang Switcher */}
-            <button
-              id="lang-switcher"
-              onClick={() => setLang(lang === 'pt' ? 'en' : 'pt')}
-              className="h-8 xl:h-9 flex items-center space-x-1 px-2.5 xl:px-3 rounded-none bg-slate-100 hover:bg-slate-200 border border-slate-300 text-xs xl:text-sm font-bold text-slate-800 transition-all cursor-pointer whitespace-nowrap"
-              title={lang === 'pt' ? 'Switch to English' : 'Mudar para Português'}
-            >
-              <Globe className="w-3.5 h-3.5 text-amber-600 flex-shrink-0" />
-              <span>{lang === 'pt' ? 'EN' : 'PT'}</span>
-            </button>
-
-            {/* Admin toggle - padlock icon only */}
-            <button
-              id="admin-dashboard-btn"
-              onClick={onAdminToggle}
-              title={t.navAdmin}
-              aria-label={t.navAdmin}
-              className={`h-8 xl:h-9 px-2.5 xl:px-3 rounded-none border transition-all cursor-pointer flex items-center justify-center ${
-                showAdminLink
-                  ? 'bg-amber-100 text-amber-900 border-amber-500 shadow-xs'
-                  : 'bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200 hover:border-slate-400'
-              }`}
-            >
-              <Lock className="w-3.5 h-3.5 text-amber-600 flex-shrink-0" />
-            </button>
-
-            {/* CTA Register */}
+          {/* ZONE 3: ACTIONS (ONLY REGISTRATION BUTTON & MOBILE MENU TOGGLE) */}
+          <div className="flex items-center space-x-2 flex-shrink-0">
+            {/* CTA Register - Desktop */}
             <button
               id="nav-cta-register"
               onClick={onRegisterClick}
-              className="h-8 xl:h-9 flex items-center justify-center px-3.5 xl:px-4 2xl:px-5 rounded-none bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs xl:text-sm font-bold uppercase tracking-wider shadow-sm active:scale-[0.98] transition-all cursor-pointer whitespace-nowrap"
+              className="hidden sm:flex h-9 xl:h-10 items-center justify-center px-4 xl:px-5 2xl:px-6 rounded-none bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs xl:text-[13px] font-bold uppercase tracking-wider shadow-xs active:scale-[0.98] transition-all cursor-pointer whitespace-nowrap"
             >
               {t.navRegister}
             </button>
-          </div>
 
-          {/* Mobile & Tablet Menu Trigger button */}
-          <div className="lg:hidden flex items-center space-x-2">
-            <button
-              id="mobile-lang-switcher"
-              onClick={() => setLang(lang === 'pt' ? 'en' : 'pt')}
-              className="md:hidden h-8 flex items-center space-x-1 px-2.5 rounded-none bg-slate-100 border border-slate-300 text-xs font-bold text-slate-800"
-            >
-              <Globe className="w-3.5 h-3.5 text-amber-600" />
-              <span>{lang === 'pt' ? 'EN' : 'PT'}</span>
-            </button>
-
-            <button
-              id="mobile-header-admin-btn"
-              onClick={onAdminToggle}
-              title={t.navAdmin}
-              aria-label={t.navAdmin}
-              className={`md:hidden h-8 px-2.5 rounded-none border transition-all cursor-pointer flex items-center justify-center ${
-                showAdminLink
-                  ? 'bg-amber-100 text-amber-900 border-amber-500'
-                  : 'bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200'
-              }`}
-            >
-              <Lock className="w-3.5 h-3.5 text-amber-600" />
-            </button>
-
+            {/* MOBILE MENU TOGGLE TRIGGER (< lg) */}
             <button
               id="mobile-menu-btn"
               onClick={() => setIsOpen(!isOpen)}
-              className="h-8 w-8 p-0 flex items-center justify-center rounded-none text-slate-800 hover:bg-slate-100 focus:outline-none border border-slate-300 cursor-pointer"
+              className="lg:hidden h-9 w-9 p-0 flex items-center justify-center rounded-none text-slate-800 hover:bg-slate-100 focus:outline-none border border-slate-300 cursor-pointer"
               aria-label="Toggle Menu"
             >
-              {isOpen ? <X className="w-6 h-6 text-amber-600" /> : <Menu className="w-6 h-6 text-slate-800" />}
+              {isOpen ? <X className="w-5 h-5 text-amber-600" /> : <Menu className="w-5 h-5 text-slate-800" />}
             </button>
           </div>
+
         </div>
       </div>
 
-      {/* Mobile & Tablet Menu Dropdown */}
+      {/* MOBILE & TABLET EXPANDED DRAWER MENU WITH CENTERED ELEMENTS */}
       <div
         id="mobile-menu"
         className={`lg:hidden overflow-hidden transition-all duration-300 ${
-          isOpen ? 'max-h-[85vh] opacity-100 overflow-y-auto' : 'max-h-0 opacity-0'
-        } bg-white border-b border-slate-200 shadow-lg`}
+          isOpen ? 'max-h-[90vh] opacity-100 overflow-y-auto' : 'max-h-0 opacity-0'
+        } bg-white border-b border-slate-200 shadow-xl`}
       >
-        <div className="px-3 pt-2 pb-6 space-y-1 sm:px-4 text-center">
-          {navItems.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              id={`mobile-nav-item-${item.href.substring(1)}`}
-              onClick={(e) => handleNavClick(e, item.href)}
-              className="block px-3 py-3 rounded-none text-sm font-semibold text-slate-800 hover:text-amber-700 hover:bg-amber-50 transition-colors border-b border-slate-100"
-            >
-              {item.label}
-            </a>
-          ))}
+        <div className="px-4 pt-3 pb-6 space-y-1 text-center max-w-lg mx-auto">
+          {navItems.map((item) => {
+            const isAttendance = item.href === '#attendance';
+            const isActive = activeSection === item.href.substring(1);
 
-          <div className="pt-4 pb-2 px-2 sm:px-4">
+            return (
+              <a
+                key={item.href}
+                href={item.href}
+                id={`mobile-nav-item-${item.href.substring(1)}`}
+                onClick={(e) => handleNavClick(e, item.href)}
+                className={`block px-4 py-2.5 rounded-none text-xs sm:text-sm font-semibold tracking-tight uppercase transition-colors border-b border-slate-100 ${
+                  isActive
+                    ? 'bg-amber-50 text-amber-800 font-bold border-amber-300'
+                    : isAttendance
+                    ? 'text-emerald-700 font-bold bg-emerald-50/50'
+                    : 'text-slate-800 hover:text-amber-700 hover:bg-amber-50/60'
+                }`}
+              >
+                {isAttendance ? `🔴 ${item.label}` : item.label}
+              </a>
+            );
+          })}
+
+          <div className="pt-4 pb-2 px-2">
             <button
               id="mobile-nav-cta-register"
               onClick={() => {
                 setIsOpen(false);
                 onRegisterClick();
               }}
-              className="w-full py-3 rounded-none bg-amber-500 text-slate-950 text-xs font-bold uppercase tracking-widest hover:bg-amber-600 transition-colors cursor-pointer shadow-sm"
+              className="w-full py-3 rounded-none bg-amber-500 text-slate-950 text-xs sm:text-sm font-bold uppercase tracking-widest hover:bg-amber-600 transition-colors cursor-pointer shadow-sm active:scale-[0.98]"
             >
               {t.navRegister}
             </button>

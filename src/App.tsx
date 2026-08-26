@@ -14,24 +14,37 @@ import RegistrationForm from './components/RegistrationForm';
 import TravelGuide from './components/TravelGuide';
 import Partners from './components/Partners';
 import { Gallery } from './components/Gallery';
+import LiveAttendance from './components/LiveAttendance';
+import QrCodeScannerModal from './components/QrCodeScannerModal';
 import AdminDashboard from './components/AdminDashboard';
 import InvestorChat from './components/InvestorChat';
 import TeteProfile from './components/TeteProfile';
 import BancoMocFinancialSuite from './components/BancoMocFinancialSuite';
+import FloatingLanguageToggle from './components/FloatingLanguageToggle';
 
 import { INITIAL_REGISTRATIONS, TRANSLATIONS, SPONSORS } from './data';
 import { Registration } from './types';
+import { realtimeAttendance } from './services/realtimeAttendance';
 import { Mail, Phone, MapPin, ExternalLink, Calendar, ChevronRight, ArrowUp } from 'lucide-react';
 import ciitLogoImg from './assets/images/ciit_2026_logo_1787657793393.png';
 
 export default function App() {
   const [lang, setLang] = useState<'pt' | 'en'>('pt');
-  const [registrations, setRegistrations] = useState<Registration[]>(INITIAL_REGISTRATIONS);
+  const [registrations, setRegistrations] = useState<Registration[]>(() => realtimeAttendance.getRegistrations());
   const [showAdmin, setShowAdmin] = useState(false);
+  const [isScannerOpen, setIsScannerOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [showBackToTop, setShowBackToTop] = useState(false);
 
   const t = TRANSLATIONS[lang];
+
+  // Subscribe to real-time attendance singleton
+  useEffect(() => {
+    const unsubscribe = realtimeAttendance.subscribe((state) => {
+      setRegistrations(state.registrations);
+    });
+    return () => unsubscribe();
+  }, []);
 
   // Force page to start at top header on mount
   useEffect(() => {
@@ -44,7 +57,7 @@ export default function App() {
   // Section Tracking via scroll handler
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['home', 'about', 'tete-profile', 'sectors', 'speakers', 'agenda', 'gallery', 'registration', 'travel', 'admin'];
+      const sections = ['home', 'about', 'tete-profile', 'sectors', 'speakers', 'agenda', 'gallery', 'attendance', 'registration', 'travel', 'admin'];
       const scrollPosition = window.scrollY + 200;
 
       for (const section of sections) {
@@ -68,15 +81,15 @@ export default function App() {
 
   // Handlers for Registrations Database updates
   const handleRegisterSuccess = (newReg: Registration) => {
-    setRegistrations((prev) => [newReg, ...prev]);
+    realtimeAttendance.addRegistration(newReg);
   };
 
   const handleAddManualAttendee = (manualAttendee: Registration) => {
-    setRegistrations((prev) => [manualAttendee, ...prev]);
+    realtimeAttendance.addRegistration(manualAttendee);
   };
 
   const handleClearRegistrations = () => {
-    setRegistrations(INITIAL_REGISTRATIONS);
+    realtimeAttendance.clearDemoData();
   };
 
   const scrollToSection = (id: string) => {
@@ -141,6 +154,16 @@ export default function App() {
         {/* OFFICIAL PHOTOGRAPHIC GALLERY & INTERACTIVE CAROUSEL */}
         <Gallery lang={lang} />
 
+        {/* LIVE ATTENDANCE & QR CODE CHECK-IN TRACKER */}
+        <LiveAttendance
+          lang={lang}
+          onOpenScanner={() => setIsScannerOpen(true)}
+          onOpenAdmin={() => {
+            setShowAdmin(true);
+            setTimeout(() => scrollToSection('admin'), 100);
+          }}
+        />
+
         {/* CLIENT REGISTRATION FORM & PASS BADGE CARD GENERATOR */}
         <RegistrationForm
           lang={lang}
@@ -164,10 +187,18 @@ export default function App() {
             onAddManualAttendee={handleAddManualAttendee}
             onClearRegistrations={handleClearRegistrations}
             onCloseAdmin={() => setShowAdmin(false)}
+            onOpenScanner={() => setIsScannerOpen(true)}
           />
         )}
 
       </main>
+
+      {/* QR CODE ENTRANCE SCANNER MODAL */}
+      <QrCodeScannerModal
+        lang={lang}
+        isOpen={isScannerOpen}
+        onClose={() => setIsScannerOpen(false)}
+      />
 
       {/* FOOTER */}
       <footer id="footer" className="bg-corporate-950 text-white pt-16 pb-12 border-t border-gold-600/20">
@@ -272,16 +303,22 @@ export default function App() {
         </div>
       </footer>
 
+      {/* FLOATING INDEPENDENT LANGUAGE SWITCH BUTTON */}
+      <FloatingLanguageToggle
+        lang={lang}
+        setLang={setLang}
+      />
+
       {/* VOLTAR AO INÍCIO (BACK TO TOP) FLOATING BUTTON */}
       {showBackToTop && (
         <button
           id="btn-back-to-top"
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 z-40 p-3 bg-corporate-900/90 hover:bg-gold-500 text-gold-300 hover:text-corporate-950 border border-gold-500/50 hover:border-gold-400 shadow-2xl backdrop-blur-md transition-all duration-300 transform hover:scale-110 flex items-center justify-center rounded-full group cursor-pointer"
+          className="fixed bottom-20 right-6 z-40 p-2.5 bg-corporate-900/90 hover:bg-gold-500 text-gold-300 hover:text-corporate-950 border border-gold-500/50 hover:border-gold-400 shadow-2xl backdrop-blur-md transition-all duration-300 transform hover:scale-110 flex items-center justify-center rounded-full group cursor-pointer"
           title={lang === 'pt' ? 'Voltar ao Início' : 'Back to Top'}
           aria-label={lang === 'pt' ? 'Voltar ao Início' : 'Back to Top'}
         >
-          <ArrowUp className="w-5 h-5 text-gold-400 group-hover:text-corporate-950 transition-transform group-hover:-translate-y-1" />
+          <ArrowUp className="w-4 h-4 text-gold-400 group-hover:text-corporate-950 transition-transform group-hover:-translate-y-0.5" />
         </button>
       )}
 
