@@ -6,6 +6,14 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
+import AboutTete from './components/AboutTete';
+import WhereToInvest from './components/WhereToInvest';
+import MineralPotential from './components/MineralPotential';
+import FisheriesAquaculture from './components/FisheriesAquaculture';
+import OtherPotentials from './components/OtherPotentials';
+import EnergyPotential from './components/EnergyPotential';
+import ProjectsPortfolio from './components/ProjectsPortfolio';
+import InvestorArea from './components/InvestorArea';
 import About from './components/About';
 import Sectors from './components/Sectors';
 import Speakers from './components/Speakers';
@@ -23,7 +31,7 @@ import BancoMocFinancialSuite from './components/BancoMocFinancialSuite';
 import FloatingLanguageToggle from './components/FloatingLanguageToggle';
 
 import { INITIAL_REGISTRATIONS, TRANSLATIONS, SPONSORS } from './data';
-import { Registration } from './types';
+import { Registration, ProjectItem } from './types';
 import { realtimeAttendance } from './services/realtimeAttendance';
 import { Mail, Phone, MapPin, ExternalLink, Calendar, ChevronRight, ArrowUp } from 'lucide-react';
 import ciitLogoImg from './assets/images/ciit_2026_logo_1787657793393.png';
@@ -35,6 +43,7 @@ export default function App() {
   const [isScannerOpen, setIsScannerOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [selectedInquiryProject, setSelectedInquiryProject] = useState<ProjectItem | null>(null);
 
   const t = TRANSLATIONS[lang];
 
@@ -57,7 +66,28 @@ export default function App() {
   // Section Tracking via scroll handler
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['home', 'about', 'tete-profile', 'sectors', 'speakers', 'agenda', 'gallery', 'attendance', 'registration', 'travel', 'admin'];
+      const sections = [
+        'home', 
+        'sobre-tete', 
+        'porque-investir', 
+        'onde-investir', 
+        'potencial-mineral', 
+        'pesca-aquacultura', 
+        'outros-potenciais', 
+        'potencial-energetico', 
+        'portfolio-projetos', 
+        'area-investidor',
+        'about', 
+        'tete-profile', 
+        'sectors', 
+        'speakers', 
+        'agenda', 
+        'gallery', 
+        'attendance', 
+        'registration', 
+        'travel', 
+        'admin'
+      ];
       const scrollPosition = window.scrollY + 200;
 
       for (const section of sections) {
@@ -103,58 +133,112 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleSelectProjectForInquiry = (project: ProjectItem) => {
+    setSelectedInquiryProject(project);
+    scrollToSection('area-investidor');
+  };
+
   return (
-    <div id="root-layout" className="min-h-screen flex flex-col justify-between bg-neutral-50 text-neutral-900 overflow-x-hidden selection:bg-gold-500 selection:text-corporate-950">
+    <div id="root-layout" className="min-h-screen flex flex-col justify-between bg-neutral-50 text-neutral-900 overflow-x-hidden selection:bg-amber-500 selection:text-slate-950">
       
       {/* FIXED STICKY HEADER (NAVBAR + BANCO DE MOÇAMBIQUE TICKER BAR) */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-corporate-950 shadow-2xl border-b border-gold-500/20">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-slate-950 shadow-2xl border-b border-amber-500/20">
         <Navbar
           lang={lang}
-          setLang={setLang}
           activeSection={activeSection}
           onRegisterClick={() => scrollToSection('registration')}
+        />
+
+        {/* BANCO DE MOÇAMBIQUE EXCHANGE TICKER CAROUSEL */}
+        <BancoMocFinancialSuite 
+          lang={lang} 
           onAdminToggle={() => {
             setShowAdmin(!showAdmin);
             setTimeout(() => {
               scrollToSection('admin');
             }, 100);
           }}
-          showAdminLink={showAdmin}
+          showAdmin={showAdmin}
         />
-
-        {/* BANCO DE MOÇAMBIQUE EXCHANGE TICKER CAROUSEL */}
-        <BancoMocFinancialSuite lang={lang} />
       </header>
 
-      {/* Main Sections */}
-      <main className="flex-grow pt-[115px] sm:pt-[120px]">
+      {/* Main Content Sections */}
+      <main className="flex-grow pt-[102px] sm:pt-[114px] md:pt-[122px] lg:pt-[128px]">
         
-        {/* HERO SECTION */}
+        {/* 1. HERO SECTION (High Impact with new Headline & Subheadline) */}
         <Hero
           lang={lang}
           onRegisterClick={() => scrollToSection('registration')}
-          onExploreClick={() => scrollToSection('about')}
+          onExploreClick={() => scrollToSection('onde-investir')}
+          onPortfolioClick={() => scrollToSection('portfolio-projetos')}
         />
 
-        {/* ABOUT CONFERENCE SECTION */}
+        {/* 2. SOBRE TETE & PORQUÊ INVESTIR (15 Distritos, 5 Municípios, 1.400km Fronteiras, 6 Diferenciais) */}
+        <AboutTete 
+          lang={lang}
+          onExplorePortfolio={() => scrollToSection('portfolio-projetos')}
+          onInquireInterest={(subject) => {
+            scrollToSection('area-investidor');
+          }}
+        />
+
+        {/* 3. ONDE INVESTIR (Energia, Indústria Extrativa, Agricultura) */}
+        <WhereToInvest 
+          lang={lang}
+        />
+
+        {/* 4. POTENCIAL MINERAL POR DISTRITO (15 Distritos com todos os minérios mapeados) */}
+        <MineralPotential 
+          lang={lang}
+        />
+
+        {/* 5. PESCA E AQUACULTURA (Espécies exatas, 4.000 ton, 2.700 ton, 12M alevinos, 6.000 ton Kapenta) */}
+        <FisheriesAquaculture 
+          lang={lang}
+        />
+
+        {/* 6. OUTROS POTENCIAIS (Pecuária 5,29M com Cabrito IG, Agricultura 10M acres, Florestas, Turismo, Logística) */}
+        <OtherPotentials 
+          lang={lang}
+        />
+
+        {/* 7. POTENCIAL ENERGÉTICO (HCB 2.925 MW, Mphanda Nkuwa 1.500 MW, Boroma 200 MW, Lupata 600 MW) */}
+        <EnergyPotential 
+          lang={lang}
+          onViewProjectsClick={() => scrollToSection('portfolio-projetos')}
+        />
+
+        {/* 8. PORTFÓLIO DE PROJETOS DE INVESTIMENTO (8 Projetos Estratégicos com filtros) */}
+        <ProjectsPortfolio 
+          lang={lang}
+          onSelectProjectForInquiry={handleSelectProjectForInquiry}
+        />
+
+        {/* 9. ÁREA DO INVESTIDOR: ENCONTRE A SUA OPORTUNIDADE EM TETE (Formulário Completo) */}
+        <InvestorArea 
+          lang={lang}
+          preSelectedProject={selectedInquiryProject}
+        />
+
+        {/* 10. SOBRE A CONFERÊNCIA CIIT 2026 */}
         <About lang={lang} />
 
-        {/* TETE PROVINCE PROFILE & TOURIST ATTRACTIONS SECTION */}
+        {/* 11. PERFIL DE TETE & PONTOS TURÍSTICOS */}
         <TeteProfile lang={lang} />
 
-        {/* THE 6 CS OF TETE SECTORS GRID */}
+        {/* 12. OS 6C'S DE TETE */}
         <Sectors lang={lang} />
 
-        {/* KEYNOTE SPEAKERS GRID PANEL */}
+        {/* 13. ORADORES CONFIRMADOS */}
         <Speakers lang={lang} />
 
-        {/* INTERACTIVE TIMETABLE AGENDA */}
+        {/* 14. PROGRAMA OFICIAL CIIT 2026 */}
         <Agenda lang={lang} />
 
-        {/* OFFICIAL PHOTOGRAPHIC GALLERY & INTERACTIVE CAROUSEL */}
+        {/* 15. GALERIA OFICIAL DE FOTOGRAFIAS */}
         <Gallery lang={lang} />
 
-        {/* LIVE ATTENDANCE & QR CODE CHECK-IN TRACKER */}
+        {/* 16. PRESENÇAS LIVE & CHECK-IN EM TEMPO REAL */}
         <LiveAttendance
           lang={lang}
           onOpenScanner={() => setIsScannerOpen(true)}
@@ -164,22 +248,22 @@ export default function App() {
           }}
         />
 
-        {/* CLIENT REGISTRATION FORM & PASS BADGE CARD GENERATOR */}
+        {/* 17. CREDENCIAMENTO E FORMULÁRIO DE INSCRIÇÃO */}
         <RegistrationForm
           lang={lang}
           onRegisterSuccess={handleRegisterSuccess}
         />
 
-        {/* VISITORS TRAVEL GUIDE & HOTELS */}
+        {/* 18. GUIA DE VIAGEM E HOTÉIS */}
         <TravelGuide lang={lang} />
 
-        {/* STRATEGIC INSTITUTIONAL PARTNERS & SPONSORS */}
+        {/* 19. PARCEIROS E PATROCINADORES */}
         <Partners lang={lang} />
 
-        {/* INTERACTIVE INTEGRATED INVESTOR CHATBOT */}
+        {/* 20. ASSISTENTE VIRTUAL DE INVESTIMENTO */}
         <InvestorChat lang={lang} />
 
-        {/* ADMINISTRATION PORTAL LOGS TABLE */}
+        {/* 21. PAINEL ADMINISTRATIVO */}
         {showAdmin && (
           <AdminDashboard
             lang={lang}
@@ -201,7 +285,7 @@ export default function App() {
       />
 
       {/* FOOTER */}
-      <footer id="footer" className="bg-corporate-950 text-white pt-16 pb-12 border-t border-gold-600/20">
+      <footer id="footer" className="bg-slate-950 text-white pt-16 pb-12 border-t border-amber-500/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
@@ -216,44 +300,44 @@ export default function App() {
                 <img
                   src={ciitLogoImg}
                   alt="CIIT 2026 Logo"
-                  className="h-12 sm:h-14 w-auto object-contain drop-shadow-[0_2px_12px_rgba(234,179,8,0.3)] transition-transform group-hover:scale-105"
+                  className="h-12 sm:h-14 w-auto object-contain drop-shadow-md transition-transform group-hover:scale-105"
                   referrerPolicy="no-referrer"
                 />
               </button>
-              <p className="text-xs text-gray-400 leading-relaxed font-light">
+              <p className="text-xs text-slate-400 leading-relaxed font-light">
                 {lang === 'pt'
-                  ? 'A Conferência Internacional de Investimentos de Tete impulsiona o desenvolvimento de Moçambique promovendo conexões seguras de investimento privado.'
-                  : 'The Tete International Investment Conference empowers Mozambican commerce by promoting elite foreign private venture connections.'}
+                  ? 'A Conferência Internacional de Investimentos de Tete impulsiona o desenvolvimento de Moçambique promovendo conexões seguras de investimento privado nos setores de energia, mineração, agricultura, pecuária e infraestrutura.'
+                  : 'The Tete International Investment Conference empowers Mozambican commerce by promoting elite foreign private venture connections in energy, mining, agriculture, livestock, and infrastructure.'}
               </p>
-              <div className="pt-2 text-xs text-gold-400 font-semibold italic">
-                {lang === 'pt' ? '"Tete, Terra dos 6C\'s e da Diversidade"' : '"Tete, Land of the 6Cs and Diversity"'}
+              <div className="pt-2 text-xs text-amber-400 font-semibold italic">
+                {lang === 'pt' ? '"Invista em Tete. Construa o futuro."' : '"Invest in Tete. Build the future."'}
               </div>
             </div>
 
             {/* Column 2: Quick Links */}
             <div className="space-y-4">
-              <h4 className="text-xs font-mono font-bold tracking-widest text-gold-400 uppercase">
-                {lang === 'pt' ? 'Links Rápidos' : 'Quick Links'}
+              <h4 className="text-xs font-mono font-bold tracking-widest text-amber-400 uppercase">
+                {lang === 'pt' ? 'Navegação' : 'Navigation'}
               </h4>
-              <ul className="space-y-2 text-xs text-gray-400">
+              <ul className="space-y-2 text-xs text-slate-400">
                 <li>
-                  <button onClick={() => scrollToSection('about')} className="hover:text-white transition-colors cursor-pointer text-left">
-                    {t.navAbout}
+                  <button onClick={() => scrollToSection('sobre-tete')} className="hover:text-white transition-colors cursor-pointer text-left">
+                    {lang === 'pt' ? 'Sobre Tete' : 'About Tete'}
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => scrollToSection('sectors')} className="hover:text-white transition-colors cursor-pointer text-left">
-                    {t.nav6cs}
+                  <button onClick={() => scrollToSection('onde-investir')} className="hover:text-white transition-colors cursor-pointer text-left">
+                    {lang === 'pt' ? 'Onde Investir' : 'Where to Invest'}
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => scrollToSection('agenda')} className="hover:text-white transition-colors cursor-pointer text-left">
-                    {t.navAgenda}
+                  <button onClick={() => scrollToSection('portfolio-projetos')} className="hover:text-white transition-colors cursor-pointer text-left">
+                    {lang === 'pt' ? 'Portfólio de Projetos' : 'Projects Portfolio'}
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => scrollToSection('gallery')} className="hover:text-white transition-colors cursor-pointer text-left">
-                    {t.navGallery || (lang === 'pt' ? 'Galeria' : 'Gallery')}
+                  <button onClick={() => scrollToSection('area-investidor')} className="hover:text-white transition-colors cursor-pointer text-left">
+                    {lang === 'pt' ? 'Área do Investidor' : 'Investor Area'}
                   </button>
                 </li>
                 <li>
@@ -266,21 +350,21 @@ export default function App() {
 
             {/* Column 3: Contacts */}
             <div className="space-y-4">
-              <h4 className="text-xs font-mono font-bold tracking-widest text-gold-400 uppercase">
-                {lang === 'pt' ? 'Contactos' : 'Contacts'}
+              <h4 className="text-xs font-mono font-bold tracking-widest text-amber-400 uppercase">
+                {lang === 'pt' ? 'Contactos Oficiais' : 'Official Contacts'}
               </h4>
-              <ul className="space-y-3 text-xs text-gray-400">
+              <ul className="space-y-3 text-xs text-slate-400">
                 <li className="flex items-start space-x-2">
-                  <MapPin className="w-4 h-4 text-gold-500 flex-shrink-0" />
-                  <span>Av. 25 de Setembro, Cidade de Tete, Moçambique</span>
+                  <MapPin className="w-4 h-4 text-amber-500 flex-shrink-0" />
+                  <span>Av. 25 de Setembro, Cidade de Tete, Província de Tete, Moçambique</span>
                 </li>
                 <li className="flex items-center space-x-2">
-                  <Mail className="w-4 h-4 text-gold-500 flex-shrink-0" />
-                  <a href="mailto:info@ciit-tete.gov.mz" className="hover:text-white transition-colors">info@ciit-tete.gov.mz</a>
+                  <Mail className="w-4 h-4 text-amber-500 flex-shrink-0" />
+                  <a href="mailto:invest@tete.gov.mz" className="hover:text-white transition-colors">invest@tete.gov.mz</a>
                 </li>
                 <li className="flex items-center space-x-2">
-                  <Phone className="w-4 h-4 text-gold-500 flex-shrink-0" />
-                  <span>+258 25 220 100</span>
+                  <Phone className="w-4 h-4 text-amber-500 flex-shrink-0" />
+                  <span>+258 25 220 100 / +258 84 300 1234</span>
                 </li>
               </ul>
             </div>
@@ -288,15 +372,15 @@ export default function App() {
           </div>
 
           {/* Bottom Stamp and Copyright */}
-          <div className="pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] text-gray-500 font-mono">
+          <div className="pt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] text-slate-500 font-mono">
             <div>
               <p>© 2026 {t.footerRights}</p>
             </div>
             
             <div className="flex items-center space-x-4">
-              <span className="text-gold-500">República de Moçambique</span>
-              <span className="w-1.5 h-1.5 rounded-none bg-emerald-500" />
-              <span>Governo Provincial</span>
+              <span className="text-amber-500">República de Moçambique</span>
+              <span className="w-1.5 h-1.5 bg-emerald-500" />
+              <span>Governo da Província de Tete</span>
             </div>
           </div>
 
@@ -314,11 +398,11 @@ export default function App() {
         <button
           id="btn-back-to-top"
           onClick={scrollToTop}
-          className="fixed bottom-20 right-6 z-40 p-2.5 bg-corporate-900/90 hover:bg-gold-500 text-gold-300 hover:text-corporate-950 border border-gold-500/50 hover:border-gold-400 shadow-2xl backdrop-blur-md transition-all duration-300 transform hover:scale-110 flex items-center justify-center rounded-full group cursor-pointer"
+          className="fixed bottom-20 right-6 z-40 p-2.5 bg-slate-900/90 hover:bg-amber-500 text-amber-300 hover:text-slate-950 border border-amber-500/50 hover:border-amber-400 shadow-2xl backdrop-blur-md transition-all duration-300 transform hover:scale-110 flex items-center justify-center rounded-full group cursor-pointer"
           title={lang === 'pt' ? 'Voltar ao Início' : 'Back to Top'}
           aria-label={lang === 'pt' ? 'Voltar ao Início' : 'Back to Top'}
         >
-          <ArrowUp className="w-4 h-4 text-gold-400 group-hover:text-corporate-950 transition-transform group-hover:-translate-y-0.5" />
+          <ArrowUp className="w-4 h-4 text-amber-400 group-hover:text-slate-950 transition-transform group-hover:-translate-y-0.5" />
         </button>
       )}
 

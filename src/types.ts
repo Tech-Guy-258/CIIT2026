@@ -200,3 +200,206 @@ export interface GalleryItem {
   aspectRatio?: string;
   featured?: boolean;
 }
+
+export interface DistrictMineral {
+  district: string;
+  minerals: string;
+  mineralsEn?: string;
+  mineralTypes: string[];
+}
+
+export interface ProjectItem {
+  id: string;
+  name: string;
+  nameEn?: string;
+  description: string;
+  descriptionEn?: string;
+  capacity?: string;
+  capacityEn?: string;
+  location: string;
+  locationEn?: string;
+  investment?: string;
+  investmentEn?: string;
+  sector: 'Energia' | 'Agricultura' | 'Pecuária' | 'Mineração' | 'Indústria' | 'Turismo' | 'Pesca/Aquacultura' | 'Infraestrutura';
+  sectorEn?: string;
+  locationType: 'Distrito' | 'Cidade' | 'Província';
+  locationTypeEn?: string;
+  investmentType: 'Energia' | 'Infraestrutura' | 'Produção' | 'Processamento' | 'Extração';
+  investmentTypeEn?: string;
+  image?: string;
+}
+
+export interface SpeciesDistribution {
+  scientificName: string;
+  commonName: string;
+  commonNameEn?: string;
+  percentage: number;
+  color: string;
+}
+
+export interface LivestockData {
+  category: string;
+  categoryEn: string;
+  count: number;
+  unit: string;
+}
+
+export interface WhyInvestCard {
+  id: string;
+  number: number;
+  title: string;
+  titleEn: string;
+  description: string;
+  descriptionEn: string;
+  keyPoints?: string[];
+  keyPointsEn?: string[];
+  iconName: string;
+}
+
+export interface InvestorInquiry {
+  id?: string;
+  name: string;
+  company: string;
+  country: string;
+  email: string;
+  phone: string;
+  sectorOfInterest: string;
+  projectOfInterest: string;
+  message: string;
+  submittedAt?: string;
+}
+
+export interface DistrictEconomyActivity {
+  name: string;
+  nameEn: string;
+  desc: string;
+  isPrimary?: boolean;
+}
+
+export interface DistrictInvestmentProject {
+  sector: string;
+  project: string;
+  location: string;
+  capacity: string;
+  investment: string;
+}
+
+export interface DistrictIndicators {
+  location: boolean;
+  agriculture: boolean;
+  mining: boolean;
+  energy: boolean;
+  fisheries: boolean;
+  livestock: boolean;
+  tourism: boolean;
+}
+
+export interface DistrictDetail {
+  id: string;
+  slug: string;
+  name: string;
+  capital: string;
+  tagline: string;
+  taglineEn?: string;
+  image: string;
+  heroImage?: string;
+  location: string;
+  locationEn?: string;
+  area: string;
+  population: string;
+  climate?: string;
+  climateEn?: string;
+  overview: string;
+  overviewEn?: string;
+  history: string;
+  historyEn?: string;
+  geography: {
+    borders: string;
+    bordersEn?: string;
+    rivers: string;
+    localities: string;
+    coordinates?: string;
+  };
+  economy: DistrictEconomyActivity[];
+  resources: string;
+  resourcesEn?: string;
+  investmentProjects: DistrictInvestmentProject[];
+  indicators: DistrictIndicators;
+  gallery: string[];
+  sources: string[];
+}
+
+export interface MunicipalityDetail {
+  id: string;
+  slug: string;
+  name: string;
+  status: string;
+  statusEn: string;
+  image: string;
+  heroImage?: string;
+  location: string;
+  locationEn: string;
+  population: string;
+  overview: string;
+  overviewEn: string;
+  history: string;
+  historyEn: string;
+  economy: string;
+  economyEn: string;
+  strategicImportance: string;
+  strategicImportanceEn: string;
+  infrastructure: string;
+  infrastructureEn: string;
+  investmentPotential: string;
+  investmentPotentialEn: string;
+  heritageCulture: string;
+  curiosities: string;
+  sources: string[];
+}
+
+export interface BorderPostItem {
+  name: string;
+  type: string;
+  connectsTo: string;
+}
+
+export interface BorderDetail {
+  id: string;
+  country: string;
+  flag: string;
+  borderLength: string;
+  borderType: string;
+  borderTypeEn: string;
+  borderPosts: BorderPostItem[];
+  commercialImportance: string;
+  commercialImportanceEn: string;
+  logisticsImportance: string;
+  logisticsImportanceEn: string;
+  history: string;
+  historyEn: string;
+  tradeOpportunities: string[];
+  tradeOpportunitiesEn?: string[];
+  sources: string[];
+}
+
+export interface TimelineEvent {
+  id: string;
+  period: string;
+  title: string;
+  titleEn: string;
+  description: string;
+  descriptionEn: string;
+  highlight: string;
+}
+
+export interface MapPoint {
+  id: string;
+  name: string;
+  type: 'district' | 'municipality' | 'border' | 'project' | 'resource';
+  x: number; // percentage 0-100
+  y: number; // percentage 0-100
+  district?: string;
+  info: string;
+}
+
+
