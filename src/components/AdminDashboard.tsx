@@ -3,15 +3,16 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { TRANSLATIONS } from '../data';
-import { Registration, CategoryAttendanceBreakdown, CheckInRecord } from '../types';
+import { Registration, CategoryAttendanceBreakdown, CheckInRecord, AccessCodeRecord } from '../types';
 import { realtimeAttendance } from '../services/realtimeAttendance';
+import { accessControl } from '../services/accessControl';
 import {
   Users, UserCheck, Clock, Percent, ShieldCheck, Lock, Search, Filter,
   FileSpreadsheet, UserPlus, LogOut, Check, X, QrCode, Trash2,
   Briefcase, TrendingUp, Mic, Award, Building, Layers, CheckCircle2,
-  BarChart3, Activity
+  BarChart3, Activity, KeyRound, ShieldAlert, RotateCcw, Plus, RefreshCw, AlertTriangle
 } from 'lucide-react';
 
 interface AdminDashboardProps {
@@ -48,6 +49,87 @@ export default function AdminDashboard({
   // Real-time check-ins and hourly data for Admin analytics
   const [recentCheckIns, setRecentCheckIns] = useState<CheckInRecord[]>(() => realtimeAttendance.getCheckIns().slice(0, 10));
   const [hourlyData, setHourlyData] = useState(() => realtimeAttendance.getHourlyEvolution());
+
+  // Dashboard Tab selection
+  const [adminTab, setAdminTab] = useState<'delegates' | 'access_codes'>('delegates');
+
+  // Access Codes Management State
+  const [adminCodes, setAdminCodes] = useState<AccessCodeRecord[]>([]);
+  const [loadingCodes, setLoadingCodes] = useState(false);
+  const [showNewCodeForm, setShowNewCodeForm] = useState(false);
+  const [newCodeInput, setNewCodeInput] = useState('');
+  const [newCodeLabel, setNewCodeLabel] = useState('');
+  const [newCodeCategory, setNewCodeCategory] = useState('Geral');
+  const [codeFeedbackMsg, setCodeFeedbackMsg] = useState<{ text: string; isError?: boolean } | null>(null);
+
+  const fetchCodes = useCallback(async () => {
+    setLoadingCodes(true);
+    const list = await accessControl.fetchAdminCodes();
+    setAdminCodes(list);
+    setLoadingCodes(false);
+  }, []);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchCodes();
+    }
+  }, [isAuthenticated, fetchCodes]);
+
+  const handleCreateCode = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newCodeInput.trim()) return;
+
+    const success = await accessControl.adminCreateCode(newCodeInput, newCodeLabel, newCodeCategory);
+    if (success) {
+      setCodeFeedbackMsg({ text: `Código ${newCodeInput.toUpperCase()} criado com sucesso!` });
+      setNewCodeInput('');
+      setNewCodeLabel('');
+      setShowNewCodeForm(false);
+      fetchCodes();
+      setTimeout(() => setCodeFeedbackMsg(null), 4000);
+    } else {
+      setCodeFeedbackMsg({ text: 'Falha ao criar código. Verifique se o código já existe.', isError: true });
+    }
+  };
+
+  const handleRevokeCode = async (code: string) => {
+    const confirmRevoke = window.confirm(lang === 'pt' ? `Tem a certeza que deseja revogar o acesso do código ${code}? O utilizador perderá o acesso imediatamente.` : `Are you sure you want to revoke access for code ${code}?`);
+    if (!confirmRevoke) return;
+
+    const success = await accessControl.adminRevokeCode(code, 'Revogado manualmente pelo Administrador.');
+    if (success) {
+      setCodeFeedbackMsg({ text: `Código ${code} revogado com sucesso!` });
+      fetchCodes();
+      setTimeout(() => setCodeFeedbackMsg(null), 4000);
+    }
+  };
+
+  const handleResetCode = async (code: string) => {
+    const success = await accessControl.adminResetCode(code);
+    if (success) {
+      setCodeFeedbackMsg({ text: `Código ${code} resetado para não utilizado (24h disponíveis).` });
+      fetchCodes();
+      setTimeout(() => setCodeFeedbackMsg(null), 4000);
+    }
+  };
+
+  const handleDeleteCode = async (code: string) => {
+    const confirmDelete = window.confirm(
+      lang === 'pt'
+        ? `Tem a certeza que deseja APAGAR permanentemente o código ${code}? Esta ação removerá o código do sistema de forma irreversível.`
+        : `Are you sure you want to PERMANENTLY DELETE code ${code}? This action cannot be undone.`
+    );
+    if (!confirmDelete) return;
+
+    const success = await accessControl.adminDeleteCode(code);
+    if (success) {
+      setCodeFeedbackMsg({ text: `Código ${code} apagado com sucesso do sistema!` });
+      fetchCodes();
+      setTimeout(() => setCodeFeedbackMsg(null), 4000);
+    } else {
+      setCodeFeedbackMsg({ text: 'Falha ao apagar o código. Tente novamente.', isError: true });
+    }
+  };
 
   useEffect(() => {
     const unsubscribe = realtimeAttendance.subscribe((state) => {
@@ -387,6 +469,46 @@ export default function AdminDashboard({
           </div>
         </div>
 
+        {/* TAB NAVIGATION: PARTICIPANTS VS 24H ACCESS CODES */}
+        <div className="flex border-b border-white/10 mb-8 space-x-2 overflow-x-auto">
+          <button
+            type="button"
+            onClick={() => setAdminTab('delegates')}
+            className={`px-5 py-3 font-mono text-xs uppercase tracking-wider font-bold transition-all border-b-2 cursor-pointer flex items-center space-x-2 whitespace-nowrap ${
+              adminTab === 'delegates'
+                ? 'border-gold-500 text-gold-400 bg-white/5'
+                : 'border-transparent text-gray-400 hover:text-white hover:bg-white/[0.02]'
+            }`}
+          >
+            <Users className="w-4 h-4" />
+            <span>{lang === 'pt' ? 'Gestão de Presenças & Credenciamento' : 'Attendance & Delegates'}</span>
+            <span className="ml-1.5 px-2 py-0.5 text-[10px] rounded-none bg-gold-500/20 text-gold-300 font-mono">
+              {totalCount}
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setAdminTab('access_codes');
+              fetchCodes();
+            }}
+            className={`px-5 py-3 font-mono text-xs uppercase tracking-wider font-bold transition-all border-b-2 cursor-pointer flex items-center space-x-2 whitespace-nowrap ${
+              adminTab === 'access_codes'
+                ? 'border-amber-500 text-amber-400 bg-white/5'
+                : 'border-transparent text-gray-400 hover:text-white hover:bg-white/[0.02]'
+            }`}
+          >
+            <KeyRound className="w-4 h-4" />
+            <span>{lang === 'pt' ? 'Controlo de Códigos de Acesso (24h)' : '24h Access Codes Control'}</span>
+            <span className="ml-1.5 px-2 py-0.5 text-[10px] rounded-none bg-emerald-500/20 text-emerald-400 font-mono">
+              {adminCodes.filter(c => c.status === 'active').length} {lang === 'pt' ? 'Ativos' : 'Active'}
+            </span>
+          </button>
+        </div>
+
+        {adminTab === 'delegates' ? (
+        <>
         {/* SECTION: ATTENDANCE DISCRIMINATION BY PARTICIPATION CATEGORY */}
         <div className="mb-10">
           <div className="flex items-center justify-between mb-4">
@@ -947,6 +1069,345 @@ export default function AdminDashboard({
             </table>
           </div>
         </div>
+        </>
+        ) : (
+          /* =========================================================================
+             TAB: 24-HOUR ACCESS CODES MANAGEMENT (CONTROLO DE ACESSOS)
+             ========================================================================= */
+          <div className="space-y-8 animate-fadeIn">
+            
+            {/* TOP METRICS: ACCESS CODES STATUS */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div className="p-4 bg-corporate-950/70 border border-white/10 rounded-none">
+                <span className="text-[10px] font-mono uppercase tracking-widest text-gray-400 block font-bold">
+                  {lang === 'pt' ? 'TOTAL DE CÓDIGOS' : 'TOTAL CODES'}
+                </span>
+                <span className="text-3xl font-display font-black text-white mt-1 block">
+                  {adminCodes.length}
+                </span>
+                <span className="text-[10px] text-gray-500 font-mono mt-1 block">
+                  {lang === 'pt' ? 'Registados no Servidor' : 'Registered on Server'}
+                </span>
+              </div>
+
+              <div className="p-4 bg-corporate-950/70 border border-emerald-500/30 rounded-none">
+                <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-400 block font-bold flex items-center space-x-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>{lang === 'pt' ? 'ATIVOS (24H)' : 'ACTIVE (24H)'}</span>
+                </span>
+                <span className="text-3xl font-display font-black text-emerald-400 mt-1 block">
+                  {adminCodes.filter(c => c.status === 'active').length}
+                </span>
+                <span className="text-[10px] text-emerald-400/70 font-mono mt-1 block">
+                  {lang === 'pt' ? 'Dentro do prazo de 24h' : 'Within 24h window'}
+                </span>
+              </div>
+
+              <div className="p-4 bg-corporate-950/70 border border-red-500/30 rounded-none">
+                <span className="text-[10px] font-mono uppercase tracking-widest text-red-400 block font-bold">
+                  {lang === 'pt' ? 'EXPIRADOS (>24H)' : 'EXPIRED (>24H)'}
+                </span>
+                <span className="text-3xl font-display font-black text-red-400 mt-1 block">
+                  {adminCodes.filter(c => c.status === 'expired').length}
+                </span>
+                <span className="text-[10px] text-red-400/70 font-mono mt-1 block">
+                  {lang === 'pt' ? 'Prazo de 24h esgotado' : '24h window elapsed'}
+                </span>
+              </div>
+
+              <div className="p-4 bg-corporate-950/70 border border-blue-500/30 rounded-none">
+                <span className="text-[10px] font-mono uppercase tracking-widest text-blue-400 block font-bold">
+                  {lang === 'pt' ? 'DISPONÍVEIS' : 'AVAILABLE'}
+                </span>
+                <span className="text-3xl font-display font-black text-blue-400 mt-1 block">
+                  {adminCodes.filter(c => c.status === 'unused').length}
+                </span>
+                <span className="text-[10px] text-blue-400/70 font-mono mt-1 block">
+                  {lang === 'pt' ? 'Aguardando 1º acesso' : 'Awaiting first use'}
+                </span>
+              </div>
+            </div>
+
+            {/* ACTION TOOLBAR */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-corporate-950 p-4 border border-white/10 rounded-none">
+              <div>
+                <h3 className="text-sm font-mono uppercase font-bold text-white tracking-wider flex items-center space-x-2">
+                  <KeyRound className="w-4 h-4 text-amber-400" />
+                  <span>{lang === 'pt' ? 'Gestão e Emissão de Códigos de Acesso 24 Horas' : '24-Hour Access Code Management & Issuance'}</span>
+                </h3>
+                <p className="text-xs text-gray-400 mt-0.5">
+                  {lang === 'pt'
+                    ? 'Cada código inicia automaticamente a contagem de 24 horas contínuas no primeiro acesso do utilizador.'
+                    : 'Each code automatically begins a 24-hour continuous window on the user\'s first access.'}
+                </p>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <button
+                  type="button"
+                  onClick={() => setShowNewCodeForm(!showNewCodeForm)}
+                  className="px-3.5 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-mono text-xs font-bold uppercase tracking-wider transition-colors flex items-center space-x-1.5 cursor-pointer rounded-none"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>{showNewCodeForm ? (lang === 'pt' ? 'Cancelar' : 'Cancel') : (lang === 'pt' ? 'Novo Código' : 'New Code')}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={fetchCodes}
+                  disabled={loadingCodes}
+                  className="px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-mono text-xs font-semibold flex items-center space-x-1.5 transition-colors cursor-pointer rounded-none"
+                  title="Atualizar Códigos"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${loadingCodes ? 'animate-spin text-amber-400' : 'text-gray-400'}`} />
+                  <span>{lang === 'pt' ? 'Atualizar' : 'Refresh'}</span>
+                </button>
+              </div>
+            </div>
+
+            {/* FEEDBACK ALERT */}
+            {codeFeedbackMsg && (
+              <div className={`p-3 border text-xs font-mono rounded-none flex items-center justify-between animate-fadeIn ${
+                codeFeedbackMsg.isError
+                  ? 'bg-red-500/10 border-red-500/40 text-red-300'
+                  : 'bg-emerald-500/10 border-emerald-500/40 text-emerald-300'
+              }`}>
+                <span>{codeFeedbackMsg.text}</span>
+                <button
+                  type="button"
+                  onClick={() => setCodeFeedbackMsg(null)}
+                  className="text-gray-400 hover:text-white"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            )}
+
+            {/* NEW CODE FORM COLLAPSIBLE */}
+            {showNewCodeForm && (
+              <form onSubmit={handleCreateCode} className="p-5 bg-corporate-950 border border-amber-500/40 rounded-none space-y-4 animate-fadeIn">
+                <div className="flex items-center space-x-2 text-amber-400 text-xs font-mono font-bold uppercase tracking-wider">
+                  <KeyRound className="w-4 h-4" />
+                  <span>{lang === 'pt' ? 'Cadastrar Novo Código de Acesso' : 'Register New Access Code'}</span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-[10px] font-mono uppercase text-gray-400 mb-1">
+                      {lang === 'pt' ? 'Código (Ex: VIP-TETE-2026)' : 'Code (e.g. VIP-TETE-2026)'} *
+                    </label>
+                    <input
+                      type="text"
+                      value={newCodeInput}
+                      onChange={(e) => setNewCodeInput(e.target.value.toUpperCase())}
+                      placeholder="CIIT-XXXX-2026"
+                      required
+                      className="w-full bg-slate-900 border border-white/10 px-3 py-2 text-xs font-mono text-white uppercase focus:border-amber-400 focus:outline-none rounded-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-mono uppercase text-gray-400 mb-1">
+                      {lang === 'pt' ? 'Entidade / Destinatário' : 'Entity / Recipient'}
+                    </label>
+                    <input
+                      type="text"
+                      value={newCodeLabel}
+                      onChange={(e) => setNewCodeLabel(e.target.value)}
+                      placeholder="Ex: Embaixada / Investidor Sasol"
+                      className="w-full bg-slate-900 border border-white/10 px-3 py-2 text-xs text-white focus:border-amber-400 focus:outline-none rounded-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-mono uppercase text-gray-400 mb-1">
+                      {lang === 'pt' ? 'Categoria' : 'Category'}
+                    </label>
+                    <select
+                      value={newCodeCategory}
+                      onChange={(e) => setNewCodeCategory(e.target.value)}
+                      className="w-full bg-slate-900 border border-white/10 px-3 py-2 text-xs text-white focus:border-amber-400 focus:outline-none rounded-none"
+                    >
+                      <option value="VIP Executivo">VIP Executivo</option>
+                      <option value="Investidor">Investidor</option>
+                      <option value="Governo">Governo</option>
+                      <option value="Orador">Orador</option>
+                      <option value="Imprensa">Imprensa</option>
+                      <option value="Geral">Geral</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="flex justify-end space-x-2 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowNewCodeForm(false)}
+                    className="px-4 py-2 bg-white/5 hover:bg-white/10 text-xs font-mono text-gray-300 rounded-none cursor-pointer"
+                  >
+                    {lang === 'pt' ? 'Cancelar' : 'Cancel'}
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-5 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-mono text-xs font-bold uppercase tracking-wider rounded-none cursor-pointer"
+                  >
+                    {lang === 'pt' ? 'Guardar Código' : 'Save Code'}
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {/* ACCESS CODES TABLE */}
+            <div className="bg-corporate-950 border border-white/10 rounded-none overflow-hidden">
+              <div className="p-4 border-b border-white/10 flex items-center justify-between">
+                <span className="text-xs font-mono uppercase font-bold text-gray-300 tracking-wider">
+                  {lang === 'pt' ? 'Lista de Códigos Autorizados (Servidor)' : 'Authorized Server Codes List'}
+                </span>
+                <span className="text-[11px] font-mono text-gray-500">
+                  {adminCodes.length} {lang === 'pt' ? 'códigos totais' : 'total codes'}
+                </span>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs text-gray-300">
+                  <thead className="bg-white/[0.03] text-gray-400 font-mono text-[10px] uppercase border-b border-white/10">
+                    <tr>
+                      <th className="py-3 px-4">{lang === 'pt' ? 'Código de Acesso' : 'Access Code'}</th>
+                      <th className="py-3 px-4">{lang === 'pt' ? 'Entidade / Categoria' : 'Entity / Category'}</th>
+                      <th className="py-3 px-4">{lang === 'pt' ? 'Estado' : 'Status'}</th>
+                      <th className="py-3 px-4">{lang === 'pt' ? '1º Acesso (Início 24h)' : '1st Access (Start 24h)'}</th>
+                      <th className="py-3 px-4">{lang === 'pt' ? 'Expiração (Fim 24h)' : 'Expiration (End 24h)'}</th>
+                      <th className="py-3 px-4 text-right">{lang === 'pt' ? 'Ações Administrativas' : 'Actions'}</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-white/5 font-sans">
+                    {adminCodes.length > 0 ? (
+                      adminCodes.map((c) => {
+                        const isExpired = c.status === 'expired' || (c.expiresAt && Date.now() > c.expiresAt);
+                        const isActive = c.status === 'active' && c.expiresAt && Date.now() < c.expiresAt;
+                        const isRevoked = c.status === 'revoked';
+                        const isUnused = c.status === 'unused' || (!c.activatedAt && !isRevoked);
+
+                        return (
+                          <tr key={c.code} className="hover:bg-white/[0.02] transition-colors">
+                            
+                            {/* CODE */}
+                            <td className="py-3.5 px-4 font-mono font-bold text-amber-300 whitespace-nowrap">
+                              <span className="px-2 py-0.5 bg-amber-500/10 border border-amber-500/30">
+                                {c.code}
+                              </span>
+                            </td>
+
+                            {/* ENTITY / CATEGORY */}
+                            <td className="py-3.5 px-4">
+                              <div className="text-white font-medium">{c.label || 'Acesso Institucional'}</div>
+                              <div className="text-[10px] font-mono text-gray-400 mt-0.5">{c.category || 'Geral'}</div>
+                            </td>
+
+                            {/* STATUS BADGE */}
+                            <td className="py-3.5 px-4 whitespace-nowrap">
+                              {isActive ? (
+                                <span className="inline-flex items-center space-x-1 px-2.5 py-1 text-[10px] font-mono font-bold uppercase bg-emerald-500/15 text-emerald-400 border border-emerald-500/40">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse mr-1" />
+                                  <span>{lang === 'pt' ? 'ATIVO (24H)' : 'ACTIVE (24H)'}</span>
+                                </span>
+                              ) : isExpired ? (
+                                <span className="inline-flex items-center space-x-1 px-2.5 py-1 text-[10px] font-mono font-bold uppercase bg-red-500/15 text-red-400 border border-red-500/40">
+                                  <Clock className="w-3 h-3 mr-1" />
+                                  <span>{lang === 'pt' ? 'EXPIRADO' : 'EXPIRED'}</span>
+                                </span>
+                              ) : isRevoked ? (
+                                <span className="inline-flex items-center space-x-1 px-2.5 py-1 text-[10px] font-mono font-bold uppercase bg-amber-500/15 text-amber-400 border border-amber-500/40">
+                                  <ShieldAlert className="w-3 h-3 mr-1" />
+                                  <span>{lang === 'pt' ? 'REVOGADO' : 'REVOKED'}</span>
+                                </span>
+                              ) : (
+                                <span className="inline-flex items-center space-x-1 px-2.5 py-1 text-[10px] font-mono font-bold uppercase bg-blue-500/15 text-blue-400 border border-blue-500/40">
+                                  <span>{lang === 'pt' ? 'NÃO UTILIZADO' : 'UNUSED'}</span>
+                                </span>
+                              )}
+                            </td>
+
+                            {/* 1ST ACCESS */}
+                            <td className="py-3.5 px-4 font-mono text-[11px] text-gray-400 whitespace-nowrap">
+                              {c.activatedAt ? (
+                                <div>
+                                  <div>{new Date(c.activatedAt).toLocaleDateString('pt-MZ')}</div>
+                                  <div className="text-[10px] text-gray-500">{new Date(c.activatedAt).toLocaleTimeString('pt-MZ')}</div>
+                                </div>
+                              ) : (
+                                <span className="text-gray-600 font-sans italic">{lang === 'pt' ? 'Ainda não acedido' : 'Not yet accessed'}</span>
+                              )}
+                            </td>
+
+                            {/* EXPIRATION */}
+                            <td className="py-3.5 px-4 font-mono text-[11px] text-gray-400 whitespace-nowrap">
+                              {c.expiresAt ? (
+                                <div>
+                                  <div className={isActive ? 'text-emerald-300' : isExpired ? 'text-red-400' : 'text-gray-400'}>
+                                    {new Date(c.expiresAt).toLocaleDateString('pt-MZ')}
+                                  </div>
+                                  <div className="text-[10px] text-gray-500">{new Date(c.expiresAt).toLocaleTimeString('pt-MZ')}</div>
+                                </div>
+                              ) : (
+                                <span className="text-gray-600 font-sans italic">{lang === 'pt' ? '24h após 1º uso' : '24h after 1st use'}</span>
+                              )}
+                            </td>
+
+                            {/* ACTIONS */}
+                            <td className="py-3.5 px-4 text-right whitespace-nowrap">
+                              <div className="flex items-center justify-end space-x-2">
+                                {isActive && (
+                                  <button
+                                    type="button"
+                                    onClick={() => handleRevokeCode(c.code)}
+                                    className="px-2.5 py-1 text-[10px] font-mono font-bold uppercase bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 transition-colors cursor-pointer"
+                                    title={lang === 'pt' ? 'Revogar acesso imediatamente' : 'Revoke access immediately'}
+                                  >
+                                    {lang === 'pt' ? 'Revogar' : 'Revoke'}
+                                  </button>
+                                )}
+
+                                {(isExpired || isRevoked || isActive) && (
+                                  <button
+                                    type="button"
+                                    onClick={() => handleResetCode(c.code)}
+                                    className="px-2.5 py-1 text-[10px] font-mono font-bold uppercase bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white border border-white/10 transition-colors cursor-pointer flex items-center space-x-1"
+                                    title={lang === 'pt' ? 'Resetar para Não Utilizado (24h de novo)' : 'Reset to Unused'}
+                                  >
+                                    <RotateCcw className="w-3 h-3 text-gold-400" />
+                                    <span>{lang === 'pt' ? 'Resetar 24h' : 'Reset 24h'}</span>
+                                  </button>
+                                )}
+
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeleteCode(c.code)}
+                                  className="px-2.5 py-1 text-[10px] font-mono font-bold uppercase bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 border border-red-500/30 hover:border-red-500/50 transition-colors cursor-pointer flex items-center space-x-1"
+                                  title={lang === 'pt' ? 'Apagar permanentemente este código' : 'Permanently delete this code'}
+                                >
+                                  <Trash2 className="w-3 h-3" />
+                                  <span>{lang === 'pt' ? 'Apagar' : 'Delete'}</span>
+                                </button>
+                              </div>
+                            </td>
+
+                          </tr>
+                        );
+                      })
+                    ) : (
+                      <tr>
+                        <td colSpan={6} className="py-8 text-center text-gray-500 font-mono text-xs">
+                          {lang === 'pt' ? 'A carregar códigos do servidor...' : 'Loading access codes from server...'}
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+        )}
 
       </div>
     </section>
