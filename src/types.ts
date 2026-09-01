@@ -191,7 +191,7 @@ export interface GalleryItem {
   filename: string;
   title: string;
   titleEn: string;
-  category: 'plenary' | 'leadership' | 'speeches' | 'delegates' | 'protocol';
+  category: 'plenary' | 'leadership' | 'speeches' | 'delegates' | 'protocol' | 'facim';
   categoryLabel: string;
   categoryLabelEn: string;
   description: string;

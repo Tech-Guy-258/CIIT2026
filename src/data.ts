@@ -46,6 +46,12 @@ import ciitGalWa3 from './assets/images/CIIT LANÇAMENTO/WhatsApp Image 2026-08-
 import ciitGalWa4_1 from './assets/images/CIIT LANÇAMENTO/WhatsApp Image 2026-08-24 at 10.47.04 (1).jpeg';
 import ciitGalWa9_2 from './assets/images/CIIT LANÇAMENTO/WhatsApp Image 2026-08-24 at 10.47.09 (2).jpeg';
 
+// Official Photographic Gallery from CIIT na FACIM
+import ciitFacim1 from './assets/images/CIIT_FACIM/WhatsApp Image 2026-08-31 at 17.34.51.jpeg';
+import ciitFacim2 from './assets/images/CIIT_FACIM/WhatsApp Image 2026-08-31 at 17.34.52 (1).jpeg';
+import ciitFacim3 from './assets/images/CIIT_FACIM/WhatsApp Image 2026-08-31 at 17.34.52.jpeg';
+import ciitFacim4 from './assets/images/CIIT_FACIM/WhatsApp Image 2026-08-31 at 17.34.53.jpeg';
+
 export const SPEAKERS: Speaker[] = [
   {
     id: 'sp1',
@@ -1435,6 +1441,59 @@ export const GALLERY_IMAGES: GalleryItem[] = [
     descriptionEn: 'Key dignitaries concluding the launching ceremony, issuing an open invitation to global investors to convene in Tete in October 2026.',
     imageUrl: ciitGalWa9_2,
     aspectRatio: '16:9'
+  },
+  {
+    id: 'gal-facim-01',
+    filename: 'WhatsApp Image 2026-08-31 at 17.34.51.jpeg',
+    title: 'Pavilhão de Tete na FACIM — Divulgação Oficial da CIIT 2026',
+    titleEn: 'Tete Province Pavilion at FACIM — Official Promotion of CIIT 2026',
+    category: 'facim',
+    categoryLabel: 'CIIT na FACIM',
+    categoryLabelEn: 'CIIT at FACIM',
+    description: 'Exposição promocional da Província de Tete na Feira Internacional de Maputo (FACIM), destacando a Conferência Internacional de Investimentos de Tete perante empresários e missões internacionais.',
+    descriptionEn: 'Official promotional showcase of Tete Province at the Maputo International Trade Fair (FACIM), presenting the Tete International Investment Conference to global business delegations.',
+    imageUrl: ciitFacim1,
+    aspectRatio: '4:3',
+    featured: true
+  },
+  {
+    id: 'gal-facim-02',
+    filename: 'WhatsApp Image 2026-08-31 at 17.34.52 (1).jpeg',
+    title: 'Apresentação do Portfólio de Oportunidades no Estande da CIIT na FACIM',
+    titleEn: 'Presentation of Investment Opportunities Portfolio at the CIIT FACIM Booth',
+    category: 'facim',
+    categoryLabel: 'CIIT na FACIM',
+    categoryLabelEn: 'CIIT at FACIM',
+    description: 'Equipa técnica e institucional da Província de Tete em atendimento personalizado a investidores, distribuindo o portfólio oficial de projetos e os 6C\'s da riqueza provincial.',
+    descriptionEn: 'Technical and institutional delegation of Tete Province engaging with prospective investors, showcasing the official project portfolio and the 6 C\'s of provincial wealth.',
+    imageUrl: ciitFacim2,
+    aspectRatio: '4:3'
+  },
+  {
+    id: 'gal-facim-03',
+    filename: 'WhatsApp Image 2026-08-31 at 17.34.52.jpeg',
+    title: 'Intercâmbio Empresarial e Atração de Investimentos na FACIM',
+    titleEn: 'Business Networking and Investment Attraction at FACIM',
+    category: 'facim',
+    categoryLabel: 'CIIT na FACIM',
+    categoryLabelEn: 'CIIT at FACIM',
+    description: 'Encontros B2B no pavilhão de Tete durante a FACIM, estabelecendo parcerias estratégicas para os setores de energia, mineração, agropecuária e turismo.',
+    descriptionEn: 'B2B executive meetings at the Tete pavilion during FACIM, forging strategic partnerships for energy, mining, agriculture, and tourism sectors.',
+    imageUrl: ciitFacim3,
+    aspectRatio: '4:3'
+  },
+  {
+    id: 'gal-facim-04',
+    filename: 'WhatsApp Image 2026-08-31 at 17.34.53.jpeg',
+    title: 'Visita de Dignitários e Parceiros ao Estande de Tete na FACIM',
+    titleEn: 'Dignitaries and Partners Visiting the Tete Provincial Showcase at FACIM',
+    category: 'facim',
+    categoryLabel: 'CIIT na FACIM',
+    categoryLabelEn: 'CIIT at FACIM',
+    description: 'Visita institucional de delegações empresariais e parceiros multilaterais ao espaço de Tete na maior feira comercial e industrial de Moçambique.',
+    descriptionEn: 'Institutional visits by trade delegations and development partners to Tete\'s exhibition zone at Mozambique\'s premier trade and industrial fair.',
+    imageUrl: ciitFacim4,
+    aspectRatio: '4:3'
   }
 ];
 
@@ -1491,12 +1550,13 @@ export const TRANSLATIONS = {
     day: 'Dia',
     galleryTitle: 'Galeria Oficial de Fotografias',
     gallerySubtitle: 'Registos Visuais Oficiais da Cerimónia de Lançamento e Sessões Plenárias da CIIT 2026',
-    galleryFilterAll: 'Todas as Fotografias (18)',
+    galleryFilterAll: 'Todas as Fotografias (22)',
     galleryFilterPlenary: 'Sala Plenária',
     galleryFilterLeadership: 'Liderança & Governo',
     galleryFilterSpeeches: 'Discursos Oficiais',
     galleryFilterDelegates: 'Corpo Diplomático',
     galleryFilterProtocol: 'Protocolo & Fotos de Família',
+    galleryFilterFacim: 'CIIT na FACIM',
     galleryPrev: 'Imagem anterior',
     galleryNext: 'Próxima imagem',
     galleryClose: 'Fechar visualização',
@@ -1549,13 +1609,15 @@ export const TRANSLATIONS = {
     adminTableTitle: 'Lista de Participantes Cadastrados',
     adminAddManual: 'Registar Manualmente',
     liveAttendanceTitle: 'Presenças em Tempo Real',
-    liveAttendanceSubtitle: 'Acompanhamento do credenciamento e fluxo de entrada dos participantes no evento',
-    liveTotalRegistered: 'Total de Cadastrados',
-    livePresent: 'Presentes',
-    livePending: 'Pendentes / A Caminho',
-    liveAttendanceRate: 'Percentagem de Presença',
+    liveAttendanceSubtitle: 'Acompanhamento do credenciamento e presenças por tipo de participação na CIIT 2026',
+    liveOverviewTitle: 'Quadro Geral de Presenças',
+    liveOverviewSubtitle: 'Controlo consolidado de presenças confirmadas no local e delegados a caminho',
+    liveTotalRegistered: 'Total Geral de Inscritos',
+    livePresent: 'Já no Local (Confirmados)',
+    livePending: 'A Caminho (Pendentes)',
+    liveAttendanceRate: 'Taxa Global de Presença',
     attendanceByTypeTitle: 'Presenças por Tipo de Participação',
-    attendanceByTypeSubtitle: 'Discriminação detalhada de inscritos, presenças confirmadas e participantes a caminho por categoria no ato da inscrição',
+    attendanceByTypeSubtitle: 'Discriminação detalhada de inscritos, presenças já no local e participantes a caminho por categoria no ato da inscrição',
     categoryDelegates: 'Delegados Executivos',
     categoryInvestors: 'Investidores',
     categoryGovernment: 'Membros do Governo',
@@ -1636,12 +1698,13 @@ export const TRANSLATIONS = {
     day: 'Day',
     galleryTitle: 'Official Photo Gallery',
     gallerySubtitle: 'Official Photographic Records of the Launching Ceremony and Plenary Sessions of CIIT 2026',
-    galleryFilterAll: 'All Photographs (18)',
+    galleryFilterAll: 'All Photographs (22)',
     galleryFilterPlenary: 'Plenary Hall',
     galleryFilterLeadership: 'Leadership & Government',
     galleryFilterSpeeches: 'Official Speeches',
     galleryFilterDelegates: 'Diplomatic Corps',
     galleryFilterProtocol: 'Protocol & Family Photos',
+    galleryFilterFacim: 'CIIT at FACIM',
     galleryPrev: 'Previous photo',
     galleryNext: 'Next photo',
     galleryClose: 'Close view',
@@ -1694,11 +1757,13 @@ export const TRANSLATIONS = {
     adminTableTitle: 'Registered Delegates Database',
     adminAddManual: 'Register Manual Attendee',
     liveAttendanceTitle: 'Live Attendance',
-    liveAttendanceSubtitle: 'Real-time tracking of attendee check-ins and entrance flow',
-    liveTotalRegistered: 'Total Registered',
-    livePresent: 'Present',
-    livePending: 'Pending / On The Way',
-    liveAttendanceRate: 'Attendance Rate',
+    liveAttendanceSubtitle: 'Real-time monitoring of accreditation and attendance by participation category at CIIT 2026',
+    liveOverviewTitle: 'General Attendance Overview',
+    liveOverviewSubtitle: 'Consolidated overview of attendees already on site and delegates on the way',
+    liveTotalRegistered: 'Total Registered Delegates',
+    livePresent: 'Already on Site (Confirmed)',
+    livePending: 'On The Way (Pending)',
+    liveAttendanceRate: 'Overall Attendance Rate',
     attendanceByTypeTitle: 'Attendance by Participation Type',
     attendanceByTypeSubtitle: 'Detailed breakdown of registered, confirmed present, and pending attendees by registration category',
     categoryDelegates: 'Executive Delegates',

@@ -3,14 +3,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { TRANSLATIONS } from '../data';
-import { Registration, CategoryAttendanceBreakdown } from '../types';
+import { Registration, CategoryAttendanceBreakdown, CheckInRecord } from '../types';
 import { realtimeAttendance } from '../services/realtimeAttendance';
 import {
   Users, UserCheck, Clock, Percent, ShieldCheck, Lock, Search, Filter,
   FileSpreadsheet, UserPlus, LogOut, Check, X, QrCode, Trash2,
-  Briefcase, TrendingUp, Mic, Award, Building, Layers, CheckCircle2
+  Briefcase, TrendingUp, Mic, Award, Building, Layers, CheckCircle2,
+  BarChart3, Activity
 } from 'lucide-react';
 
 interface AdminDashboardProps {
@@ -43,6 +44,21 @@ export default function AdminDashboard({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedType, setSelectedType] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<'all' | 'present' | 'pending'>('all');
+
+  // Real-time check-ins and hourly data for Admin analytics
+  const [recentCheckIns, setRecentCheckIns] = useState<CheckInRecord[]>(() => realtimeAttendance.getCheckIns().slice(0, 10));
+  const [hourlyData, setHourlyData] = useState(() => realtimeAttendance.getHourlyEvolution());
+
+  useEffect(() => {
+    const unsubscribe = realtimeAttendance.subscribe((state) => {
+      setRecentCheckIns(state.checkIns.slice(0, 10));
+      setHourlyData(realtimeAttendance.getHourlyEvolution());
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // Find maximum hourly count for SVG chart scaling
+  const maxHourlyCount = Math.max(...hourlyData.map(d => d.count), 5);
 
   // Manual entry toggle
   const [showManualForm, setShowManualForm] = useState(false);
@@ -247,6 +263,23 @@ export default function AdminDashboard({
   const filteredPresentCount = filteredList.filter(r => r.isCheckedIn).length;
   const filteredPendingCount = filteredList.length - filteredPresentCount;
 
+  const getCategoryBadgeClass = (type: string) => {
+    switch (type) {
+      case 'delegate':
+        return 'bg-blue-500/10 text-blue-400 border-blue-500/30';
+      case 'investor':
+        return 'bg-amber-500/10 text-amber-400 border-amber-500/30';
+      case 'government':
+        return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
+      case 'speaker':
+        return 'bg-purple-500/10 text-purple-400 border-purple-500/30';
+      case 'sponsor':
+        return 'bg-pink-500/10 text-pink-400 border-pink-500/30';
+      default:
+        return 'bg-white/10 text-gray-300 border-white/20';
+    }
+  };
+
   if (!isAuthenticated) {
     return (
       <section id="admin" className="py-24 bg-neutral-900 text-white border-b border-gray-800 flex items-center justify-center min-h-[60vh] px-4 relative">
@@ -445,6 +478,162 @@ export default function AdminDashboard({
               );
             })}
           </div>
+        </div>
+
+        {/* SECTION: TWO-COLUMN REAL-TIME CHECK-IN STREAM & HOURLY EVOLUTION (ADMIN EXCLUSIVE) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-10">
+          
+          {/* LEFT: LATEST CHECK-INS FEED */}
+          <div className="lg:col-span-6 bg-corporate-950/70 border border-white/10 p-5 sm:p-6 rounded-none">
+            <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-4">
+              <div className="flex items-center space-x-2.5">
+                <Clock className="w-4 h-4 text-gold-400" />
+                <div>
+                  <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-white">
+                    {lang === 'pt' ? 'Últimos Check-ins em Tempo Real' : 'Latest Check-ins Stream'}
+                  </h3>
+                  <span className="text-[10px] text-gray-400 font-light block">
+                    {lang === 'pt' ? 'Registo contínuo de validações de credenciais' : 'Continuous credential validation logs'}
+                  </span>
+                </div>
+              </div>
+              <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded-none flex items-center space-x-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span>{recentCheckIns.length} {lang === 'pt' ? 'recentes' : 'recent'}</span>
+              </span>
+            </div>
+
+            <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1">
+              {recentCheckIns.length > 0 ? (
+                recentCheckIns.map((item) => (
+                  <div
+                    key={item.id}
+                    className="p-3 bg-corporate-900/60 border border-white/5 hover:border-gold-500/30 transition-all rounded-none flex items-start justify-between gap-3"
+                  >
+                    <div className="space-y-0.5">
+                      <div className="flex items-center space-x-2">
+                        <span className="font-bold text-xs text-white">
+                          {item.participantName}
+                        </span>
+                        <span className={`text-[9px] font-mono uppercase px-1.5 py-0.2 border ${getCategoryBadgeClass(item.registrationType || 'delegate')}`}>
+                          {item.registrationType}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-gray-400 font-light">
+                        {item.jobTitle} • <span className="text-gray-300">{item.company}</span>
+                      </p>
+                    </div>
+
+                    <div className="text-right flex-shrink-0">
+                      <span className="font-mono text-xs font-bold text-gold-400 block">
+                        {item.formattedTime}
+                      </span>
+                      <span className="inline-block mt-0.5 px-1.5 py-0.2 text-[9px] font-bold uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                        ✓ Presente
+                      </span>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="py-8 text-center text-gray-500 text-xs">
+                  {lang === 'pt' ? 'Nenhum check-in registado recentemente.' : 'No check-ins recorded recently.'}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* RIGHT: HOURLY DISTRIBUTION CHART */}
+          <div className="lg:col-span-6 bg-corporate-950/70 border border-white/10 p-5 sm:p-6 rounded-none flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-4">
+                <div className="flex items-center space-x-2.5">
+                  <BarChart3 className="w-4 h-4 text-gold-400" />
+                  <div>
+                    <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-white">
+                      {lang === 'pt' ? 'Evolução de Entradas por Hora' : 'Hourly Check-in Evolution'}
+                    </h3>
+                    <span className="text-[10px] text-gray-400 font-light block">
+                      {lang === 'pt' ? 'Fluxo de credenciamento ao longo do dia' : 'Accreditation flow throughout the day'}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-gold-400 animate-pulse" />
+                  <span className="text-[10px] font-mono text-gold-400 font-bold">
+                    {presentCount} {lang === 'pt' ? 'Presentes' : 'Present'}
+                  </span>
+                </div>
+              </div>
+
+              {/* Visual Bars for Hourly Check-ins with animated layout */}
+              <div className="pt-2 pb-1">
+                <div className="h-36 sm:h-40 flex items-end justify-between gap-1 sm:gap-2 border-b border-white/10 pb-2 relative">
+                  
+                  {/* Subtle background horizontal grid lines */}
+                  <div className="absolute inset-x-0 top-0 border-t border-dashed border-white/5 pointer-events-none" />
+                  <div className="absolute inset-x-0 top-1/2 border-t border-dashed border-white/5 pointer-events-none" />
+
+                  {hourlyData.map((slot) => {
+                    const heightPercent = maxHourlyCount > 0 ? (slot.count / maxHourlyCount) * 100 : 0;
+                    const hasEntries = slot.count > 0;
+                    return (
+                      <div key={slot.hour} className="flex-1 h-full flex flex-col items-center justify-end group relative">
+                        
+                        {/* Interactive Tooltip on hover */}
+                        <div className="absolute -top-9 bg-corporate-950/95 border border-gold-500/60 text-gold-300 text-[10px] font-mono px-2 py-0.5 rounded-none opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-30 shadow-xl">
+                          <span className="font-bold text-white">{slot.hour}:</span> {slot.count} {lang === 'pt' ? 'entradas' : 'entries'} • <span className="text-gold-400 font-bold">{slot.cumulative}</span> {lang === 'pt' ? 'acumulado' : 'cumulative'}
+                        </div>
+
+                        {/* Direct Numeric Count above active bars */}
+                        <span className={`text-[9px] font-mono font-bold mb-0.5 transition-all ${
+                          hasEntries ? 'text-gold-400 opacity-100' : 'text-transparent opacity-0'
+                        }`}>
+                          {hasEntries ? slot.count : '0'}
+                        </span>
+
+                        {/* Bar Track & Dynamic Animated Fill */}
+                        <div className="w-full h-24 sm:h-28 bg-white/5 group-hover:bg-white/10 transition-colors rounded-none relative flex items-end justify-center overflow-hidden border border-white/5">
+                          <div
+                            className={`w-full transition-all duration-700 ease-out relative ${
+                              hasEntries
+                                ? 'bg-gradient-to-t from-amber-600 via-gold-500 to-amber-300 shadow-sm shadow-gold-500/20'
+                                : 'bg-transparent'
+                            }`}
+                            style={{ height: `${hasEntries ? Math.max(12, heightPercent) : 0}%` }}
+                          >
+                            {hasEntries && (
+                              <div className="absolute top-0 left-0 right-0 h-0.5 bg-white/80" />
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* X-Axis Hour Labels */}
+                <div className="flex justify-between text-[9px] font-mono text-gray-400 pt-2">
+                  {hourlyData.map((slot) => (
+                    <span key={slot.hour} className="flex-1 text-center font-medium">
+                      {slot.hour}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Attendance Insight Quote */}
+            <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-[10px] text-gray-400">
+              <span className="font-mono flex items-center space-x-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-gold-400" />
+                <span>{lang === 'pt' ? 'Pico de Entrada: 08h00 — 10h00' : 'Peak Flow: 08:00 — 10:00'}</span>
+              </span>
+              <span className="font-mono text-gold-400 font-bold">
+                {presentCount}/{totalCount} {lang === 'pt' ? 'Presentes' : 'Present'} ({attendanceRate}%)
+              </span>
+            </div>
+          </div>
+
         </div>
 
         {/* SEARCH, FILTER & ACTION CONTROLS BAR */}

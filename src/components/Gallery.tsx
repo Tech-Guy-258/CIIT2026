@@ -30,7 +30,7 @@ interface GalleryProps {
   lang: 'pt' | 'en';
 }
 
-type GalleryCategory = 'all' | 'plenary' | 'leadership' | 'speeches' | 'delegates' | 'protocol';
+type GalleryCategory = 'all' | 'plenary' | 'leadership' | 'speeches' | 'delegates' | 'protocol' | 'facim';
 
 export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
   const t = TRANSLATIONS[lang];
@@ -186,7 +186,8 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
   };
 
   const categories = [
-    { key: 'all' as GalleryCategory, label: t.galleryFilterAll || (lang === 'pt' ? 'Todas as Fotos (18)' : 'All Photos (18)') },
+    { key: 'all' as GalleryCategory, label: t.galleryFilterAll || (lang === 'pt' ? 'Todas as Fotos (22)' : 'All Photos (22)') },
+    { key: 'facim' as GalleryCategory, label: t.galleryFilterFacim || (lang === 'pt' ? 'CIIT na FACIM' : 'CIIT at FACIM') },
     { key: 'plenary' as GalleryCategory, label: t.galleryFilterPlenary || (lang === 'pt' ? 'Sala Plenária' : 'Plenary Hall') },
     { key: 'leadership' as GalleryCategory, label: t.galleryFilterLeadership || (lang === 'pt' ? 'Liderança & Governo' : 'Leadership & Govt') },
     { key: 'speeches' as GalleryCategory, label: t.galleryFilterSpeeches || (lang === 'pt' ? 'Discursos Oficiais' : 'Official Speeches') },

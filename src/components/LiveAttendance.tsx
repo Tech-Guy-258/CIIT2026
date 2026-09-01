@@ -9,9 +9,9 @@ import { realtimeAttendance } from '../services/realtimeAttendance';
 import { AttendanceMetrics, CheckInRecord, Registration, CategoryAttendanceBreakdown } from '../types';
 import {
   Users, UserCheck, Clock, Percent, QrCode, Sparkles,
-  TrendingUp, ShieldCheck, BarChart3, CheckCircle2, Trash2,
+  TrendingUp, ShieldCheck, CheckCircle2, Trash2,
   Briefcase, Mic, Award, Filter, Search, ChevronRight, Check,
-  X, HelpCircle, Layers, ArrowRight
+  X, Layers, Activity
 } from 'lucide-react';
 
 interface LiveAttendanceProps {
@@ -29,8 +29,6 @@ export default function LiveAttendance({
 
   const [metrics, setMetrics] = useState<AttendanceMetrics>(() => realtimeAttendance.getMetrics());
   const [registrations, setRegistrations] = useState<Registration[]>(() => realtimeAttendance.getRegistrations());
-  const [recentCheckIns, setRecentCheckIns] = useState<CheckInRecord[]>(() => realtimeAttendance.getCheckIns().slice(0, 6));
-  const [hourlyData, setHourlyData] = useState(() => realtimeAttendance.getHourlyEvolution());
   const [isOnline, setIsOnline] = useState<boolean>(() => realtimeAttendance.getOnlineStatus());
   const [hasDemoData, setHasDemoData] = useState<boolean>(() => {
     return realtimeAttendance.getRegistrations().some(r => r.isDemo);
@@ -48,8 +46,6 @@ export default function LiveAttendance({
     const unsubscribe = realtimeAttendance.subscribe((state) => {
       setMetrics(state.metrics);
       setRegistrations(state.registrations);
-      setRecentCheckIns(state.checkIns.slice(0, 6));
-      setHourlyData(realtimeAttendance.getHourlyEvolution());
       setIsOnline(realtimeAttendance.getOnlineStatus());
       setHasDemoData(state.registrations.some(r => r.isDemo));
 
@@ -74,9 +70,6 @@ export default function LiveAttendance({
   const handleClearDemo = () => {
     realtimeAttendance.clearDemoData();
   };
-
-  // Find maximum hourly count for SVG chart scaling
-  const maxHourlyCount = Math.max(...hourlyData.map(d => d.count), 5);
 
   const categoriesData = useMemo(() => {
     return metrics.categoryBreakdown || realtimeAttendance.getCategoryBreakdown();
@@ -150,7 +143,7 @@ export default function LiveAttendance({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* SECTION HEADER & REALTIME STATUS BADGE */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-white/10 pb-8 mb-12 gap-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-white/10 pb-8 mb-10 gap-6">
           <div>
             <div className="flex items-center space-x-3 mb-2">
               <span className="text-[10px] font-mono font-bold tracking-widest uppercase text-gold-400 bg-gold-500/10 border border-gold-500/30 px-3 py-1 rounded-none flex items-center space-x-1.5">
@@ -250,7 +243,123 @@ export default function LiveAttendance({
           </div>
         )}
 
-        {/* SECTION: ATTENDANCE DISCRIMINATED BY PARTICIPATION TYPE (USER REQUEST) */}
+        {/* SECTION 1: QUADRO GERAL DE PRESENÇAS (TOTAL GERAL, NO LOCAL E A CAMINHO) */}
+        <div className="mb-10 bg-gradient-to-br from-corporate-900/90 via-corporate-950/90 to-corporate-900/90 border border-gold-600/30 p-6 sm:p-8 rounded-none shadow-xl relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-80 h-80 bg-gold-500/5 rounded-none blur-3xl pointer-events-none" />
+          
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/10 pb-4 mb-6 gap-3">
+            <div className="flex items-center space-x-2.5">
+              <Activity className="w-5 h-5 text-gold-400" />
+              <div>
+                <span className="text-[10px] font-mono font-bold tracking-widest uppercase text-gold-400 block">
+                  {lang === 'pt' ? 'CONTROLO GERAL CONSOLIDADO' : 'CONSOLIDATED GENERAL ATTENDANCE'}
+                </span>
+                <h3 className="text-lg sm:text-xl font-display font-light uppercase text-white tracking-wider">
+                  {t.liveOverviewTitle}
+                </h3>
+              </div>
+            </div>
+            <div className="flex items-center space-x-2">
+              <span className="inline-flex items-center space-x-1.5 px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-bold">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span>{metrics.totalPresent} {lang === 'pt' ? 'Já no Local' : 'On Site'}</span>
+              </span>
+              <span className="inline-flex items-center space-x-1 px-3 py-1 bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-mono font-bold">
+                <span>⏳ {metrics.totalPending} {lang === 'pt' ? 'A Caminho' : 'On The Way'}</span>
+              </span>
+            </div>
+          </div>
+
+          {/* 4 GLOBAL OVERVIEW KPI CARDS */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            {/* 1. Total Geral de Inscritos */}
+            <div className="p-5 bg-corporate-950/70 border border-white/10 rounded-none relative overflow-hidden">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[10px] font-mono text-gray-400 uppercase tracking-widest font-bold">
+                  {t.liveTotalRegistered}
+                </span>
+                <div className="p-2 bg-white/5 border border-white/10 rounded-none text-gold-400">
+                  <Users className="w-4 h-4" />
+                </div>
+              </div>
+              <span className="text-3xl sm:text-4xl font-display font-black text-white block tracking-tight">
+                {metrics.totalRegistered}
+              </span>
+              <p className="text-[11px] text-gray-400 font-light mt-1">
+                {lang === 'pt' ? 'Delegados, Investidores & Convidados' : 'Delegates, Investors & Guests'}
+              </p>
+            </div>
+
+            {/* 2. Total Já no Local (Presenças Confirmadas) */}
+            <div className="p-5 bg-corporate-950/70 border border-emerald-500/40 rounded-none relative overflow-hidden shadow-lg shadow-emerald-500/5">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[10px] font-mono text-emerald-400 uppercase tracking-widest font-bold flex items-center space-x-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>{t.livePresent}</span>
+                </span>
+                <div className="p-2 bg-emerald-500/10 border border-emerald-500/30 rounded-none text-emerald-400">
+                  <UserCheck className="w-4 h-4" />
+                </div>
+              </div>
+              <span className="text-3xl sm:text-4xl font-display font-black text-emerald-400 block tracking-tight">
+                {metrics.totalPresent}
+              </span>
+              <p className="text-[11px] text-emerald-300/80 font-light mt-1">
+                {lang === 'pt' ? 'Check-ins validados na entrada' : 'Validated check-ins at entrance'}
+              </p>
+            </div>
+
+            {/* 3. Total A Caminho (Pendentes) */}
+            <div className="p-5 bg-corporate-950/70 border border-amber-500/40 rounded-none relative overflow-hidden shadow-lg shadow-amber-500/5">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[10px] font-mono text-amber-400 uppercase tracking-widest font-bold">
+                  {t.livePending}
+                </span>
+                <div className="p-2 bg-amber-500/10 border border-amber-500/30 rounded-none text-amber-400">
+                  <Clock className="w-4 h-4" />
+                </div>
+              </div>
+              <span className="text-3xl sm:text-4xl font-display font-black text-amber-400 block tracking-tight">
+                {metrics.totalPending}
+              </span>
+              <p className="text-[11px] text-amber-300/80 font-light mt-1">
+                {lang === 'pt' ? 'Participantes aguardados no recinto' : 'Delegates expected at venue'}
+              </p>
+            </div>
+
+            {/* 4. Taxa Global de Presença */}
+            <div className="p-5 bg-corporate-950/70 border border-gold-500/40 rounded-none relative overflow-hidden shadow-lg shadow-gold-500/5">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[10px] font-mono text-gold-400 uppercase tracking-widest font-bold">
+                  {t.liveAttendanceRate}
+                </span>
+                <div className="p-2 bg-gold-500/10 border border-gold-500/30 rounded-none text-gold-400">
+                  <Percent className="w-4 h-4" />
+                </div>
+              </div>
+              <span className="text-3xl sm:text-4xl font-display font-black text-gold-400 block tracking-tight">
+                {metrics.attendanceRate}%
+              </span>
+              {/* Dual-bar visualization */}
+              <div className="w-full bg-white/10 h-2 mt-2 rounded-none overflow-hidden flex">
+                <div
+                  className="bg-emerald-500 h-full transition-all duration-700"
+                  style={{ width: `${Math.min(100, Math.max(0, metrics.attendanceRate))}%` }}
+                  title={`${metrics.totalPresent} Presentes`}
+                />
+                <div
+                  className="bg-amber-500/80 h-full transition-all duration-700"
+                  style={{ width: `${Math.min(100, Math.max(0, 100 - metrics.attendanceRate))}%` }}
+                  title={`${metrics.totalPending} A caminho`}
+                />
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        {/* SECTION 2: ATTENDANCE DISCRIMINATED BY PARTICIPATION TYPE */}
         <div className="mb-12 bg-corporate-900/40 border border-gold-600/30 p-6 sm:p-8 rounded-none relative">
           
           <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-white/10 pb-5 mb-6 gap-4">
@@ -316,7 +425,7 @@ export default function LiveAttendance({
                     {lang === 'pt' ? cat.label : cat.labelEn}
                   </h4>
 
-                  {/* Split Counter: Presentes vs A Caminho */}
+                  {/* Split Counter: Já no Local (Presentes) vs A Caminho */}
                   <div className="grid grid-cols-2 gap-2 py-3 border-y border-white/5 my-2">
                     <div>
                       <span className="text-[9px] font-mono text-emerald-400 uppercase block font-semibold flex items-center space-x-1">
@@ -348,7 +457,7 @@ export default function LiveAttendance({
                       <div
                         className="bg-emerald-500 h-full transition-all duration-500"
                         style={{ width: `${Math.min(100, Math.max(0, cat.rate))}%` }}
-                        title={`${cat.present} Presentes`}
+                        title={`${cat.present} Presentes no local`}
                       />
                       <div
                         className="bg-amber-500/70 h-full transition-all duration-500"
@@ -388,8 +497,8 @@ export default function LiveAttendance({
                   </h4>
                   <p className="text-xs text-gray-400 font-light mt-0.5">
                     {lang === 'pt'
-                      ? `Mostrando ${filteredAttendees.length} de ${registrations.length} participantes (${filteredAttendees.filter(a => a.isCheckedIn).length} presentes, ${filteredAttendees.filter(a => !a.isCheckedIn).length} a caminho)`
-                      : `Showing ${filteredAttendees.length} of ${registrations.length} attendees (${filteredAttendees.filter(a => a.isCheckedIn).length} present, ${filteredAttendees.filter(a => !a.isCheckedIn).length} on the way)`}
+                      ? `Mostrando ${filteredAttendees.length} de ${registrations.length} participantes (${filteredAttendees.filter(a => a.isCheckedIn).length} já no local, ${filteredAttendees.filter(a => !a.isCheckedIn).length} a caminho)`
+                      : `Showing ${filteredAttendees.length} of ${registrations.length} attendees (${filteredAttendees.filter(a => a.isCheckedIn).length} on site, ${filteredAttendees.filter(a => !a.isCheckedIn).length} on the way)`}
                   </p>
                 </div>
 
@@ -418,7 +527,7 @@ export default function LiveAttendance({
                     className="bg-corporate-900 text-white text-xs border border-white/15 px-3 py-2 rounded-none focus:outline-none focus:border-gold-500 cursor-pointer"
                   >
                     <option value="all">{lang === 'pt' ? 'Todos os Estados' : 'All Statuses'}</option>
-                    <option value="present">{lang === 'pt' ? '✓ Apenas Presentes' : '✓ Present'}</option>
+                    <option value="present">{lang === 'pt' ? '✓ Já no Local' : '✓ On Site (Present)'}</option>
                     <option value="pending">{lang === 'pt' ? '⏳ Apenas A Caminho' : '⏳ On The Way'}</option>
                   </select>
 
@@ -518,153 +627,8 @@ export default function LiveAttendance({
 
         </div>
 
-        {/* TWO-COLUMN GRID: RECENT STREAM & HOURLY EVOLUTION */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          
-          {/* LEFT: LATEST CHECK-INS FEED */}
-          <div className="lg:col-span-6 bg-corporate-900/50 border border-white/10 p-6 sm:p-8 rounded-none">
-            <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
-              <div className="flex items-center space-x-2.5">
-                <Clock className="w-4 h-4 text-gold-400" />
-                <h3 className="text-sm font-display font-bold uppercase tracking-wider text-white">
-                  {t.liveLatestCheckIns}
-                </h3>
-              </div>
-              <span className="text-[10px] font-mono text-gray-400 bg-white/5 border border-white/10 px-2.5 py-1 rounded-none">
-                {lang === 'pt' ? 'Fluxo Contínuo' : 'Live Stream'}
-              </span>
-            </div>
-
-            <div className="space-y-3">
-              {recentCheckIns.length > 0 ? (
-                recentCheckIns.map((item) => (
-                  <div
-                    key={item.id}
-                    className="p-4 bg-corporate-950/80 border border-white/5 hover:border-gold-500/30 transition-all rounded-none flex items-start justify-between gap-4"
-                  >
-                    <div className="space-y-1">
-                      <div className="flex items-center space-x-2">
-                        <span className="font-display font-bold text-sm text-white">
-                          {item.participantName}
-                        </span>
-                        <span className={`text-[9px] font-mono uppercase px-2 py-0.5 border ${getCategoryBadgeClass(item.registrationType || 'delegate')}`}>
-                          {item.registrationType}
-                        </span>
-                      </div>
-                      <p className="text-xs text-gray-400 font-light">
-                        {item.jobTitle} • <span className="text-gray-300">{item.company}</span>
-                      </p>
-                    </div>
-
-                    <div className="text-right flex-shrink-0">
-                      <span className="font-mono text-xs font-bold text-gold-400 block">
-                        {item.formattedTime}
-                      </span>
-                      <span className="inline-block mt-1 px-2 py-0.5 text-[9px] font-bold uppercase bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                        ✓ Presente
-                      </span>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="py-12 text-center text-gray-500 text-xs">
-                  {t.liveNoCheckInsYet}
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* RIGHT: HOURLY DISTRIBUTION CHART */}
-          <div className="lg:col-span-6 bg-corporate-900/50 border border-white/10 p-6 sm:p-8 rounded-none flex flex-col justify-between">
-            <div>
-              <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
-                <div className="flex items-center space-x-2.5">
-                  <BarChart3 className="w-4 h-4 text-gold-400" />
-                  <h3 className="text-sm font-display font-bold uppercase tracking-wider text-white">
-                    {t.liveHourlyEvolution}
-                  </h3>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <span className="w-2 h-2 rounded-full bg-gold-400 animate-pulse" />
-                  <span className="text-[11px] font-mono text-gold-400 font-bold">
-                    {metrics.totalPresent} {lang === 'pt' ? 'Check-ins Totais' : 'Total Entries'}
-                  </span>
-                </div>
-              </div>
-
-              {/* Visual Bars for Hourly Check-ins with animated layout */}
-              <div className="pt-2 pb-2">
-                <div className="h-48 sm:h-52 flex items-end justify-between gap-1 sm:gap-2.5 border-b border-white/10 pb-2 relative">
-                  
-                  {/* Subtle background horizontal grid lines */}
-                  <div className="absolute inset-x-0 top-0 border-t border-dashed border-white/5 pointer-events-none" />
-                  <div className="absolute inset-x-0 top-1/2 border-t border-dashed border-white/5 pointer-events-none" />
-
-                  {hourlyData.map((slot) => {
-                    const heightPercent = maxHourlyCount > 0 ? (slot.count / maxHourlyCount) * 100 : 0;
-                    const hasEntries = slot.count > 0;
-                    return (
-                      <div key={slot.hour} className="flex-1 h-full flex flex-col items-center justify-end group relative">
-                        
-                        {/* Interactive Tooltip on hover */}
-                        <div className="absolute -top-10 bg-corporate-950/95 border border-gold-500/60 text-gold-300 text-[10px] font-mono px-2.5 py-1 rounded-none opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-30 shadow-xl">
-                          <span className="font-bold text-white">{slot.hour}:</span> {slot.count} {lang === 'pt' ? 'entradas' : 'entries'} • <span className="text-gold-400 font-bold">{slot.cumulative}</span> {lang === 'pt' ? 'acumulado' : 'cumulative'}
-                        </div>
-
-                        {/* Direct Numeric Count above active bars */}
-                        <span className={`text-[10px] font-mono font-bold mb-1 transition-all ${
-                          hasEntries ? 'text-gold-400 opacity-100' : 'text-transparent opacity-0'
-                        }`}>
-                          {hasEntries ? slot.count : '0'}
-                        </span>
-
-                        {/* Bar Track & Dynamic Animated Fill */}
-                        <div className="w-full h-36 sm:h-40 bg-white/5 group-hover:bg-white/10 transition-colors rounded-none relative flex items-end justify-center overflow-hidden border border-white/5">
-                          <div
-                            className={`w-full transition-all duration-700 ease-out relative ${
-                              hasEntries
-                                ? 'bg-gradient-to-t from-amber-600 via-gold-500 to-amber-300 shadow-md shadow-gold-500/20'
-                                : 'bg-transparent'
-                            }`}
-                            style={{ height: `${hasEntries ? Math.max(10, heightPercent) : 0}%` }}
-                          >
-                            {/* Glowing top line highlight */}
-                            {hasEntries && (
-                              <div className="absolute top-0 left-0 right-0 h-1 bg-white/80" />
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {/* X-Axis Hour Labels */}
-                <div className="flex justify-between text-[10px] font-mono text-gray-400 pt-2.5">
-                  {hourlyData.map((slot) => (
-                    <span key={slot.hour} className="flex-1 text-center font-medium">
-                      {slot.hour}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Attendance Insight Quote */}
-            <div className="mt-6 pt-4 border-t border-white/5 flex flex-col sm:flex-row sm:items-center justify-between text-xs text-gray-400 gap-2">
-              <span className="font-mono text-[10px] flex items-center space-x-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-gold-400" />
-                <span>{lang === 'pt' ? 'Pico de Entrada: 08h00 — 10h00 (Sessão de Abertura & Painéis)' : 'Peak Flow: 08:00 — 10:00 (Opening Plenary & Panels)'}</span>
-              </span>
-              <span className="font-mono text-gold-400 font-bold text-right">
-                {metrics.totalPresent}/{metrics.totalRegistered} {lang === 'pt' ? 'Presentes' : 'Present'}
-              </span>
-            </div>
-          </div>
-
-        </div>
-
       </div>
     </section>
   );
 }
+

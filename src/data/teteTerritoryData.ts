@@ -4,6 +4,7 @@
  */
 
 import { DistrictDetail, MunicipalityDetail, BorderDetail, TimelineEvent, MapPoint } from '../types';
+import { DISTRICT_IMAGES_MAP } from './districtImages';
 
 // Image assets references
 import hcbImg from '../assets/images/HCB.jpg';
@@ -35,8 +36,8 @@ export const DISTRICTS_DETAILED_DATA: DistrictDetail[] = [
     capital: 'Ulónguè',
     tagline: 'O celeiro agrícola e hortícola de Moçambique no planalto fértil.',
     taglineEn: 'Mozambique’s fertile highland agricultural and horticultural granary.',
-    image: citrusImg,
-    heroImage: citrusImg,
+    image: DISTRICT_IMAGES_MAP.angonia.image,
+    heroImage: DISTRICT_IMAGES_MAP.angonia.heroImage,
     location: 'Nordeste da Província de Tete (Planalto de Angónia)',
     locationEn: 'Northeast of Tete Province (Angónia Plateau)',
     area: '3.437 km²',
@@ -75,7 +76,7 @@ export const DISTRICTS_DETAILED_DATA: DistrictDetail[] = [
       livestock: true,
       tourism: true
     },
-    gallery: [citrusImg, cottonImg, goatsImg],
+    gallery: DISTRICT_IMAGES_MAP.angonia.gallery,
     sources: ['Governo da Província de Tete', 'INE - Censo Geral e Projeções Distritais', 'MAE - Perfil do Distrito de Angónia', 'Documento Oficial CIIT / Info.pdf']
   },
   {
@@ -85,8 +86,8 @@ export const DISTRICTS_DETAILED_DATA: DistrictDetail[] = [
     capital: 'Chitima',
     tagline: 'O coração energético da África Austral e da economia azul no Zambeze.',
     taglineEn: 'Southern Africa’s energy powerhouse and Zambezi blue economy capital.',
-    image: hcbImg,
-    heroImage: albufeiraImg,
+    image: DISTRICT_IMAGES_MAP['cahora-bassa'].image,
+    heroImage: DISTRICT_IMAGES_MAP['cahora-bassa'].heroImage,
     location: 'Centro-Sul da Província de Tete',
     locationEn: 'Central-South Tete Province',
     area: '10.590 km²',
@@ -125,7 +126,7 @@ export const DISTRICTS_DETAILED_DATA: DistrictDetail[] = [
       livestock: false,
       tourism: true
     },
-    gallery: [hcbImg, albufeiraImg, chicoaImg, kapentaImg],
+    gallery: DISTRICT_IMAGES_MAP['cahora-bassa'].gallery,
     sources: ['Governo da Província de Tete', 'HCB Relatórios Anuais', 'INE Moçambique', 'Documento Oficial CIIT / Info.pdf']
   },
   {
@@ -135,8 +136,8 @@ export const DISTRICTS_DETAILED_DATA: DistrictDetail[] = [
     capital: 'Luenha',
     tagline: 'Capital da pecuária tradicional, corredor para o Zimbabwe e bacia do Luenha.',
     taglineEn: 'Livestock heartland, Luenha basin, and strategic highway to Zimbabwe.',
-    image: goatsImg,
-    heroImage: goatsImg,
+    image: DISTRICT_IMAGES_MAP.changara.image,
+    heroImage: DISTRICT_IMAGES_MAP.changara.heroImage,
     location: 'Sul da Província de Tete',
     locationEn: 'Southern Tete Province',
     area: '6.444 km²',
@@ -175,7 +176,7 @@ export const DISTRICTS_DETAILED_DATA: DistrictDetail[] = [
       livestock: true,
       tourism: false
     },
-    gallery: [goatsImg, samoraBridgeImg, citrusImg],
+    gallery: DISTRICT_IMAGES_MAP.changara.gallery,
     sources: ['Governo da Província de Tete', 'INE Moçambique', 'MAE - Perfil do Distrito de Changara', 'Documento Oficial CIIT / Info.pdf']
   },
   {
@@ -185,8 +186,8 @@ export const DISTRICTS_DETAILED_DATA: DistrictDetail[] = [
     capital: 'Chifunde',
     tagline: 'Fronteira norte com Zâmbia e Malawi, reserva florestal e potencial agrícola.',
     taglineEn: 'Northern frontier with Zambia and Malawi, forest reserves and agro-potential.',
-    image: cottonImg,
-    heroImage: cottonImg,
+    image: DISTRICT_IMAGES_MAP.chifunde.image,
+    heroImage: DISTRICT_IMAGES_MAP.chifunde.heroImage,
     location: 'Norte da Província de Tete',
     locationEn: 'Northern Tete Province',
     area: '9.323 km²',
@@ -223,7 +224,7 @@ export const DISTRICTS_DETAILED_DATA: DistrictDetail[] = [
       livestock: true,
       tourism: true
     },
-    gallery: [cottonImg, citrusImg, goatsImg],
+    gallery: DISTRICT_IMAGES_MAP.chifunde.gallery,
     sources: ['Governo da Província de Tete', 'INE Moçambique', 'MAE - Perfil de Chifunde', 'Documento Oficial CIIT / Info.pdf']
   },
   {
@@ -233,8 +234,8 @@ export const DISTRICTS_DETAILED_DATA: DistrictDetail[] = [
     capital: 'Manje',
     tagline: 'Minerais metálicos, calcários, ferro e bacias agrícolas férteis.',
     taglineEn: 'Metallic minerals, limestone deposits, iron ore, and fertile farming plains.',
-    image: brmImg,
-    heroImage: brmImg,
+    image: DISTRICT_IMAGES_MAP.chiuta.image,
+    heroImage: DISTRICT_IMAGES_MAP.chiuta.heroImage,
     location: 'Centro-Norte de Tete',
     locationEn: 'Central-North Tete',
     area: '6.958 km²',
@@ -271,7 +272,7 @@ export const DISTRICTS_DETAILED_DATA: DistrictDetail[] = [
       livestock: true,
       tourism: false
     },
-    gallery: [brmImg, coalImg, citrusImg],
+    gallery: DISTRICT_IMAGES_MAP.chiuta.gallery,
     sources: ['Governo da Província de Tete', 'INE Moçambique', 'Ministério dos Recursos Minerais e Energia', 'Documento Oficial CIIT / Info.pdf']
   },
   {
@@ -281,8 +282,8 @@ export const DISTRICTS_DETAILED_DATA: DistrictDetail[] = [
     capital: 'Cidade de Tete',
     tagline: 'Capital provincial, polo financeiro, histórico e logístico do Zambeze.',
     taglineEn: 'Provincial capital, financial, historical, and logistic hub on the Zambezi.',
-    image: samoraBridgeImg,
-    heroImage: kassuendeImg,
+    image: DISTRICT_IMAGES_MAP['cidade-de-tete'].image,
+    heroImage: DISTRICT_IMAGES_MAP['cidade-de-tete'].heroImage,
     location: 'Centro da Província (Margens do Rio Zambeze)',
     locationEn: 'Central Tete (Zambezi River Banks)',
     area: '286 km²',
@@ -321,7 +322,7 @@ export const DISTRICTS_DETAILED_DATA: DistrictDetail[] = [
       livestock: false,
       tourism: true
     },
-    gallery: [samoraBridgeImg, kassuendeImg, donaAnaImg],
+    gallery: DISTRICT_IMAGES_MAP['cidade-de-tete'].gallery,
     sources: ['Governo da Província de Tete', 'Conselho Municipal da Cidade de Tete', 'INE Moçambique', 'Documento Oficial CIIT / Info.pdf']
   },
   {
@@ -331,8 +332,8 @@ export const DISTRICTS_DETAILED_DATA: DistrictDetail[] = [
     capital: 'Dôa',
     tagline: 'Bacia carbonífera do Baixo Zambeze e corredor ferroviário de Sena.',
     taglineEn: 'Lower Zambezi coal basin and Sena railway logistics corridor.',
-    image: coalImg,
-    heroImage: donaAnaImg,
+    image: DISTRICT_IMAGES_MAP.doa.image,
+    heroImage: DISTRICT_IMAGES_MAP.doa.heroImage,
     location: 'Sudeste da Província de Tete',
     locationEn: 'Southeast Tete Province',
     area: '3.606 km²',
@@ -369,7 +370,7 @@ export const DISTRICTS_DETAILED_DATA: DistrictDetail[] = [
       livestock: true,
       tourism: false
     },
-    gallery: [coalImg, donaAnaImg, cottonImg],
+    gallery: DISTRICT_IMAGES_MAP.doa.gallery,
     sources: ['Governo da Província de Tete', 'INE Moçambique', 'MAE - Divisão Administrativa', 'Documento Oficial CIIT / Info.pdf']
   },
   {
@@ -379,8 +380,8 @@ export const DISTRICTS_DETAILED_DATA: DistrictDetail[] = [
     capital: 'Furancungo',
     tagline: 'Planalto de Furancungo, minerais nobres, ouro e agricultura de excelência.',
     taglineEn: 'Furancungo plateau, precious minerals, gold, and fertile cropping.',
-    image: citrusImg,
-    heroImage: citrusImg,
+    image: DISTRICT_IMAGES_MAP.macanga.image,
+    heroImage: DISTRICT_IMAGES_MAP.macanga.heroImage,
     location: 'Norte da Província de Tete',
     locationEn: 'Northern Tete Province',
     area: '7.300 km²',
@@ -418,7 +419,7 @@ export const DISTRICTS_DETAILED_DATA: DistrictDetail[] = [
       livestock: true,
       tourism: true
     },
-    gallery: [citrusImg, cottonImg, goatsImg],
+    gallery: DISTRICT_IMAGES_MAP.macanga.gallery,
     sources: ['Governo da Província de Tete', 'INE Moçambique', 'MAE - Perfil do Distrito de Macanga', 'Documento Oficial CIIT / Info.pdf']
   },
   {
@@ -428,8 +429,8 @@ export const DISTRICTS_DETAILED_DATA: DistrictDetail[] = [
     capital: 'Mphende',
     tagline: 'Parque Nacional de Mágoè, Albufeira de Cahora Bassa e recursos minerais.',
     taglineEn: 'Mágoè National Park, Lake Cahora Bassa, and rich mineral resources.',
-    image: magoeImg,
-    heroImage: magoeImg,
+    image: DISTRICT_IMAGES_MAP.magoe.image,
+    heroImage: DISTRICT_IMAGES_MAP.magoe.heroImage,
     location: 'Sudoeste de Tete (Margem Sul da Albufeira)',
     locationEn: 'Southwest Tete (South Bank of Lake Cahora Bassa)',
     area: '8.697 km²',
@@ -467,8 +468,58 @@ export const DISTRICTS_DETAILED_DATA: DistrictDetail[] = [
       livestock: true,
       tourism: true
     },
-    gallery: [magoeImg, tchumaImg, kapentaImg, albufeiraImg],
+    gallery: DISTRICT_IMAGES_MAP.magoe.gallery,
     sources: ['Governo da Província de Tete', 'ANAC - Administração Nacional das Áreas de Conservação', 'INE Moçambique', 'Documento Oficial CIIT / Info.pdf']
+  },
+  {
+    id: 'marara',
+    slug: 'marara',
+    name: 'Marara',
+    capital: 'Marara Centro (Kambulatsitsi)',
+    tagline: 'Capital da pecuária caprina, polo de carvão e corredor logístico do Zambeze.',
+    taglineEn: 'Caprine livestock capital, coal node, and Zambezi transport corridor.',
+    image: DISTRICT_IMAGES_MAP.marara.image,
+    heroImage: DISTRICT_IMAGES_MAP.marara.heroImage,
+    location: 'Sul da Província de Tete (Margem Sul do Rio Zambeze)',
+    locationEn: 'Southern Tete Province (South bank of Zambezi River)',
+    area: '2.840 km²',
+    population: '80.000 hab. (INE Proj.)',
+    climate: 'Tropical semiárido quente',
+    climateEn: 'Hot semi-arid tropical',
+    overview: 'O Distrito de Marara, criado pelo desmembramento territorial da parte norte de Changara, localiza-se estrategicamente na margem sul do Rio Zambeze e ao longo do Rio Luenha. É famoso pela excelência na criação do afamado Cabrito de Tete, abundância de recursos minerais carboníferos, pedreiras e exploração de agregados de construção civil.',
+    overviewEn: 'Marara District, formed from the northern territory of Changara, lies along the southern bank of the Zambezi and Luenha rivers. It is famed for premium indigenous caprine breeding (Tete Goat), rich coal occurrences, and construction aggregates quarries.',
+    history: 'Historicamente território de cruzamento de caravanas mercantis entre Tete e o planalto zimbabueano, a região abrigou missões históricas e comunidades tradicionais Tonga e Nyungwe. Foi elevado à categoria de distrito pela Lei nº 26/2013 de 18 de Dezembro, acelerando investimentos em infraestruturas públicas, eletrificação, abastecimento de água e serviços sociais.',
+    historyEn: 'Historically a trading junction between Tete and the Zimbabwean plateau, hosting historic missions and Tonga/Nyungwe communities. Elevated to full district status in 2013, accelerating investments in civic infrastructure, electrification, and social services.',
+    geography: {
+      borders: 'Cidade de Tete, Changara, Moatize, Cahora Bassa e Chiúta',
+      bordersEn: 'Tete City, Changara, Moatize, Cahora Bassa, and Chiúta',
+      rivers: 'Rio Zambeze, Rio Luenha',
+      localities: 'Marara Centro (Sede), Kambulatsitsi, Mufa, Boroma',
+      coordinates: '16°02′S 33°28′E'
+    },
+    economy: [
+      { name: 'Pecuária Tradicional e Comercial', nameEn: 'Livestock Breeding', desc: 'Maior polo produtor do famoso Cabrito de Tete, bovinos de corte e ovinos.', isPrimary: true },
+      { name: 'Mineração de Carvão e Pedreiras', nameEn: 'Mining & Aggregates', desc: 'Concessões de carvão térmico e exploração industrial de inertes para construção civil.', isPrimary: true },
+      { name: 'Agricultura ao Longo do Zambeze', nameEn: 'Riverine Agriculture', desc: 'Milho, hortícolas e culturas de sequeiro nas várzeas férteis.', isPrimary: false },
+      { name: 'Logística Rodoviária', nameEn: 'Road Logistics', desc: 'Eixo rodoviário estratégico de ligação à Estrada Nacional N7/N8.', isPrimary: false }
+    ],
+    resources: 'Rebanhos caprinos de raça autóctone, jazigos de carvão mineral, bancos de areia e granito de alta qualidade, margens fluviais para regadio.',
+    resourcesEn: 'Indigenous goat livestock gene pool, thermal coal occurrences, premium aggregate stone quarries, and Zambezi riverfront arable soils.',
+    investmentProjects: [
+      { sector: 'Pecuária & Agro-indústria', project: 'Matadouro Industrial e Centro de Processamento de Carnes de Marara', location: 'Marara Centro', capacity: '100.000 cabeças/ano', investment: 'US$ 16M' },
+      { sector: 'Indústria Extractiva', project: 'Unidade Industrial de Britagem e Agregados de Construção', location: 'Kambulatsitsi / Mufa', capacity: '500.000 m³/ano', investment: 'US$ 12M' }
+    ],
+    indicators: {
+      location: true,
+      agriculture: true,
+      mining: true,
+      energy: false,
+      fisheries: false,
+      livestock: true,
+      tourism: true
+    },
+    gallery: DISTRICT_IMAGES_MAP.marara.gallery,
+    sources: ['Governo da Província de Tete', 'INE Moçambique', 'MAE - Divisão Territorial', 'Documento Oficial CIIT / Info.pdf']
   },
   {
     id: 'maravia',
@@ -477,8 +528,8 @@ export const DISTRICTS_DETAILED_DATA: DistrictDetail[] = [
     capital: 'Fíngoè',
     tagline: 'Tesouro mineral do norte, ouro, cobre, ferro e fronteira com a Zâmbia.',
     taglineEn: 'Northern mineral treasure, gold, copper, iron ore, and Zambia frontier.',
-    image: brmImg,
-    heroImage: brmImg,
+    image: DISTRICT_IMAGES_MAP.maravia.image,
+    heroImage: DISTRICT_IMAGES_MAP.maravia.heroImage,
     location: 'Noroeste da Província de Tete',
     locationEn: 'Northwest Tete Province',
     area: '16.515 km²',
@@ -516,7 +567,7 @@ export const DISTRICTS_DETAILED_DATA: DistrictDetail[] = [
       livestock: true,
       tourism: true
     },
-    gallery: [brmImg, coalImg, cottonImg],
+    gallery: DISTRICT_IMAGES_MAP.maravia.gallery,
     sources: ['Governo da Província de Tete', 'INE Moçambique', 'Direção Provincial de Recursos Minerais e Energia', 'Documento Oficial CIIT / Info.pdf']
   },
   {
@@ -526,8 +577,8 @@ export const DISTRICTS_DETAILED_DATA: DistrictDetail[] = [
     capital: 'Cidade de Moatize',
     tagline: 'A capital do carvão mineral, megaprojetos industriais e nó logístico.',
     taglineEn: 'Global coal capital, heavy industrial megaprojects, and rail logistics.',
-    image: coalImg,
-    heroImage: coalImg,
+    image: DISTRICT_IMAGES_MAP.moatize.image,
+    heroImage: DISTRICT_IMAGES_MAP.moatize.heroImage,
     location: 'Centro-Leste da Província de Tete',
     locationEn: 'Central-East Tete Province',
     area: '8.455 km²',
@@ -567,7 +618,7 @@ export const DISTRICTS_DETAILED_DATA: DistrictDetail[] = [
       livestock: true,
       tourism: false
     },
-    gallery: [coalImg, samoraBridgeImg, kassuendeImg, brmImg],
+    gallery: DISTRICT_IMAGES_MAP.moatize.gallery,
     sources: ['Governo da Província de Tete', 'INE Moçambique', 'Direção Provincial de Recursos Minerais e Energia', 'Documento Oficial CIIT / Info.pdf']
   },
   {
@@ -577,8 +628,8 @@ export const DISTRICTS_DETAILED_DATA: DistrictDetail[] = [
     capital: 'Nyamayabáue',
     tagline: 'Confluência do Zambeze e Chire, Ponte Dona Ana e agricultura de várzea.',
     taglineEn: 'Zambezi-Shire confluence, iconic Dona Ana Bridge, and fertile plains.',
-    image: donaAnaImg,
-    heroImage: donaAnaImg,
+    image: DISTRICT_IMAGES_MAP.mutarara.image,
+    heroImage: DISTRICT_IMAGES_MAP.mutarara.heroImage,
     location: 'Extremo Sudeste da Província de Tete',
     locationEn: 'Southeast Tip of Tete Province',
     area: '6.295 km²',
@@ -616,7 +667,7 @@ export const DISTRICTS_DETAILED_DATA: DistrictDetail[] = [
       livestock: true,
       tourism: true
     },
-    gallery: [donaAnaImg, citrusImg, cottonImg],
+    gallery: DISTRICT_IMAGES_MAP.mutarara.gallery,
     sources: ['Governo da Província de Tete', 'INE Moçambique', 'MAE - Perfil do Distrito de Mutarara', 'Documento Oficial CIIT / Info.pdf']
   },
   {
@@ -626,8 +677,8 @@ export const DISTRICTS_DETAILED_DATA: DistrictDetail[] = [
     capital: 'Tsangano',
     tagline: 'Planalto frio, batata-reno, trigo, horticultura e ligação transfronteiriça.',
     taglineEn: 'Cool highlands, high-yield potato and wheat farming, cross-border commerce.',
-    image: citrusImg,
-    heroImage: citrusImg,
+    image: DISTRICT_IMAGES_MAP.tsangano.image,
+    heroImage: DISTRICT_IMAGES_MAP.tsangano.heroImage,
     location: 'Nordeste da Província de Tete',
     locationEn: 'Northeast Tete Province',
     area: '3.661 km²',
@@ -664,7 +715,7 @@ export const DISTRICTS_DETAILED_DATA: DistrictDetail[] = [
       livestock: true,
       tourism: true
     },
-    gallery: [citrusImg, cottonImg, goatsImg],
+    gallery: DISTRICT_IMAGES_MAP.tsangano.gallery,
     sources: ['Governo da Província de Tete', 'INE Moçambique', 'MAE - Perfil do Distrito de Tsangano', 'Documento Oficial CIIT / Info.pdf']
   },
   {
@@ -674,8 +725,8 @@ export const DISTRICTS_DETAILED_DATA: DistrictDetail[] = [
     capital: 'Zumbo',
     tagline: 'O ponto mais ocidental de Moçambique, confluência Zambeze-Luangwa e história viva.',
     taglineEn: 'Mozambique’s westernmost outpost, Zambezi-Luangwa confluence and rich history.',
-    image: tchumaImg,
-    heroImage: albufeiraImg,
+    image: DISTRICT_IMAGES_MAP.zumbo.image,
+    heroImage: DISTRICT_IMAGES_MAP.zumbo.heroImage,
     location: 'Extremo Oeste de Tete (Tríplice Fronteira Moçambique-Zâmbia-Zimbabwe)',
     locationEn: 'Westernmost Tete (Tripoint: Mozambique-Zambia-Zimbabwe)',
     area: '12.040 km²',
@@ -713,7 +764,7 @@ export const DISTRICTS_DETAILED_DATA: DistrictDetail[] = [
       livestock: true,
       tourism: true
     },
-    gallery: [tchumaImg, albufeiraImg, kapentaImg],
+    gallery: DISTRICT_IMAGES_MAP.zumbo.gallery,
     sources: ['Governo da Província de Tete', 'INE Moçambique', 'MAE - Perfil do Distrito de Zumbo', 'Documento Oficial CIIT / Info.pdf']
   }
 ];
