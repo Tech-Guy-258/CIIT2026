@@ -24,9 +24,20 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 // server.ts
 var import_express = __toESM(require("express"), 1);
 var import_path = __toESM(require("path"), 1);
+var import_fs = __toESM(require("fs"), 1);
 var import_vite = require("vite");
 var app = (0, import_express.default)();
 var PORT = 3e3;
+var STORAGE_FILE = import_path.default.join(process.cwd(), "data_access_codes.json");
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Device-Id");
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+  next();
+});
 app.use(import_express.default.json());
 app.use(import_express.default.urlencoded({ extended: true }));
 var DURATION_24H_MS = 24 * 60 * 60 * 1e3;
@@ -105,9 +116,37 @@ var DEFAULT_CODES = [
   }
 ];
 var accessCodesDb = /* @__PURE__ */ new Map();
-DEFAULT_CODES.forEach((item) => {
-  accessCodesDb.set(item.code.toUpperCase(), { ...item });
-});
+function loadCodesFromDisk() {
+  try {
+    if (import_fs.default.existsSync(STORAGE_FILE)) {
+      const raw = import_fs.default.readFileSync(STORAGE_FILE, "utf-8");
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        parsed.forEach((item) => {
+          if (item && item.code) {
+            accessCodesDb.set(item.code.toUpperCase(), item);
+          }
+        });
+      }
+    }
+  } catch (err) {
+    console.warn("N\xE3o foi poss\xEDvel ler arquivo de persist\xEAncia de c\xF3digos, inicializando padr\xE3o:", err);
+  }
+  DEFAULT_CODES.forEach((item) => {
+    if (!accessCodesDb.has(item.code.toUpperCase())) {
+      accessCodesDb.set(item.code.toUpperCase(), { ...item });
+    }
+  });
+}
+function saveCodesToDisk() {
+  try {
+    const list = Array.from(accessCodesDb.values());
+    import_fs.default.writeFileSync(STORAGE_FILE, JSON.stringify(list, null, 2), "utf-8");
+  } catch (err) {
+    console.error("Erro ao salvar c\xF3digos em disco:", err);
+  }
+}
+loadCodesFromDisk();
 function checkAndUpdateCodeExpiration(record) {
   const now = Date.now();
   if (record.status === "active" && record.expiresAt && now >= record.expiresAt) {
@@ -155,6 +194,7 @@ app.post("/api/access/validate", (req, res) => {
     record.token = `ciit_auth_${Math.random().toString(36).substring(2)}_${now.toString(36)}`;
     record.lastVerifiedAt = now;
     accessCodesDb.set(normalizedCode, record);
+    saveCodesToDisk();
     return res.json({
       success: true,
       valid: true,
@@ -171,6 +211,7 @@ app.post("/api/access/validate", (req, res) => {
   if (record.status === "active") {
     const remainingMs = Math.max(0, (record.expiresAt || 0) - now);
     record.lastVerifiedAt = now;
+    saveCodesToDisk();
     return res.json({
       success: true,
       valid: true,
@@ -284,6 +325,7 @@ app.post("/api/access/admin/create", (req, res) => {
     createdAt: Date.now()
   };
   accessCodesDb.set(normalizedCode, newCodeRecord);
+  saveCodesToDisk();
   return res.json({
     success: true,
     message: `C\xF3digo ${normalizedCode} criado com sucesso.`,
@@ -304,6 +346,7 @@ app.post("/api/access/admin/revoke", (req, res) => {
   record.revokedAt = Date.now();
   record.revokedReason = reason || "Acesso revogado pela administra\xE7\xE3o da CIIT 2026.";
   accessCodesDb.set(normalizedCode, record);
+  saveCodesToDisk();
   return res.json({
     success: true,
     message: `C\xF3digo ${normalizedCode} revogado com sucesso.`,
@@ -328,6 +371,7 @@ app.post("/api/access/admin/reset", (req, res) => {
   record.revokedAt = null;
   record.revokedReason = void 0;
   accessCodesDb.set(normalizedCode, record);
+  saveCodesToDisk();
   return res.json({
     success: true,
     message: `C\xF3digo ${normalizedCode} redefinido para n\xE3o utilizado (24 horas dispon\xEDveis).`,
@@ -344,6 +388,7 @@ app.post("/api/access/admin/delete", (req, res) => {
     return res.status(404).json({ success: false, error: "C\xF3digo n\xE3o encontrado." });
   }
   accessCodesDb.delete(normalizedCode);
+  saveCodesToDisk();
   return res.json({
     success: true,
     message: `C\xF3digo ${normalizedCode} apagado permanentemente.`,
