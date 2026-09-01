@@ -177,14 +177,16 @@ function checkAndUpdateCodeExpiration(record: ServerAccessCode): ServerAccessCod
 // API ROUTES FOR 24H ACCESS CODE GATEKEEPER
 // ----------------------------------------------------
 
-// 1. Validate / Activate Access Code
-app.post('/api/access/validate', (req, res) => {
-  const { code: rawCode, deviceId } = req.body;
+// 1. Validate / Activate Access Code (Supports POST and GET for maximum compatibility across mobile & web)
+const handleValidateAccess = (req: express.Request, res: express.Response) => {
+  const rawCode = (req.body?.code || req.query?.code || '') as string;
+  const deviceId = (req.body?.deviceId || req.query?.deviceId || '') as string;
   const now = Date.now();
 
   if (!rawCode || typeof rawCode !== 'string') {
-    return res.status(400).json({
+    return res.status(200).json({
       success: false,
+      valid: false,
       error: 'Por favor, introduza um código de acesso válido.'
     });
   }
@@ -193,8 +195,9 @@ app.post('/api/access/validate', (req, res) => {
   const record = accessCodesDb.get(normalizedCode);
 
   if (!record) {
-    return res.status(404).json({
+    return res.status(200).json({
       success: false,
+      valid: false,
       error: 'Código de acesso não encontrado. Verifique o código e tente novamente.'
     });
   }
@@ -203,16 +206,18 @@ app.post('/api/access/validate', (req, res) => {
   checkAndUpdateCodeExpiration(record);
 
   if (record.status === 'revoked') {
-    return res.status(403).json({
+    return res.status(200).json({
       success: false,
+      valid: false,
       revoked: true,
       error: record.revokedReason || 'Este código de acesso foi revogado pela comissão organizadora.'
     });
   }
 
   if (record.status === 'expired') {
-    return res.status(403).json({
+    return res.status(200).json({
       success: false,
+      valid: false,
       expired: true,
       error: 'Este código de acesso expirou após 24 horas. Solicite um novo código para continuar.'
     });
@@ -230,7 +235,7 @@ app.post('/api/access/validate', (req, res) => {
     accessCodesDb.set(normalizedCode, record);
     saveCodesToDisk();
 
-    return res.json({
+    return res.status(200).json({
       success: true,
       valid: true,
       code: record.code,
@@ -250,7 +255,7 @@ app.post('/api/access/validate', (req, res) => {
     record.lastVerifiedAt = now;
     saveCodesToDisk();
 
-    return res.json({
+    return res.status(200).json({
       success: true,
       valid: true,
       code: record.code,
@@ -264,11 +269,15 @@ app.post('/api/access/validate', (req, res) => {
     });
   }
 
-  return res.status(400).json({
+  return res.status(200).json({
     success: false,
+    valid: false,
     error: 'Estado de acesso desconhecido.'
   });
-});
+};
+
+app.post('/api/access/validate', handleValidateAccess);
+app.get('/api/access/validate', handleValidateAccess);
 
 // 2. Continuous Session Verification & Server Clock Sync
 app.get('/api/access/verify-session', (req, res) => {
