@@ -12,7 +12,8 @@ import {
   Users, UserCheck, Clock, Percent, ShieldCheck, Lock, Search, Filter,
   FileSpreadsheet, UserPlus, LogOut, Check, X, QrCode, Trash2,
   Briefcase, TrendingUp, Mic, Award, Building, Layers, CheckCircle2,
-  BarChart3, Activity, KeyRound, ShieldAlert, RotateCcw, Plus, RefreshCw, AlertTriangle
+  BarChart3, Activity, KeyRound, ShieldAlert, RotateCcw, Plus, RefreshCw, AlertTriangle,
+  Share2, Copy, Smartphone, Laptop, ExternalLink
 } from 'lucide-react';
 
 interface AdminDashboardProps {
@@ -128,6 +129,20 @@ export default function AdminDashboard({
       setTimeout(() => setCodeFeedbackMsg(null), 4000);
     } else {
       setCodeFeedbackMsg({ text: 'Falha ao apagar o código. Tente novamente.', isError: true });
+    }
+  };
+
+  const handleCopyDirectLink = (code: string) => {
+    const url = accessControl.getDirectAccessUrl(code);
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(() => {
+        setCodeFeedbackMsg({ text: `Link copiado com sucesso! Pode enviar por WhatsApp, SMS ou Email para telemóveis e computadores externos: ${url}` });
+        setTimeout(() => setCodeFeedbackMsg(null), 6000);
+      }).catch(() => {
+        prompt(lang === 'pt' ? 'Copie o link abaixo para abrir em dispositivos externos:' : 'Copy link below:', url);
+      });
+    } else {
+      prompt(lang === 'pt' ? 'Copie o link abaixo para abrir em dispositivos externos:' : 'Copy link below:', url);
     }
   };
 
@@ -1165,6 +1180,25 @@ export default function AdminDashboard({
               </div>
             </div>
 
+            {/* EXTERNAL DEVICE ACCESS GUIDE BANNER */}
+            <div className="p-3.5 bg-gradient-to-r from-amber-950/40 via-slate-900 to-slate-900 border border-amber-500/30 text-xs text-amber-200 font-sans flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-start sm:items-center space-x-2.5">
+                <div className="p-1.5 bg-amber-500/20 text-amber-400 border border-amber-500/40 shrink-0">
+                  <Smartphone className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="font-bold text-amber-300">
+                    {lang === 'pt' ? 'Acesso Direto em Dispositivos Externos (Telemóveis, Tablets & PCs):' : 'Direct Access for External Devices (Phones, Tablets & PCs):'}
+                  </span>
+                  <p className="text-[11px] text-gray-300 mt-0.5">
+                    {lang === 'pt'
+                      ? 'Qualquer delegado ou investidor pode aceder fora do Google AI Studio. Clique em "Copiar Link" para gerar o link com o código integrado e partilhe por WhatsApp, Email ou SMS.'
+                      : 'Anyone can access outside Google AI Studio. Click "Copy Link" to generate a direct login link and share via WhatsApp, Email, or SMS.'}
+                  </p>
+                </div>
+              </div>
+            </div>
+
             {/* FEEDBACK ALERT */}
             {codeFeedbackMsg && (
               <div className={`p-3 border text-xs font-mono rounded-none flex items-center justify-between animate-fadeIn ${
@@ -1356,6 +1390,16 @@ export default function AdminDashboard({
                             {/* ACTIONS */}
                             <td className="py-3.5 px-4 text-right whitespace-nowrap">
                               <div className="flex items-center justify-end space-x-2">
+                                <button
+                                  type="button"
+                                  onClick={() => handleCopyDirectLink(c.code)}
+                                  className="px-2.5 py-1 text-[10px] font-mono font-bold uppercase bg-amber-500/10 hover:bg-amber-500/25 text-amber-300 border border-amber-500/40 transition-colors cursor-pointer flex items-center space-x-1"
+                                  title={lang === 'pt' ? 'Copiar link direto para telemóveis e dispositivos externos' : 'Copy direct access link for mobile & external devices'}
+                                >
+                                  <Copy className="w-3 h-3 text-amber-400" />
+                                  <span>{lang === 'pt' ? 'Copiar Link' : 'Copy Link'}</span>
+                                </button>
+
                                 {isActive && (
                                   <button
                                     type="button"

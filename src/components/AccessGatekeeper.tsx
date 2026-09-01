@@ -6,7 +6,7 @@
 import React, { useState } from 'react';
 import { accessControl } from '../services/accessControl';
 import { AccessSessionState } from '../types';
-import { Lock, ShieldAlert, KeyRound, ArrowRight, CheckCircle2, AlertCircle, Sparkles, Clock, Globe } from 'lucide-react';
+import { Lock, ShieldAlert, KeyRound, ArrowRight, CheckCircle2, AlertCircle, Sparkles, Clock, Globe, Smartphone, Copy, Check } from 'lucide-react';
 import ciitLogoImg from '../assets/images/ciit_2026_logo_1787657793393.png';
 
 interface AccessGatekeeperProps {
@@ -19,6 +19,7 @@ export default function AccessGatekeeper({ sessionState, lang = 'pt' }: AccessGa
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showDemoHelper, setShowDemoHelper] = useState(false);
+  const [copiedPreset, setCopiedPreset] = useState<string | null>(null);
 
   const isExpired = sessionState.status === 'expired';
   const isRevoked = sessionState.status === 'revoked';
@@ -41,6 +42,21 @@ export default function AccessGatekeeper({ sessionState, lang = 'pt' }: AccessGa
   const handleApplyPreset = (presetCode: string) => {
     setCode(presetCode);
     setErrorMessage(null);
+  };
+
+  const handleCopyDirectLink = (presetCode: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const url = accessControl.getDirectAccessUrl(presetCode);
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(() => {
+        setCopiedPreset(presetCode);
+        setTimeout(() => setCopiedPreset(null), 3000);
+      }).catch(() => {
+        prompt(lang === 'pt' ? 'Copie o link direto:' : 'Copy direct link:', url);
+      });
+    } else {
+      prompt(lang === 'pt' ? 'Copie o link direto:' : 'Copy direct link:', url);
+    }
   };
 
   return (
@@ -191,7 +207,7 @@ export default function AccessGatekeeper({ sessionState, lang = 'pt' }: AccessGa
             </button>
           </form>
 
-          {/* 24H VALIDITY SECURITY NOTICE */}
+          {/* 24H VALIDITY & EXTERNAL DEVICE COMPATIBILITY NOTICE */}
           <div className="mt-6 pt-5 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400 font-mono">
             <span className="flex items-center space-x-1.5 text-slate-400">
               <Clock className="w-3.5 h-3.5 text-amber-400" />
@@ -206,12 +222,17 @@ export default function AccessGatekeeper({ sessionState, lang = 'pt' }: AccessGa
             </button>
           </div>
 
-          {/* HELPER DRAWER WITH PRE-CONFIGURED OFFICIAL CODES */}
+          {/* HELPER DRAWER WITH PRE-CONFIGURED OFFICIAL CODES & DIRECT LINKS */}
           {showDemoHelper && (
             <div className="mt-4 p-3 bg-slate-950/90 border border-amber-500/20 text-xs rounded-none space-y-2 animate-fadeIn">
-              <span className="text-[10px] font-mono text-amber-400 uppercase tracking-wider block font-bold">
-                {lang === 'pt' ? 'Códigos Disponíveis (Clique para aplicar):' : 'Available Codes (Click to apply):'}
-              </span>
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-mono text-amber-400 uppercase tracking-wider block font-bold">
+                  {lang === 'pt' ? 'Códigos Disponíveis:' : 'Available Codes:'}
+                </span>
+                <span className="text-[9px] font-mono text-slate-500">
+                  {lang === 'pt' ? 'Clique para usar ou copiar link' : 'Click to use or copy link'}
+                </span>
+              </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
                 {[
                   { code: 'CIIT2026', label: 'Oficial CIIT' },
@@ -219,19 +240,44 @@ export default function AccessGatekeeper({ sessionState, lang = 'pt' }: AccessGa
                   { code: 'CIIT-VIP-ACCESS', label: 'VIP Executivo' },
                   { code: 'GOV-TETE-2026', label: 'Governo' },
                 ].map((item) => (
-                  <button
+                  <div
                     key={item.code}
-                    type="button"
                     onClick={() => handleApplyPreset(item.code)}
-                    className="p-1.5 bg-slate-900 hover:bg-amber-500/10 border border-slate-700 hover:border-amber-500/50 text-left transition-all rounded-none cursor-pointer flex items-center justify-between"
+                    className="p-1.5 bg-slate-900 hover:bg-amber-500/10 border border-slate-700 hover:border-amber-500/50 text-left transition-all rounded-none cursor-pointer flex items-center justify-between group"
                   >
-                    <span className="font-mono text-[11px] text-amber-300 font-bold">{item.code}</span>
-                    <span className="text-[9px] text-slate-400">{item.label}</span>
-                  </button>
+                    <div>
+                      <span className="font-mono text-[11px] text-amber-300 font-bold block">{item.code}</span>
+                      <span className="text-[9px] text-slate-400 block">{item.label}</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={(e) => handleCopyDirectLink(item.code, e)}
+                      className="px-1.5 py-0.5 bg-white/5 hover:bg-amber-500/20 border border-white/10 hover:border-amber-500/40 text-[9px] font-mono text-gray-300 hover:text-amber-300 transition-colors flex items-center space-x-1"
+                      title={lang === 'pt' ? 'Copiar link direto para telemóveis e dispositivos externos' : 'Copy direct link'}
+                    >
+                      {copiedPreset === item.code ? (
+                        <>
+                          <Check className="w-2.5 h-2.5 text-emerald-400" />
+                          <span className="text-emerald-400 font-bold">{lang === 'pt' ? 'Copiado' : 'Copied'}</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-2.5 h-2.5" />
+                          <span>{lang === 'pt' ? 'Link' : 'Link'}</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
                 ))}
               </div>
             </div>
           )}
+
+          {/* EXTERNAL DEVICE COMPATIBILITY FOOTNOTE */}
+          <div className="mt-4 pt-3 border-t border-slate-800/50 flex items-center justify-center space-x-2 text-[10px] text-slate-500 font-mono">
+            <Smartphone className="w-3 h-3 text-amber-400/70" />
+            <span>{lang === 'pt' ? 'Compatível com telemóveis, tablets e computadores' : 'Compatible with mobile phones, tablets and PCs'}</span>
+          </div>
 
         </div>
       </div>

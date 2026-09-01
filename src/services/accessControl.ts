@@ -70,9 +70,61 @@ class AccessControlService {
 
   /**
    * Initializes session on load by querying backend server verification
+   * Also supports instant auto-authentication from URL query parameter on external devices
    */
   public async initializeSession(): Promise<void> {
     if (typeof window === 'undefined') return;
+
+    // 1. Check URL parameters for direct link authentication from external devices (e.g. ?code=CIIT2026 or ?access_code=CIIT2026 or #code=CIIT2026)
+    let urlCode: string | null = null;
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      urlCode =
+        urlParams.get('code') ||
+        urlParams.get('access_code') ||
+        urlParams.get('ac') ||
+        urlParams.get('key') ||
+        urlParams.get('ciit_code') ||
+        urlParams.get('c') ||
+        null;
+
+      if (!urlCode && window.location.hash) {
+        const hashMatch = window.location.hash.match(/[#&?](?:code|ac|access_code|key)=([^&]+)/i);
+        if (hashMatch && hashMatch[1]) {
+          urlCode = decodeURIComponent(hashMatch[1]);
+        }
+      }
+    } catch (e) {
+      console.warn('Erro ao ler parâmetros de URL:', e);
+    }
+
+    // If an external device opens with a valid code in the URL, authenticate automatically!
+    if (urlCode && urlCode.trim()) {
+      const cleanUrlCode = urlCode.trim().toUpperCase();
+      this.currentState = {
+        ...this.currentState,
+        isChecking: true,
+      };
+      this.notify();
+
+      const res = await this.validateAccessCode(cleanUrlCode);
+      if (res.success) {
+        // Clean URL query parameters smoothly without reloading
+        try {
+          const cleanUrl = new URL(window.location.href);
+          cleanUrl.searchParams.delete('code');
+          cleanUrl.searchParams.delete('access_code');
+          cleanUrl.searchParams.delete('ac');
+          cleanUrl.searchParams.delete('key');
+          cleanUrl.searchParams.delete('ciit_code');
+          cleanUrl.searchParams.delete('c');
+          window.history.replaceState({}, document.title, cleanUrl.pathname + (cleanUrl.search ? cleanUrl.search : ''));
+        } catch (e) {
+          // ignore
+        }
+        return;
+      }
+    }
 
     const savedCode = localStorage.getItem(STORAGE_KEY_CODE);
     const savedToken = localStorage.getItem(STORAGE_KEY_TOKEN);
@@ -456,6 +508,16 @@ class AccessControlService {
       console.error('Erro ao apagar código:', e);
       return false;
     }
+  }
+
+  /**
+   * Generates a direct magic access link for external devices (Smartphones, Tablets, PCs)
+   */
+  public getDirectAccessUrl(code: string): string {
+    if (typeof window === 'undefined') return `?code=${encodeURIComponent(code)}`;
+    const origin = window.location.origin;
+    const pathname = window.location.pathname;
+    return `${origin}${pathname}?code=${encodeURIComponent(code.trim().toUpperCase())}`;
   }
 }
 

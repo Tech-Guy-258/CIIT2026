@@ -11,6 +11,20 @@ import { createServer as createViteServer } from 'vite';
 const app = express();
 const PORT = 3000;
 
+// Disk persistence path for access codes
+const STORAGE_FILE = path.join(process.cwd(), 'data_access_codes.json');
+
+// Enable CORS and security headers for external devices / mobile browsers / PWAs / iframes
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, X-Device-Id');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
 // Body parsers
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -110,12 +124,45 @@ const DEFAULT_CODES: ServerAccessCode[] = [
   }
 ];
 
-// In-memory store initialized with defaults
+// In-memory store initialized with defaults and synced with disk
 let accessCodesDb: Map<string, ServerAccessCode> = new Map();
 
-DEFAULT_CODES.forEach(item => {
-  accessCodesDb.set(item.code.toUpperCase(), { ...item });
-});
+function loadCodesFromDisk(): void {
+  try {
+    if (fs.existsSync(STORAGE_FILE)) {
+      const raw = fs.readFileSync(STORAGE_FILE, 'utf-8');
+      const parsed: ServerAccessCode[] = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        parsed.forEach(item => {
+          if (item && item.code) {
+            accessCodesDb.set(item.code.toUpperCase(), item);
+          }
+        });
+      }
+    }
+  } catch (err) {
+    console.warn('Não foi possível ler arquivo de persistência de códigos, inicializando padrão:', err);
+  }
+
+  // Ensure default codes always exist if not already loaded
+  DEFAULT_CODES.forEach(item => {
+    if (!accessCodesDb.has(item.code.toUpperCase())) {
+      accessCodesDb.set(item.code.toUpperCase(), { ...item });
+    }
+  });
+}
+
+function saveCodesToDisk(): void {
+  try {
+    const list = Array.from(accessCodesDb.values());
+    fs.writeFileSync(STORAGE_FILE, JSON.stringify(list, null, 2), 'utf-8');
+  } catch (err) {
+    console.error('Erro ao salvar códigos em disco:', err);
+  }
+}
+
+// Initial load
+loadCodesFromDisk();
 
 // Helper to check and update expiration against authoritative server time
 function checkAndUpdateCodeExpiration(record: ServerAccessCode): ServerAccessCode {
@@ -181,6 +228,7 @@ app.post('/api/access/validate', (req, res) => {
     record.lastVerifiedAt = now;
 
     accessCodesDb.set(normalizedCode, record);
+    saveCodesToDisk();
 
     return res.json({
       success: true,
@@ -200,6 +248,7 @@ app.post('/api/access/validate', (req, res) => {
   if (record.status === 'active') {
     const remainingMs = Math.max(0, (record.expiresAt || 0) - now);
     record.lastVerifiedAt = now;
+    saveCodesToDisk();
 
     return res.json({
       success: true,
@@ -338,6 +387,7 @@ app.post('/api/access/admin/create', (req, res) => {
   };
 
   accessCodesDb.set(normalizedCode, newCodeRecord);
+  saveCodesToDisk();
 
   return res.json({
     success: true,
@@ -364,6 +414,7 @@ app.post('/api/access/admin/revoke', (req, res) => {
   record.revokedAt = Date.now();
   record.revokedReason = reason || 'Acesso revogado pela administração da CIIT 2026.';
   accessCodesDb.set(normalizedCode, record);
+  saveCodesToDisk();
 
   return res.json({
     success: true,
@@ -394,6 +445,7 @@ app.post('/api/access/admin/reset', (req, res) => {
   record.revokedAt = null;
   record.revokedReason = undefined;
   accessCodesDb.set(normalizedCode, record);
+  saveCodesToDisk();
 
   return res.json({
     success: true,
@@ -415,6 +467,7 @@ app.post('/api/access/admin/delete', (req, res) => {
   }
 
   accessCodesDb.delete(normalizedCode);
+  saveCodesToDisk();
 
   return res.json({
     success: true,
