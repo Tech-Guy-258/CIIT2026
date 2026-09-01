@@ -338,17 +338,25 @@ class AccessControlService {
 
     // 2. Resilient Local Authentication Engine (Enforces the exact 24-Hour window reliably)
     const localRegistry = this.getLocalCodesRegistry();
-    const record = localRegistry[cleanCode];
-
-    if (!record) {
-      return {
-        success: false,
-        error: 'Código de acesso não encontrado. Verifique o código e tente novamente.',
-      };
-    }
+    let record = localRegistry[cleanCode];
 
     const now = Date.now();
     const DURATION_24H_MS = 24 * 60 * 60 * 1000;
+
+    // MODO TESTE RÁPIDO & APRESENTAÇÃO: Criação instantânea de qualquer código digitado
+    if (!record) {
+      record = {
+        code: cleanCode,
+        label: `Acesso Demonstração (${cleanCode})`,
+        category: 'Teste & Apresentação',
+        status: 'unused',
+        activatedAt: null,
+        expiresAt: null,
+        createdAt: now,
+      };
+      localRegistry[cleanCode] = record;
+      this.saveLocalCodesRegistry(localRegistry);
+    }
 
     if (record.status === 'revoked') {
       this.handleRevoked(record.revokedReason || 'Este código de acesso foi revogado pela organização.');

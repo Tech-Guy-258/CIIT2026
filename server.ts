@@ -192,14 +192,21 @@ const handleValidateAccess = (req: express.Request, res: express.Response) => {
   }
 
   const normalizedCode = rawCode.trim().toUpperCase();
-  const record = accessCodesDb.get(normalizedCode);
+  let record = accessCodesDb.get(normalizedCode);
 
+  // MODO TESTE RÁPIDO & APRESENTAÇÃO: Criação instantânea se não existir
   if (!record) {
-    return res.status(200).json({
-      success: false,
-      valid: false,
-      error: 'Código de acesso não encontrado. Verifique o código e tente novamente.'
-    });
+    record = {
+      code: normalizedCode,
+      label: `Acesso Demonstração (${normalizedCode})`,
+      category: 'Teste & Apresentação',
+      status: 'unused',
+      createdAt: now,
+      activatedAt: null,
+      expiresAt: null
+    };
+    accessCodesDb.set(normalizedCode, record);
+    saveCodesToDisk();
   }
 
   // Update status if expired

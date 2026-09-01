@@ -149,9 +149,14 @@ export default function AccessGatekeeper({ sessionState, lang = 'pt' }: AccessGa
           {/* CODE ENTRY FORM */}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="access-code-input" className="block text-[11px] font-mono uppercase tracking-widest text-slate-400 font-bold mb-1.5">
-                {lang === 'pt' ? 'Código de Acesso' : 'Access Code'}
-              </label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label htmlFor="access-code-input" className="block text-[11px] font-mono uppercase tracking-widest text-slate-400 font-bold">
+                  {lang === 'pt' ? 'Código de Acesso' : 'Access Code'}
+                </label>
+                <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-1.5 py-0.5 font-semibold">
+                  {lang === 'pt' ? 'Qualquer código aceite' : 'Any code accepted'}
+                </span>
+              </div>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-amber-400">
                   <KeyRound className="w-4 h-4" />
@@ -164,7 +169,7 @@ export default function AccessGatekeeper({ sessionState, lang = 'pt' }: AccessGa
                     setCode(e.target.value.toUpperCase());
                     if (errorMessage) setErrorMessage(null);
                   }}
-                  placeholder={lang === 'pt' ? 'Ex: CIIT2026' : 'e.g. CIIT2026'}
+                  placeholder={lang === 'pt' ? 'Digite qualquer código (ex: CIIT2026, DEMO, TESTE)' : 'Type any code (e.g. CIIT2026, DEMO)'}
                   disabled={loading}
                   autoComplete="off"
                   spellCheck="false"
@@ -204,6 +209,16 @@ export default function AccessGatekeeper({ sessionState, lang = 'pt' }: AccessGa
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}
+            </button>
+
+            {/* 1-CLICK QUICK ACCESS FOR PRESENTATION */}
+            <button
+              type="button"
+              onClick={() => handleApplyPreset('CIIT2026')}
+              className="w-full py-2 px-4 bg-slate-900 hover:bg-amber-500/10 border border-slate-700 hover:border-amber-500/40 text-[11px] font-mono text-amber-300 hover:text-amber-200 transition-colors flex items-center justify-center space-x-1.5 cursor-pointer"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <span>{lang === 'pt' ? 'Acesso Rápido com CIIT2026' : 'Quick Access with CIIT2026'}</span>
             </button>
           </form>
 
