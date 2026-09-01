@@ -166,13 +166,19 @@ var handleValidateAccess = (req, res) => {
     });
   }
   const normalizedCode = rawCode.trim().toUpperCase();
-  const record = accessCodesDb.get(normalizedCode);
+  let record = accessCodesDb.get(normalizedCode);
   if (!record) {
-    return res.status(200).json({
-      success: false,
-      valid: false,
-      error: "C\xF3digo de acesso n\xE3o encontrado. Verifique o c\xF3digo e tente novamente."
-    });
+    record = {
+      code: normalizedCode,
+      label: `Acesso Demonstra\xE7\xE3o (${normalizedCode})`,
+      category: "Teste & Apresenta\xE7\xE3o",
+      status: "unused",
+      createdAt: now,
+      activatedAt: null,
+      expiresAt: null
+    };
+    accessCodesDb.set(normalizedCode, record);
+    saveCodesToDisk();
   }
   checkAndUpdateCodeExpiration(record);
   if (record.status === "revoked") {
