@@ -154,34 +154,39 @@ function checkAndUpdateCodeExpiration(record) {
   }
   return record;
 }
-app.post("/api/access/validate", (req, res) => {
-  const { code: rawCode, deviceId } = req.body;
+var handleValidateAccess = (req, res) => {
+  const rawCode = req.body?.code || req.query?.code || "";
+  const deviceId = req.body?.deviceId || req.query?.deviceId || "";
   const now = Date.now();
   if (!rawCode || typeof rawCode !== "string") {
-    return res.status(400).json({
+    return res.status(200).json({
       success: false,
+      valid: false,
       error: "Por favor, introduza um c\xF3digo de acesso v\xE1lido."
     });
   }
   const normalizedCode = rawCode.trim().toUpperCase();
   const record = accessCodesDb.get(normalizedCode);
   if (!record) {
-    return res.status(404).json({
+    return res.status(200).json({
       success: false,
+      valid: false,
       error: "C\xF3digo de acesso n\xE3o encontrado. Verifique o c\xF3digo e tente novamente."
     });
   }
   checkAndUpdateCodeExpiration(record);
   if (record.status === "revoked") {
-    return res.status(403).json({
+    return res.status(200).json({
       success: false,
+      valid: false,
       revoked: true,
       error: record.revokedReason || "Este c\xF3digo de acesso foi revogado pela comiss\xE3o organizadora."
     });
   }
   if (record.status === "expired") {
-    return res.status(403).json({
+    return res.status(200).json({
       success: false,
+      valid: false,
       expired: true,
       error: "Este c\xF3digo de acesso expirou ap\xF3s 24 horas. Solicite um novo c\xF3digo para continuar."
     });
@@ -195,7 +200,7 @@ app.post("/api/access/validate", (req, res) => {
     record.lastVerifiedAt = now;
     accessCodesDb.set(normalizedCode, record);
     saveCodesToDisk();
-    return res.json({
+    return res.status(200).json({
       success: true,
       valid: true,
       code: record.code,
@@ -212,7 +217,7 @@ app.post("/api/access/validate", (req, res) => {
     const remainingMs = Math.max(0, (record.expiresAt || 0) - now);
     record.lastVerifiedAt = now;
     saveCodesToDisk();
-    return res.json({
+    return res.status(200).json({
       success: true,
       valid: true,
       code: record.code,
@@ -225,11 +230,14 @@ app.post("/api/access/validate", (req, res) => {
       message: "Acesso ativo restabelecido."
     });
   }
-  return res.status(400).json({
+  return res.status(200).json({
     success: false,
+    valid: false,
     error: "Estado de acesso desconhecido."
   });
-});
+};
+app.post("/api/access/validate", handleValidateAccess);
+app.get("/api/access/validate", handleValidateAccess);
 app.get("/api/access/verify-session", (req, res) => {
   const rawCode = req.query.code;
   const token = req.query.token;
