@@ -402,4 +402,32 @@ export interface MapPoint {
   info: string;
 }
 
+export type AccessCodeStatus = 'unactivated' | 'active' | 'expired' | 'revoked';
+
+export interface AccessCodeRecord {
+  id: string;
+  code: string;
+  label?: string;
+  status: AccessCodeStatus;
+  activatedAt?: number | null;
+  expiresAt?: number | null;
+  createdAt: number;
+  revokedAt?: number | null;
+  revocationReason?: string;
+  deviceId?: string;
+  lastAccessAt?: number | null;
+  maxHours: number;
+  notes?: string;
+}
+
+export interface AccessVerificationResult {
+  allowed: boolean;
+  codeRecord?: AccessCodeRecord;
+  reason?: 'NOT_FOUND' | 'EXPIRED' | 'REVOKED' | 'INVALID_FORMAT' | 'ACTIVE_VALID';
+  message: string;
+  messageEn: string;
+  remainingMs?: number;
+}
+
+
 

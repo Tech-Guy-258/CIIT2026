@@ -1,0 +1,23 @@
+{
+  "$schema": "https://firebase.google.com/docs/firestore/blueprint-schema",
+  "entities": {
+    "access_codes": {
+      "title": "Access Codes",
+      "description": "24-hour access codes for CIIT 2026 conference portal",
+      "properties": {
+        "code": { "type": "string", "description": "Access code token (uppercase)" },
+        "status": { "type": "string", "enum": ["unactivated", "active", "expired", "revoked"] },
+        "label": { "type": "string", "description": "Designation or recipient name" },
+        "activatedAt": { "type": "number", "description": "Activation timestamp in ms" },
+        "expiresAt": { "type": "number", "description": "Expiration timestamp in ms (24h after activation)" },
+        "createdAt": { "type": "number", "description": "Creation timestamp in ms" },
+        "revokedAt": { "type": "number", "description": "Revocation timestamp in ms if revoked" },
+        "revocationReason": { "type": "string", "description": "Reason for revocation" },
+        "deviceId": { "type": "string", "description": "Device or browser instance ID" },
+        "lastAccessAt": { "type": "number", "description": "Last accessed timestamp in ms" },
+        "maxHours": { "type": "number", "description": "Total validity duration in hours, defaults to 24" }
+      },
+      "required": ["code", "status", "createdAt"]
+    }
+  }
+}

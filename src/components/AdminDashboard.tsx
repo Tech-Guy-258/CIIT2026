@@ -11,8 +11,9 @@ import {
   Users, UserCheck, Clock, Percent, ShieldCheck, Lock, Search, Filter,
   FileSpreadsheet, UserPlus, LogOut, Check, X, QrCode, Trash2,
   Briefcase, TrendingUp, Mic, Award, Building, Layers, CheckCircle2,
-  BarChart3, Activity
+  BarChart3, Activity, Key
 } from 'lucide-react';
+import AccessCodeManagement from './AccessCodeManagement';
 
 interface AdminDashboardProps {
   lang: 'pt' | 'en';
@@ -39,6 +40,7 @@ export default function AdminDashboard({
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [passcode, setPasscode] = useState('');
   const [authError, setAuthError] = useState('');
+  const [adminTab, setAdminTab] = useState<'attendance' | 'access_codes'>('attendance');
 
   // Search & Filter state
   const [searchQuery, setSearchQuery] = useState('');
@@ -387,8 +389,43 @@ export default function AdminDashboard({
           </div>
         </div>
 
-        {/* SECTION: ATTENDANCE DISCRIMINATION BY PARTICIPATION CATEGORY */}
-        <div className="mb-10">
+        {/* Tab Navigation Switcher */}
+        <div className="flex items-center space-x-2 border-b border-white/10 mb-8 pb-3">
+          <button
+            onClick={() => setAdminTab('attendance')}
+            className={`px-4 py-2 text-xs font-mono font-bold tracking-wider uppercase transition-all flex items-center space-x-2 rounded-t cursor-pointer ${
+              adminTab === 'attendance'
+                ? 'bg-gold-500/20 text-gold-300 border-b-2 border-gold-400 font-black'
+                : 'text-gray-400 hover:text-white hover:bg-white/5'
+            }`}
+          >
+            <Users className="w-4 h-4" />
+            <span>{lang === 'pt' ? 'Presenças & Participantes' : 'Attendance & Delegates'}</span>
+          </button>
+
+          <button
+            onClick={() => setAdminTab('access_codes')}
+            className={`px-4 py-2 text-xs font-mono font-bold tracking-wider uppercase transition-all flex items-center space-x-2 rounded-t cursor-pointer ${
+              adminTab === 'access_codes'
+                ? 'bg-gold-500/20 text-gold-300 border-b-2 border-gold-400 font-black'
+                : 'text-gray-400 hover:text-white hover:bg-white/5'
+            }`}
+          >
+            <Key className="w-4 h-4 text-amber-400" />
+            <span>{lang === 'pt' ? 'Códigos de Acesso 24h (Firestore)' : '24h Access Codes (Firestore)'}</span>
+          </button>
+        </div>
+
+        {/* TAB 1: ACCESS CODES MANAGEMENT (FIRESTORE) */}
+        {adminTab === 'access_codes' && (
+          <AccessCodeManagement lang={lang} />
+        )}
+
+        {/* TAB 2: ATTENDANCE & PARTICIPANTS */}
+        {adminTab === 'attendance' && (
+          <>
+            {/* SECTION: ATTENDANCE DISCRIMINATION BY PARTICIPATION CATEGORY */}
+            <div className="mb-10">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-2">
               <Layers className="w-4 h-4 text-gold-400" />
@@ -947,6 +984,8 @@ export default function AdminDashboard({
             </table>
           </div>
         </div>
+        </>
+        )}
 
       </div>
     </section>

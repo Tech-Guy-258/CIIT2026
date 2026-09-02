@@ -29,9 +29,11 @@ import InvestorChat from './components/InvestorChat';
 import TeteProfile from './components/TeteProfile';
 import BancoMocFinancialSuite from './components/BancoMocFinancialSuite';
 import FloatingLanguageToggle from './components/FloatingLanguageToggle';
+import AccessGate from './components/AccessGate';
+import AccessStatusBanner from './components/AccessStatusBanner';
 
 import { INITIAL_REGISTRATIONS, TRANSLATIONS, SPONSORS } from './data';
-import { Registration, ProjectItem } from './types';
+import { Registration, ProjectItem, AccessCodeRecord } from './types';
 import { realtimeAttendance } from './services/realtimeAttendance';
 import { Mail, Phone, MapPin, ExternalLink, Calendar, ChevronRight, ArrowUp } from 'lucide-react';
 import ciitLogoImg from './assets/images/ciit_2026_logo_1787657793393.png';
@@ -44,6 +46,10 @@ export default function App() {
   const [activeSection, setActiveSection] = useState('home');
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [selectedInquiryProject, setSelectedInquiryProject] = useState<ProjectItem | null>(null);
+
+  // Access Control State
+  const [activeCodeRecord, setActiveCodeRecord] = useState<AccessCodeRecord | null>(null);
+  const [accessRemainingMs, setAccessRemainingMs] = useState<number>(0);
 
   const t = TRANSLATIONS[lang];
 
@@ -139,28 +145,46 @@ export default function App() {
   };
 
   return (
-    <div id="root-layout" className="min-h-screen flex flex-col justify-between bg-neutral-50 text-neutral-900 overflow-x-hidden selection:bg-amber-500 selection:text-slate-950">
-      
-      {/* FIXED STICKY HEADER (NAVBAR + BANCO DE MOÇAMBIQUE TICKER BAR) */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-slate-950 shadow-2xl border-b border-amber-500/20">
-        <Navbar
-          lang={lang}
-          activeSection={activeSection}
-          onRegisterClick={() => scrollToSection('registration')}
-        />
+    <AccessGate
+      lang={lang}
+      onAccessStateChange={(record, remaining) => {
+        setActiveCodeRecord(record);
+        setAccessRemainingMs(remaining);
+      }}
+    >
+      <div id="root-layout" className="min-h-screen flex flex-col justify-between bg-neutral-50 text-neutral-900 overflow-x-hidden selection:bg-amber-500 selection:text-slate-950">
+        
+        {/* FIXED STICKY HEADER (NAVBAR + BANCO DE MOÇAMBIQUE TICKER BAR + ACCESS STATUS BANNER) */}
+        <header className="fixed top-0 left-0 right-0 z-50 bg-slate-950 shadow-2xl border-b border-amber-500/20">
+          <Navbar
+            lang={lang}
+            activeSection={activeSection}
+            onRegisterClick={() => scrollToSection('registration')}
+          />
 
-        {/* BANCO DE MOÇAMBIQUE EXCHANGE TICKER CAROUSEL */}
-        <BancoMocFinancialSuite 
-          lang={lang} 
-          onAdminToggle={() => {
-            setShowAdmin(!showAdmin);
-            setTimeout(() => {
-              scrollToSection('admin');
-            }, 100);
-          }}
-          showAdmin={showAdmin}
-        />
-      </header>
+          {/* BANCO DE MOÇAMBIQUE EXCHANGE TICKER CAROUSEL */}
+          <BancoMocFinancialSuite 
+            lang={lang} 
+            onAdminToggle={() => {
+              setShowAdmin(!showAdmin);
+              setTimeout(() => {
+                scrollToSection('admin');
+              }, 100);
+            }}
+            showAdmin={showAdmin}
+          />
+
+          {/* 24-HOUR ACCESS VALIDITY STATUS BANNER */}
+          <AccessStatusBanner
+            lang={lang}
+            codeRecord={activeCodeRecord}
+            remainingMs={accessRemainingMs}
+            onExitSession={() => {
+              setActiveCodeRecord(null);
+              setAccessRemainingMs(0);
+            }}
+          />
+        </header>
 
       {/* Main Content Sections */}
       <main className="flex-grow pt-[102px] sm:pt-[114px] md:pt-[122px] lg:pt-[128px]">
@@ -406,6 +430,7 @@ export default function App() {
         </button>
       )}
 
-    </div>
+      </div>
+    </AccessGate>
   );
 }
