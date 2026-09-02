@@ -418,6 +418,7 @@ export interface AccessCodeRecord {
   lastAccessAt?: number | null;
   maxHours: number;
   notes?: string;
+  isUnlimited?: boolean;
 }
 
 export interface AccessVerificationResult {

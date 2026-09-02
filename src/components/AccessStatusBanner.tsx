@@ -35,16 +35,19 @@ export default function AccessStatusBanner({
 
   if (!codeRecord) return null;
 
+  const isUnlimited = codeRecord.isUnlimited || codeRecord.code === 'ADMIN-DIVA';
+
   // Calculate hours, minutes, seconds remaining
   const totalSeconds = Math.max(0, Math.floor(remainingMs / 1000));
   const hours = Math.floor(totalSeconds / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
   const seconds = totalSeconds % 60;
 
-  const isCritical = totalSeconds < 3600; // Less than 1 hour remaining
+  const isCritical = !isUnlimited && totalSeconds < 3600; // Less than 1 hour remaining for expiring passes
 
   // Format date helper
   const formatDate = (timestamp?: number | null) => {
+    if (isUnlimited && !timestamp) return lang === 'pt' ? 'Ilimitado (Sem Expiração)' : 'Unlimited (No Expiration)';
     if (!timestamp) return '---';
     return new Date(timestamp).toLocaleString(lang === 'pt' ? 'pt-MZ' : 'en-US', {
       day: '2-digit',
@@ -68,7 +71,9 @@ export default function AccessStatusBanner({
         className={`px-3 py-1.5 transition-colors duration-300 text-xs font-mono flex items-center justify-between border-b ${
           isCritical 
             ? 'bg-red-950/90 text-red-200 border-red-500/40 animate-pulse' 
-            : 'bg-slate-900/95 text-amber-300 border-amber-500/30'
+            : isUnlimited
+              ? 'bg-slate-900/98 text-amber-300 border-amber-500/40'
+              : 'bg-slate-900/95 text-amber-300 border-amber-500/30'
         }`}
       >
         <div className="max-w-7xl mx-auto w-full flex flex-wrap items-center justify-between gap-2 px-1">
@@ -79,13 +84,22 @@ export default function AccessStatusBanner({
               <span>{codeRecord.code}</span>
             </span>
             <span className="hidden sm:inline text-slate-400 text-[11px]">
-              • {codeRecord.label || (lang === 'pt' ? 'Passe de Acesso 24h' : '24h Access Pass')}
+              • {codeRecord.label || (isUnlimited ? 'Super Administrador' : (lang === 'pt' ? 'Passe de Acesso 24h' : '24h Access Pass'))}
             </span>
           </div>
 
           {/* Center: Validity Requirement text & Countdown */}
           <div className="flex items-center space-x-2 font-medium">
-            {isCritical ? (
+            {isUnlimited ? (
+              <div className="flex items-center space-x-1.5 text-amber-300 font-bold">
+                <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
+                <span>
+                  {lang === 'pt'
+                    ? 'Acesso Ilimitado • Administrador Geral (Painel Admin Desbloqueado)'
+                    : 'Unlimited Access • General Administrator (Admin Panel Unlocked)'}
+                </span>
+              </div>
+            ) : isCritical ? (
               <div className="flex items-center space-x-1.5 text-red-400 font-bold">
                 <AlertTriangle className="w-3.5 h-3.5 animate-bounce text-red-400" />
                 <span>
@@ -142,13 +156,19 @@ export default function AccessStatusBanner({
             <div className="p-3 bg-slate-900/90 rounded-lg border border-slate-800">
               <span className="text-slate-400 block text-[10px] uppercase">{lang === 'pt' ? 'Primeiro Acesso (Ativação)' : 'First Access (Activated)'}</span>
               <span className="text-white font-medium">{formatDate(codeRecord.activatedAt)}</span>
-              <span className="text-slate-500 block text-[10px] mt-1">{lang === 'pt' ? 'Início do ciclo de 24h' : '24h cycle start'}</span>
+              <span className="text-slate-500 block text-[10px] mt-1">
+                {isUnlimited ? (lang === 'pt' ? 'Acesso Permanente' : 'Permanent Access') : (lang === 'pt' ? 'Início do ciclo de 24h' : '24h cycle start')}
+              </span>
             </div>
 
             <div className="p-3 bg-slate-900/90 rounded-lg border border-slate-800">
               <span className="text-slate-400 block text-[10px] uppercase">{lang === 'pt' ? 'Expiração Automática' : 'Automatic Expiry'}</span>
-              <span className="text-red-400 font-medium">{formatDate(codeRecord.expiresAt)}</span>
-              <span className="text-slate-500 block text-[10px] mt-1">{lang === 'pt' ? 'Bloqueio irrecuperável após esta data' : 'Irrevocably locked after this date'}</span>
+              <span className={isUnlimited ? 'text-emerald-400 font-medium' : 'text-red-400 font-medium'}>
+                {isUnlimited ? (lang === 'pt' ? 'Sem limite de tempo (Ilimitado)' : 'No time limit (Unlimited)') : formatDate(codeRecord.expiresAt)}
+              </span>
+              <span className="text-slate-500 block text-[10px] mt-1">
+                {isUnlimited ? (lang === 'pt' ? 'Acesso permanente de Administrador' : 'Permanent Administrator Access') : (lang === 'pt' ? 'Bloqueio irrecuperável após esta data' : 'Irrevocably locked after this date')}
+              </span>
             </div>
 
             <div className="p-3 bg-slate-900/90 rounded-lg border border-slate-800 flex flex-col justify-between">
@@ -156,7 +176,7 @@ export default function AccessStatusBanner({
                 <span className="text-slate-400 block text-[10px] uppercase">{lang === 'pt' ? 'Estado no Firestore' : 'Firestore Status'}</span>
                 <span className="inline-flex items-center space-x-1 text-emerald-400 font-bold">
                   <ShieldCheck className="w-3.5 h-3.5" />
-                  <span>{codeRecord.status.toUpperCase()}</span>
+                  <span>{isUnlimited ? 'ADMIN ILIMITADO' : codeRecord.status.toUpperCase()}</span>
                 </span>
               </div>
               <button

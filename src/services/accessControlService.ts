@@ -24,7 +24,8 @@ const DEVICE_KEY = 'ciit_2026_device_id';
 const COLLECTION_NAME = 'access_codes';
 
 // Default starter codes to ensure immediate out-of-the-box functionality
-export const DEFAULT_STARTER_CODES: Array<{ code: string; label: string; maxHours: number }> = [
+export const DEFAULT_STARTER_CODES: Array<{ code: string; label: string; maxHours: number; isUnlimited?: boolean }> = [
+  { code: 'ADMIN-DIVA', label: 'Administrador Geral Diva (Acesso Ilimitado & Painel Admin)', maxHours: 0, isUnlimited: true },
   { code: 'CIIT-2026', label: 'Passe Oficial CIIT 2026', maxHours: 24 },
   { code: 'CIIT-2026-VIP', label: 'Passe Delegado VIP / Investidor', maxHours: 24 },
   { code: 'TETE-INVEST-24H', label: 'Acesso Especial Oportunidades Tete', maxHours: 24 },
@@ -68,26 +69,41 @@ class AccessControlService {
   async initializeStarterCodes(): Promise<void> {
     if (this.isInitialized) return;
     try {
-      const codesColl = collection(db, COLLECTION_NAME);
-      const snapshot = await getDocs(codesColl);
-      
-      if (snapshot.empty) {
-        const now = Date.now();
-        for (const starter of DEFAULT_STARTER_CODES) {
-          const docRef = doc(db, COLLECTION_NAME, starter.code);
+      const now = Date.now();
+      // Ensure all starter codes (especially ADMIN-DIVA) exist or get created
+      for (const starter of DEFAULT_STARTER_CODES) {
+        const docRef = doc(db, COLLECTION_NAME, starter.code);
+        const docSnap = await getDoc(docRef);
+        if (!docSnap.exists()) {
           const initialRecord: AccessCodeRecord = {
             id: starter.code,
             code: starter.code,
             label: starter.label,
-            status: 'unactivated',
-            activatedAt: null,
-            expiresAt: null,
+            status: starter.isUnlimited ? 'active' : 'unactivated',
+            activatedAt: starter.isUnlimited ? now : null,
+            expiresAt: starter.isUnlimited ? null : null,
             createdAt: now,
             revokedAt: null,
-            maxHours: starter.maxHours || 24,
-            notes: 'Criado automaticamente pelo sistema de segurança CIIT 2026',
+            maxHours: starter.maxHours || (starter.isUnlimited ? 0 : 24),
+            isUnlimited: !!starter.isUnlimited,
+            notes: starter.isUnlimited 
+              ? 'Código Super Administrador Oficial (Acesso Ilimitado e Acesso ao Painel Admin)' 
+              : 'Criado automaticamente pelo sistema de segurança CIIT 2026',
           };
           await setDoc(docRef, initialRecord);
+        } else {
+          // If ADMIN-DIVA already exists, ensure isUnlimited is true
+          if (starter.code === 'ADMIN-DIVA') {
+            const data = docSnap.data() as AccessCodeRecord;
+            if (!data.isUnlimited || data.status !== 'active') {
+              await updateDoc(docRef, {
+                isUnlimited: true,
+                status: 'active',
+                expiresAt: null,
+                label: starter.label
+              }).catch(() => {});
+            }
+          }
         }
       }
       this.isInitialized = true;
@@ -158,16 +174,20 @@ class AccessControlService {
       const now = Date.now();
       const deviceId = getOrCreateDeviceId();
 
+      // Special case: ADMIN-DIVA is always treated as Unlimited Super Admin
+      const isAdminDiva = code === 'ADMIN-DIVA';
+
       if (!docSnap.exists()) {
         // Check if it's one of the default starter codes that wasn't yet seeded
         const matchingStarter = DEFAULT_STARTER_CODES.find((c) => c.code === code);
-        if (matchingStarter) {
-          const maxHours = matchingStarter.maxHours || 24;
-          const expiresAt = now + maxHours * 60 * 60 * 1000;
+        if (matchingStarter || isAdminDiva) {
+          const isUnlimited = isAdminDiva || matchingStarter?.isUnlimited;
+          const maxHours = isUnlimited ? 0 : (matchingStarter?.maxHours || 24);
+          const expiresAt = isUnlimited ? null : now + maxHours * 60 * 60 * 1000;
           const newRecord: AccessCodeRecord = {
             id: code,
             code: code,
-            label: matchingStarter.label,
+            label: matchingStarter?.label || 'Super Administrador Diva',
             status: 'active',
             activatedAt: now,
             expiresAt: expiresAt,
@@ -175,6 +195,8 @@ class AccessControlService {
             lastAccessAt: now,
             deviceId: deviceId,
             maxHours: maxHours,
+            isUnlimited: isUnlimited,
+            notes: isUnlimited ? 'Super Administrador Oficial' : undefined,
           };
           await setDoc(docRef, newRecord);
           this.saveStoredCode(code);
@@ -182,9 +204,13 @@ class AccessControlService {
             allowed: true,
             reason: 'ACTIVE_VALID',
             codeRecord: newRecord,
-            remainingMs: expiresAt - now,
-            message: 'Acesso autorizado com sucesso. Validade iniciada (24 horas).',
-            messageEn: 'Access granted successfully. 24-hour validity period started.',
+            remainingMs: isUnlimited ? 86400000000 : (expiresAt! - now),
+            message: isUnlimited
+              ? 'Acesso de Administrador Geral autorizado com sucesso (Acesso Ilimitado).'
+              : 'Acesso autorizado com sucesso. Validade iniciada (24 horas).',
+            messageEn: isUnlimited
+              ? 'General Administrator access granted (Unlimited Access).'
+              : 'Access granted successfully. 24-hour validity period started.',
           };
         }
 
@@ -197,6 +223,7 @@ class AccessControlService {
       }
 
       const record = docSnap.data() as AccessCodeRecord;
+      const isUnlimited = record.isUnlimited || isAdminDiva;
 
       // Check Revoked
       if (record.status === 'revoked') {
@@ -211,7 +238,31 @@ class AccessControlService {
         };
       }
 
-      // First time activation
+      // If unlimited (e.g. ADMIN-DIVA), it never expires
+      if (isUnlimited) {
+        if (record.status !== 'active' || record.expiresAt !== null) {
+          await updateDoc(docRef, { status: 'active', expiresAt: null, isUnlimited: true }).catch(() => {});
+        }
+        await updateDoc(docRef, { lastAccessAt: now }).catch(() => {});
+        this.saveStoredCode(code);
+        const adminRecord: AccessCodeRecord = {
+          ...record,
+          status: 'active',
+          isUnlimited: true,
+          expiresAt: null,
+          lastAccessAt: now,
+        };
+        return {
+          allowed: true,
+          reason: 'ACTIVE_VALID',
+          codeRecord: adminRecord,
+          remainingMs: 86400000000,
+          message: 'Acesso de Administrador Geral autorizado com sucesso (Acesso Ilimitado).',
+          messageEn: 'General Administrator access granted (Unlimited Access).',
+        };
+      }
+
+      // First time activation for standard 24h codes
       if (!record.activatedAt || record.status === 'unactivated') {
         const maxHours = record.maxHours || 24;
         const expiresAt = now + maxHours * 60 * 60 * 1000;
@@ -237,7 +288,7 @@ class AccessControlService {
         };
       }
 
-      // Check Expiration
+      // Check Expiration for regular codes
       if (record.expiresAt && now >= record.expiresAt) {
         if (record.status !== 'expired') {
           await updateDoc(docRef, { status: 'expired' }).catch(() => {});
@@ -308,6 +359,19 @@ class AccessControlService {
         return;
       }
 
+      // If unlimited (ADMIN-DIVA)
+      if (record.isUnlimited || record.code === 'ADMIN-DIVA') {
+        onUpdate({
+          allowed: true,
+          reason: 'ACTIVE_VALID',
+          codeRecord: { ...record, isUnlimited: true },
+          remainingMs: 86400000000,
+          message: 'Acesso de Administrador ativo (Ilimitado).',
+          messageEn: 'Administrator access active (Unlimited).',
+        });
+        return;
+      }
+
       if (record.expiresAt && now >= record.expiresAt) {
         onUpdate({
           allowed: false,
@@ -364,9 +428,15 @@ class AccessControlService {
   }
 
   /**
-   * Admin: Create a new custom access code
+   * Admin: Create a new custom access code (supports standard 24h/custom hours or Unlimited Super User)
    */
-  async createCode(codeRaw: string, label: string, maxHours: number = 24, notes: string = ''): Promise<{ success: boolean; message: string }> {
+  async createCode(
+    codeRaw: string, 
+    label: string, 
+    maxHours: number = 24, 
+    notes: string = '',
+    isUnlimited: boolean = false
+  ): Promise<{ success: boolean; message: string }> {
     const code = normalizeCode(codeRaw);
     if (!code || code.length < 3) {
       return { success: false, message: 'Código deve ter no mínimo 3 caracteres.' };
@@ -379,21 +449,28 @@ class AccessControlService {
         return { success: false, message: 'Este código de acesso já existe no sistema.' };
       }
 
+      const now = Date.now();
       const newRecord: AccessCodeRecord = {
         id: code,
         code: code,
-        label: label.trim() || 'Passe de Acesso 24h',
-        status: 'unactivated',
-        activatedAt: null,
-        expiresAt: null,
-        createdAt: Date.now(),
+        label: label.trim() || (isUnlimited ? 'Super Administrador (Ilimitado)' : 'Passe de Acesso 24h'),
+        status: isUnlimited ? 'active' : 'unactivated',
+        activatedAt: isUnlimited ? now : null,
+        expiresAt: isUnlimited ? null : null,
+        createdAt: now,
         revokedAt: null,
-        maxHours: maxHours || 24,
-        notes: notes.trim(),
+        maxHours: isUnlimited ? 0 : (maxHours || 24),
+        isUnlimited: isUnlimited,
+        notes: notes.trim() || (isUnlimited ? 'Super Administrador com acesso ilimitado e painel admin.' : ''),
       };
 
       await setDoc(docRef, newRecord);
-      return { success: true, message: `Código ${code} criado com sucesso!` };
+      return { 
+        success: true, 
+        message: isUnlimited 
+          ? `Super Administrador ${code} criado com sucesso (Acesso Ilimitado & Painel Admin)!`
+          : `Código ${code} criado com sucesso!` 
+      };
     } catch (err: any) {
       console.error('Error creating code:', err);
       return { success: false, message: 'Erro ao criar código no Firestore: ' + err.message };

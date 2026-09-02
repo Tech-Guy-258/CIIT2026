@@ -18,6 +18,7 @@ import AccessCodeManagement from './AccessCodeManagement';
 interface AdminDashboardProps {
   lang: 'pt' | 'en';
   registrations: Registration[];
+  isSuperUser?: boolean;
   onAddManualAttendee?: (reg: Registration) => void;
   onAddManualRegistration?: (reg: Registration) => void;
   onClearRegistrations: () => void;
@@ -28,6 +29,7 @@ interface AdminDashboardProps {
 export default function AdminDashboard({
   lang,
   registrations,
+  isSuperUser = false,
   onAddManualAttendee,
   onAddManualRegistration,
   onClearRegistrations,
@@ -36,11 +38,18 @@ export default function AdminDashboard({
 }: AdminDashboardProps) {
   const t = TRANSLATIONS[lang];
 
-  // Auth gate
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  // Auth gate - if isSuperUser is true, automatically authenticated directly!
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(isSuperUser);
   const [passcode, setPasscode] = useState('');
   const [authError, setAuthError] = useState('');
   const [adminTab, setAdminTab] = useState<'attendance' | 'access_codes'>('attendance');
+
+  // If isSuperUser changes to true, automatically authenticate
+  useEffect(() => {
+    if (isSuperUser) {
+      setIsAuthenticated(true);
+    }
+  }, [isSuperUser]);
 
   // Search & Filter state
   const [searchQuery, setSearchQuery] = useState('');

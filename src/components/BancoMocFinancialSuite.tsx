@@ -25,6 +25,7 @@ interface BancoMocFinancialSuiteProps {
   lang: 'pt' | 'en';
   onAdminToggle?: () => void;
   showAdmin?: boolean;
+  isAdminUser?: boolean;
 }
 
 export interface ExchangeRateItem {
@@ -127,7 +128,8 @@ export const ECONOMIC_INDICATORS = {
 export default function BancoMocFinancialSuite({
   lang,
   onAdminToggle,
-  showAdmin
+  showAdmin,
+  isAdminUser
 }: BancoMocFinancialSuiteProps) {
   const [rates, setRates] = useState<ExchangeRateItem[]>(INITIAL_RATES);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -279,12 +281,12 @@ export default function BancoMocFinancialSuite({
               <span className="sm:hidden">{lang === 'pt' ? 'Câmbio' : 'Rates'}</span>
             </button>
 
-            {/* Admin Lock Button directly to the right of Mercado & Conversor */}
-            {onAdminToggle && (
+            {/* Admin Lock Button ONLY visible if isAdminUser is true (code === 'ADMIN-DIVA') */}
+            {isAdminUser && onAdminToggle && (
               <button
                 id="btn-cambio-admin-lock"
                 onClick={onAdminToggle}
-                title={lang === 'pt' ? 'Painel Administrativo CIIT 2026' : 'CIIT 2026 Admin Panel'}
+                title={lang === 'pt' ? 'Painel Administrativo CIIT 2026 (Exclusivo ADMIN-DIVA)' : 'CIIT 2026 Admin Panel (ADMIN-DIVA Exclusive)'}
                 aria-label={lang === 'pt' ? 'Painel Administrativo' : 'Admin Panel'}
                 className={`h-7 sm:h-8 w-7 sm:w-8 flex items-center justify-center border transition-all duration-200 cursor-pointer flex-shrink-0 shadow-xs active:scale-95 ${
                   showAdmin

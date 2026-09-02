@@ -152,39 +152,38 @@ export default function App() {
         setAccessRemainingMs(remaining);
       }}
     >
-      <div id="root-layout" className="min-h-screen flex flex-col justify-between bg-neutral-50 text-neutral-900 overflow-x-hidden selection:bg-amber-500 selection:text-slate-950">
-        
-        {/* FIXED STICKY HEADER (NAVBAR + BANCO DE MOÇAMBIQUE TICKER BAR + ACCESS STATUS BANNER) */}
-        <header className="fixed top-0 left-0 right-0 z-50 bg-slate-950 shadow-2xl border-b border-amber-500/20">
-          <Navbar
-            lang={lang}
-            activeSection={activeSection}
-            onRegisterClick={() => scrollToSection('registration')}
-          />
+      {({ exitSession }) => (
+        <div id="root-layout" className="min-h-screen flex flex-col justify-between bg-neutral-50 text-neutral-900 overflow-x-hidden selection:bg-amber-500 selection:text-slate-950">
+          
+          {/* FIXED STICKY HEADER (NAVBAR + BANCO DE MOÇAMBIQUE TICKER BAR + ACCESS STATUS BANNER) */}
+          <header className="fixed top-0 left-0 right-0 z-50 bg-slate-950 shadow-2xl border-b border-amber-500/20">
+            <Navbar
+              lang={lang}
+              activeSection={activeSection}
+              onRegisterClick={() => scrollToSection('registration')}
+            />
 
-          {/* BANCO DE MOÇAMBIQUE EXCHANGE TICKER CAROUSEL */}
-          <BancoMocFinancialSuite 
-            lang={lang} 
-            onAdminToggle={() => {
-              setShowAdmin(!showAdmin);
-              setTimeout(() => {
-                scrollToSection('admin');
-              }, 100);
-            }}
-            showAdmin={showAdmin}
-          />
+            {/* BANCO DE MOÇAMBIQUE EXCHANGE TICKER CAROUSEL */}
+            <BancoMocFinancialSuite 
+              lang={lang} 
+              isAdminUser={activeCodeRecord?.code === 'ADMIN-DIVA' || activeCodeRecord?.isUnlimited === true}
+              onAdminToggle={(activeCodeRecord?.code === 'ADMIN-DIVA' || activeCodeRecord?.isUnlimited === true) ? () => {
+                setShowAdmin(!showAdmin);
+                setTimeout(() => {
+                  scrollToSection('admin');
+                }, 100);
+              } : undefined}
+              showAdmin={showAdmin}
+            />
 
-          {/* 24-HOUR ACCESS VALIDITY STATUS BANNER */}
-          <AccessStatusBanner
-            lang={lang}
-            codeRecord={activeCodeRecord}
-            remainingMs={accessRemainingMs}
-            onExitSession={() => {
-              setActiveCodeRecord(null);
-              setAccessRemainingMs(0);
-            }}
-          />
-        </header>
+            {/* 24-HOUR ACCESS VALIDITY STATUS BANNER */}
+            <AccessStatusBanner
+              lang={lang}
+              codeRecord={activeCodeRecord}
+              remainingMs={accessRemainingMs}
+              onExitSession={exitSession}
+            />
+          </header>
 
       {/* Main Content Sections */}
       <main className="flex-grow pt-[102px] sm:pt-[114px] md:pt-[122px] lg:pt-[128px]">
@@ -266,10 +265,10 @@ export default function App() {
         <LiveAttendance
           lang={lang}
           onOpenScanner={() => setIsScannerOpen(true)}
-          onOpenAdmin={() => {
+          onOpenAdmin={(activeCodeRecord?.code === 'ADMIN-DIVA' || activeCodeRecord?.isUnlimited === true) ? () => {
             setShowAdmin(true);
             setTimeout(() => scrollToSection('admin'), 100);
-          }}
+          } : undefined}
         />
 
         {/* 17. CREDENCIAMENTO E FORMULÁRIO DE INSCRIÇÃO */}
@@ -287,11 +286,12 @@ export default function App() {
         {/* 20. ASSISTENTE VIRTUAL DE INVESTIMENTO */}
         <InvestorChat lang={lang} />
 
-        {/* 21. PAINEL ADMINISTRATIVO */}
-        {showAdmin && (
+        {/* 21. PAINEL ADMINISTRATIVO (ACESSO EXCLUSIVO: SUPER USERS / ADMIN-DIVA) */}
+        {showAdmin && (activeCodeRecord?.code === 'ADMIN-DIVA' || activeCodeRecord?.isUnlimited === true) && (
           <AdminDashboard
             lang={lang}
             registrations={registrations}
+            isSuperUser={activeCodeRecord?.code === 'ADMIN-DIVA' || activeCodeRecord?.isUnlimited === true}
             onAddManualAttendee={handleAddManualAttendee}
             onClearRegistrations={handleClearRegistrations}
             onCloseAdmin={() => setShowAdmin(false)}
@@ -431,6 +431,7 @@ export default function App() {
       )}
 
       </div>
+      )}
     </AccessGate>
   );
 }

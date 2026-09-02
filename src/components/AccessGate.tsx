@@ -12,7 +12,6 @@ import {
   AlertCircle, 
   CheckCircle2, 
   Lock, 
-  Sparkles, 
   RefreshCw, 
   Info,
   ShieldCheck,
@@ -20,13 +19,13 @@ import {
   Calendar,
   Globe2
 } from 'lucide-react';
-import { accessControl, DEFAULT_STARTER_CODES } from '../services/accessControlService';
+import { accessControl } from '../services/accessControlService';
 import { AccessCodeRecord, AccessVerificationResult } from '../types';
 import ciitLogoImg from '../assets/images/ciit_2026_logo_1787657793393.png';
 
 interface AccessGateProps {
   lang: 'pt' | 'en';
-  children: React.ReactNode;
+  children: (helpers: { exitSession: () => void }) => React.ReactNode;
   onAccessStateChange?: (record: AccessCodeRecord | null, remainingMs: number) => void;
 }
 
@@ -39,7 +38,6 @@ export default function AccessGate({ lang, children, onAccessStateChange }: Acce
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [expiredState, setExpiredState] = useState<{ isExpired: boolean; code?: string } | null>(null);
   const [remainingMs, setRemainingMs] = useState<number>(0);
-  const [showHelperCodes, setShowHelperCodes] = useState(false);
 
   // Initial check on mount from persistent storage
   useEffect(() => {
@@ -47,6 +45,9 @@ export default function AccessGate({ lang, children, onAccessStateChange }: Acce
 
     const performInitialAuth = async () => {
       setIsLoading(true);
+      // Ensure default access codes exist immediately in Cloud Firestore
+      await accessControl.initializeStarterCodes();
+
       const storedCode = accessControl.getStoredCode();
 
       if (!storedCode) {
@@ -178,10 +179,17 @@ export default function AccessGate({ lang, children, onAccessStateChange }: Acce
     }
   };
 
-  const handleSelectDemoCode = (code: string) => {
-    setInputCode(code);
-    setErrorMessage(null);
+  const handleExitSession = () => {
+    accessControl.clearStoredCode();
+    setIsAuthorized(false);
+    setActiveCodeRecord(null);
+    setRemainingMs(0);
     setExpiredState(null);
+    setErrorMessage(null);
+    setInputCode('');
+    if (onAccessStateChange) {
+      onAccessStateChange(null, 0);
+    }
   };
 
   // If initial load in progress, show subtle elegant splash
@@ -206,7 +214,7 @@ export default function AccessGate({ lang, children, onAccessStateChange }: Acce
 
   // If authorized and valid, render application
   if (isAuthorized && activeCodeRecord) {
-    return <>{children}</>;
+    return <>{children({ exitSession: handleExitSession })}</>;
   }
 
   // EXPIRED ACCESS SCREEN
@@ -316,14 +324,14 @@ export default function AccessGate({ lang, children, onAccessStateChange }: Acce
 
           {/* 2. Título Exato: "Acesso Restrito" */}
           <div className="text-center mb-6">
-            <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 mb-3">
+            <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 mb-3 shadow-inner">
               <Lock className="w-5 h-5" />
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold font-serif text-white tracking-wide">
+            <h1 className="text-2xl sm:text-3xl font-black font-['Outfit',sans-serif] uppercase tracking-widest text-white drop-shadow-sm">
               {lang === 'pt' ? 'Acesso Restrito' : 'Restricted Access'}
             </h1>
             {/* 3. Texto Exato: "Introduza o código de acesso para continuar." */}
-            <p className="text-sm text-slate-300 mt-2 font-light">
+            <p className="text-sm text-slate-300 mt-2 font-normal">
               {lang === 'pt'
                 ? 'Introduza o código de acesso para continuar.'
                 : 'Enter your access code to continue.'}
@@ -353,7 +361,7 @@ export default function AccessGate({ lang, children, onAccessStateChange }: Acce
                     setInputCode(e.target.value.toUpperCase());
                     if (errorMessage) setErrorMessage(null);
                   }}
-                  placeholder="ex: CIIT-2026-VIP"
+                  placeholder={lang === 'pt' ? 'ex: codigo-acesso' : 'ex: access-code'}
                   autoFocus
                   disabled={isVerifying}
                   className="w-full px-4 py-3 bg-slate-950/90 border border-slate-700 focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 rounded-xl text-white font-mono text-base tracking-wider placeholder:text-slate-600 placeholder:font-sans uppercase transition-all outline-none"
@@ -364,8 +372,8 @@ export default function AccessGate({ lang, children, onAccessStateChange }: Acce
                 <Clock className="w-3 h-3 text-amber-500 inline-block mr-1 flex-shrink-0" />
                 <span>
                   {lang === 'pt'
-                    ? 'Validade automática de 24 horas a partir do primeiro uso.'
-                    : 'Automatic 24-hour validity starting upon first use.'}
+                    ? 'Validação em tempo real via Cloud Firestore.'
+                    : 'Real-time validation via Cloud Firestore.'}
                 </span>
               </p>
             </div>
@@ -390,46 +398,6 @@ export default function AccessGate({ lang, children, onAccessStateChange }: Acce
               )}
             </button>
           </form>
-
-          {/* Quick Demo Access Codes Assist Accordion */}
-          <div className="mt-6 pt-4 border-t border-slate-800">
-            <button
-              type="button"
-              onClick={() => setShowHelperCodes(!showHelperCodes)}
-              className="w-full flex items-center justify-between text-[11px] text-slate-400 hover:text-amber-400 transition-colors py-1 cursor-pointer font-mono"
-            >
-              <span className="flex items-center space-x-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                <span>{lang === 'pt' ? 'Códigos de Acesso Disponíveis' : 'Available Access Codes'}</span>
-              </span>
-              <span className="text-[10px] text-slate-500">{showHelperCodes ? '▲' : '▼'}</span>
-            </button>
-
-            {showHelperCodes && (
-              <div className="mt-3 space-y-2 animate-fadeIn bg-slate-950/60 p-3 rounded-lg border border-slate-800">
-                <p className="text-[10px] text-slate-400 leading-tight mb-2">
-                  {lang === 'pt'
-                    ? 'Clique num código para preencher e validar instantaneamente no Firebase Firestore:'
-                    : 'Click any code to fill and validate instantly in Firebase Firestore:'}
-                </p>
-                <div className="grid grid-cols-1 gap-1.5">
-                  {DEFAULT_STARTER_CODES.map((starter) => (
-                    <button
-                      key={starter.code}
-                      type="button"
-                      onClick={() => handleSelectDemoCode(starter.code)}
-                      className="text-left px-2.5 py-1.5 rounded bg-slate-900 hover:bg-amber-500/20 hover:border-amber-500/40 border border-slate-800 text-xs font-mono text-amber-300 flex items-center justify-between transition-colors group cursor-pointer"
-                    >
-                      <span className="font-bold">{starter.code}</span>
-                      <span className="text-[10px] text-slate-400 group-hover:text-slate-300 font-sans truncate ml-2">
-                        {starter.label}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
         </div>
       </div>
 
