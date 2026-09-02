@@ -19,6 +19,7 @@ interface AdminDashboardProps {
   lang: 'pt' | 'en';
   registrations: Registration[];
   isSuperUser?: boolean;
+  currentAdminCode?: string;
   onAddManualAttendee?: (reg: Registration) => void;
   onAddManualRegistration?: (reg: Registration) => void;
   onClearRegistrations: () => void;
@@ -30,6 +31,7 @@ export default function AdminDashboard({
   lang,
   registrations,
   isSuperUser = false,
+  currentAdminCode,
   onAddManualAttendee,
   onAddManualRegistration,
   onClearRegistrations,
@@ -427,7 +429,7 @@ export default function AdminDashboard({
 
         {/* TAB 1: ACCESS CODES MANAGEMENT (FIRESTORE) */}
         {adminTab === 'access_codes' && (
-          <AccessCodeManagement lang={lang} />
+          <AccessCodeManagement lang={lang} currentAdminCode={currentAdminCode} />
         )}
 
         {/* TAB 2: ATTENDANCE & PARTICIPANTS */}

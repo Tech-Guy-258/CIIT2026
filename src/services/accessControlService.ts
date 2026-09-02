@@ -23,14 +23,22 @@ const STORAGE_KEY = 'ciit_2026_access_code';
 const DEVICE_KEY = 'ciit_2026_device_id';
 const COLLECTION_NAME = 'access_codes';
 
-// Default starter codes to ensure immediate out-of-the-box functionality
-export const DEFAULT_STARTER_CODES: Array<{ code: string; label: string; maxHours: number; isUnlimited?: boolean }> = [
-  { code: 'ADMIN-DIVA', label: 'Administrador Geral Diva (Acesso Ilimitado & Painel Admin)', maxHours: 0, isUnlimited: true },
-  { code: 'CIIT-2026', label: 'Passe Oficial CIIT 2026', maxHours: 24 },
-  { code: 'CIIT-2026-VIP', label: 'Passe Delegado VIP / Investidor', maxHours: 24 },
-  { code: 'TETE-INVEST-24H', label: 'Acesso Especial Oportunidades Tete', maxHours: 24 },
-  { code: 'GOV-TETE-2026', label: 'Credencial Institucional Governo', maxHours: 24 },
-  { code: 'DEMO-PASS', label: 'Código de Demonstração Rápida', maxHours: 24 },
+// Default starter codes to ensure immediate out-of-the-box functionality: strictly ADMIN-DIVA and APRESENTACAO-CIIT
+export const DEFAULT_STARTER_CODES: Array<{ code: string; label: string; maxHours: number; isUnlimited?: boolean; notes?: string }> = [
+  { 
+    code: 'ADMIN-DIVA', 
+    label: 'Administrador Geral Diva (Acesso Ilimitado & Painel Admin)', 
+    maxHours: 0, 
+    isUnlimited: true, 
+    notes: 'Super Administrador Oficial (Acesso Ilimitado e Painel Admin)' 
+  },
+  { 
+    code: 'APRESENTACAO-CIIT', 
+    label: 'Passe de Apresentação Oficial CIIT 2026', 
+    maxHours: 24, 
+    isUnlimited: false, 
+    notes: 'Código Oficial de Apresentação CIIT 2026 (Validade 24h a partir do primeiro uso)' 
+  },
 ];
 
 /**
@@ -64,13 +72,13 @@ class AccessControlService {
   private isInitialized = false;
 
   /**
-   * Initializes starter codes in Firestore if they don't exist yet
+   * Initializes starter codes in Firestore if they don't exist yet and removes obsolete old starter codes
    */
   async initializeStarterCodes(): Promise<void> {
     if (this.isInitialized) return;
     try {
       const now = Date.now();
-      // Ensure all starter codes (especially ADMIN-DIVA) exist or get created
+      // Ensure strictly ADMIN-DIVA and APRESENTACAO-CIIT exist
       for (const starter of DEFAULT_STARTER_CODES) {
         const docRef = doc(db, COLLECTION_NAME, starter.code);
         const docSnap = await getDoc(docRef);
@@ -86,9 +94,9 @@ class AccessControlService {
             revokedAt: null,
             maxHours: starter.maxHours || (starter.isUnlimited ? 0 : 24),
             isUnlimited: !!starter.isUnlimited,
-            notes: starter.isUnlimited 
+            notes: starter.notes || (starter.isUnlimited 
               ? 'Código Super Administrador Oficial (Acesso Ilimitado e Acesso ao Painel Admin)' 
-              : 'Criado automaticamente pelo sistema de segurança CIIT 2026',
+              : 'Código Oficial de Apresentação CIIT 2026'),
           };
           await setDoc(docRef, initialRecord);
         } else {
@@ -106,6 +114,17 @@ class AccessControlService {
           }
         }
       }
+
+      // Automatically clean obsolete starter codes from initial deployments
+      const obsoleteCodes = ['CIIT-2026', 'CIIT-2026-VIP', 'TETE-INVEST-24H', 'GOV-TETE-2026', 'DEMO-PASS'];
+      for (const obsCode of obsoleteCodes) {
+        const obsRef = doc(db, COLLECTION_NAME, obsCode);
+        const obsSnap = await getDoc(obsRef);
+        if (obsSnap.exists()) {
+          await deleteDoc(obsRef).catch(() => {});
+        }
+      }
+
       this.isInitialized = true;
     } catch (err) {
       console.warn('Could not initialize starter codes on Firestore (might be offline or rule restricted):', err);
@@ -517,10 +536,104 @@ class AccessControlService {
   }
 
   /**
-   * Admin: Delete code document
+   * Purges all access codes from Firestore, retaining ONLY ADMIN-DIVA and APRESENTACAO-CIIT
    */
-  async deleteCode(codeRaw: string): Promise<{ success: boolean; message: string }> {
+  async purgeAllExceptOfficialCodes(): Promise<{ success: boolean; message: string; deletedCount: number }> {
+    try {
+      const allowedCodes = new Set(['ADMIN-DIVA', 'APRESENTACAO-CIIT']);
+      const snap = await getDocs(collection(db, COLLECTION_NAME));
+      let deletedCount = 0;
+
+      for (const docSnap of snap.docs) {
+        const docId = docSnap.id.toUpperCase();
+        if (!allowedCodes.has(docId)) {
+          await deleteDoc(docSnap.ref);
+          deletedCount++;
+        }
+      }
+
+      // Ensure ADMIN-DIVA exists and is unlimited
+      const now = Date.now();
+      const divaRef = doc(db, COLLECTION_NAME, 'ADMIN-DIVA');
+      const divaSnap = await getDoc(divaRef);
+      if (!divaSnap.exists()) {
+        await setDoc(divaRef, {
+          id: 'ADMIN-DIVA',
+          code: 'ADMIN-DIVA',
+          label: 'Administrador Geral Diva (Acesso Ilimitado & Painel Admin)',
+          status: 'active',
+          activatedAt: now,
+          expiresAt: null,
+          createdAt: now,
+          revokedAt: null,
+          maxHours: 0,
+          isUnlimited: true,
+          notes: 'Super Administrador Oficial (Acesso Ilimitado e Painel Admin)'
+        });
+      } else {
+        await updateDoc(divaRef, {
+          isUnlimited: true,
+          status: 'active',
+          expiresAt: null,
+        }).catch(() => {});
+      }
+
+      // Ensure APRESENTACAO-CIIT exists
+      const presRef = doc(db, COLLECTION_NAME, 'APRESENTACAO-CIIT');
+      const presSnap = await getDoc(presRef);
+      if (!presSnap.exists()) {
+        await setDoc(presRef, {
+          id: 'APRESENTACAO-CIIT',
+          code: 'APRESENTACAO-CIIT',
+          label: 'Passe de Apresentação Oficial CIIT 2026',
+          status: 'unactivated',
+          activatedAt: null,
+          expiresAt: null,
+          createdAt: now,
+          revokedAt: null,
+          maxHours: 24,
+          isUnlimited: false,
+          notes: 'Código Oficial de Apresentação CIIT 2026 (Validade 24h a partir do primeiro uso)'
+        });
+      }
+
+      return {
+        success: true,
+        message: `Base de dados atualizada: Mantidos estritamente ADMIN-DIVA e APRESENTACAO-CIIT (${deletedCount} removidos).`,
+        deletedCount
+      };
+    } catch (err: any) {
+      console.error('Error purging access codes:', err);
+      return {
+        success: false,
+        message: 'Erro ao limpar códigos no Firestore: ' + err.message,
+        deletedCount: 0
+      };
+    }
+  }
+
+  /**
+   * Admin: Delete code document with protections for ADMIN-DIVA and active admin session
+   */
+  async deleteCode(codeRaw: string, currentSessionCode?: string): Promise<{ success: boolean; message: string }> {
     const code = normalizeCode(codeRaw);
+
+    // Protection rule 1: ADMIN-DIVA is the master administrator and can never be deleted
+    if (code === 'ADMIN-DIVA') {
+      return { 
+        success: false, 
+        message: 'O código ADMIN-DIVA é o administrador principal do sistema e está protegido permanentemente contra eliminação.' 
+      };
+    }
+
+    // Protection rule 2: The administrator cannot delete their own active session code
+    if (currentSessionCode && code === normalizeCode(currentSessionCode)) {
+      return { 
+        success: false, 
+        message: 'Não é permitido apagar o código de acesso da sua própria sessão ativa.' 
+      };
+    }
+
     try {
       const docRef = doc(db, COLLECTION_NAME, code);
       await deleteDoc(docRef);

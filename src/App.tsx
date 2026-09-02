@@ -292,6 +292,7 @@ export default function App() {
             lang={lang}
             registrations={registrations}
             isSuperUser={activeCodeRecord?.code === 'ADMIN-DIVA' || activeCodeRecord?.isUnlimited === true}
+            currentAdminCode={activeCodeRecord?.code}
             onAddManualAttendee={handleAddManualAttendee}
             onClearRegistrations={handleClearRegistrations}
             onCloseAdmin={() => setShowAdmin(false)}

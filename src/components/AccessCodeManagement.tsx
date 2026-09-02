@@ -31,9 +31,10 @@ import { AccessCodeRecord, AccessCodeStatus } from '../types';
 
 interface AccessCodeManagementProps {
   lang: 'pt' | 'en';
+  currentAdminCode?: string;
 }
 
-export default function AccessCodeManagement({ lang }: AccessCodeManagementProps) {
+export default function AccessCodeManagement({ lang, currentAdminCode }: AccessCodeManagementProps) {
   const [codes, setCodes] = useState<AccessCodeRecord[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
@@ -150,11 +151,49 @@ export default function AccessCodeManagement({ lang }: AccessCodeManagementProps
 
   const handleDeleteConfirm = async () => {
     if (!deletingCode) return;
+    const targetCode = deletingCode.code.toUpperCase();
+    const sessionCode = currentAdminCode ? currentAdminCode.toUpperCase() : '';
+
+    if (targetCode === 'ADMIN-DIVA') {
+      showToast(
+        lang === 'pt' 
+          ? 'O código ADMIN-DIVA é o administrador mestre permanente e não pode ser apagado.' 
+          : 'ADMIN-DIVA is the master administrator code and cannot be deleted.',
+        'error'
+      );
+      setDeletingCode(null);
+      return;
+    }
+
+    if (sessionCode && targetCode === sessionCode) {
+      showToast(
+        lang === 'pt' 
+          ? 'Não é permitido apagar o código de acesso com o qual está autenticado na sua sessão atual.' 
+          : 'You cannot delete the access code currently being used in your active session.',
+        'error'
+      );
+      setDeletingCode(null);
+      return;
+    }
+
     setIsSubmitting(true);
-    const result = await accessControl.deleteCode(deletingCode.code);
+    const result = await accessControl.deleteCode(deletingCode.code, currentAdminCode);
     setIsSubmitting(false);
     showToast(result.message, result.success ? 'success' : 'error');
     setDeletingCode(null);
+  };
+
+  const handlePurgeToOfficialCodes = async () => {
+    const confirmMsg = lang === 'pt'
+      ? 'Deseja apagar todos os códigos e deixar exclusivamente os 2 códigos oficiais na base de dados (ADMIN-DIVA e APRESENTACAO-CIIT)?'
+      : 'Clear all codes and keep only the 2 official codes (ADMIN-DIVA and APRESENTACAO-CIIT)?';
+
+    if (!confirm(confirmMsg)) return;
+
+    setIsSubmitting(true);
+    const result = await accessControl.purgeAllExceptOfficialCodes();
+    setIsSubmitting(false);
+    showToast(result.message, result.success ? 'success' : 'error');
   };
 
   const handleInitDefaultCodes = async () => {
@@ -164,7 +203,7 @@ export default function AccessCodeManagement({ lang }: AccessCodeManagementProps
       await accessControl.createCode(starter.code, starter.label, starter.maxHours);
     }
     setIsSubmitting(false);
-    showToast(lang === 'pt' ? 'Códigos padrão inicializados no Firestore com sucesso!' : 'Default codes initialized in Firestore!', 'success');
+    showToast(lang === 'pt' ? 'Códigos oficiais inicializados no Firestore com sucesso!' : 'Official codes initialized in Firestore!', 'success');
   };
 
   const formatTimestamp = (ts?: number | null) => {
@@ -307,7 +346,17 @@ export default function AccessCodeManagement({ lang }: AccessCodeManagementProps
           </p>
         </div>
 
-        <div className="flex items-center space-x-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            onClick={handlePurgeToOfficialCodes}
+            disabled={isSubmitting}
+            className="px-3 py-2 bg-red-950/60 hover:bg-red-900/80 border border-red-500/40 text-red-300 text-xs rounded-lg transition-all flex items-center space-x-1.5 cursor-pointer disabled:opacity-50"
+            title={lang === 'pt' ? 'Limpar e deixar apenas ADMIN-DIVA e APRESENTACAO-CIIT' : 'Purge all except official codes'}
+          >
+            <Trash2 className="w-3.5 h-3.5 text-red-400" />
+            <span>{lang === 'pt' ? 'Manter Apenas Oficiais' : 'Keep Only Official Codes'}</span>
+          </button>
+
           <button
             onClick={() => {
               handleGenerateRandomCode();
@@ -515,14 +564,33 @@ export default function AccessCodeManagement({ lang }: AccessCodeManagementProps
                             <span>{lang === 'pt' ? 'Reiniciar' : 'Reset'}</span>
                           </button>
                         )}
-                        <button
-                          onClick={() => setDeletingCode(item)}
-                          className="px-2 py-1 bg-red-500/10 hover:bg-red-600 hover:text-white border border-red-500/30 text-red-400 text-[10px] rounded cursor-pointer transition-all flex items-center space-x-1"
-                          title={lang === 'pt' ? 'Apagar definitivamente do Firestore' : 'Delete permanently from Firestore'}
-                        >
-                          <Trash2 className="w-3 h-3" />
-                          <span>{lang === 'pt' ? 'Apagar' : 'Delete'}</span>
-                        </button>
+                        {/* PROTECTION: Active Session Code or Master ADMIN-DIVA cannot be deleted */}
+                        {currentAdminCode && item.code.toUpperCase() === currentAdminCode.toUpperCase() ? (
+                          <span
+                            className="px-2 py-1 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] rounded flex items-center space-x-1 cursor-default font-mono"
+                            title={lang === 'pt' ? 'Sua sessão atual: não é permitido apagar o seu próprio código de acesso' : 'Active session: you cannot delete your own logged-in code'}
+                          >
+                            <Lock className="w-3 h-3 text-emerald-400" />
+                            <span>{lang === 'pt' ? 'Sua Sessão' : 'Current Session'}</span>
+                          </span>
+                        ) : item.code === 'ADMIN-DIVA' ? (
+                          <span
+                            className="px-2 py-1 bg-amber-500/10 border border-amber-500/30 text-amber-400 text-[10px] rounded flex items-center space-x-1 cursor-default font-mono"
+                            title={lang === 'pt' ? 'Administrador Mestre: protegido permanentemente contra exclusão' : 'Master Administrator: permanently protected'}
+                          >
+                            <ShieldCheck className="w-3 h-3 text-amber-400" />
+                            <span>{lang === 'pt' ? 'Protegido' : 'Protected'}</span>
+                          </span>
+                        ) : (
+                          <button
+                            onClick={() => setDeletingCode(item)}
+                            className="px-2 py-1 bg-red-500/10 hover:bg-red-600 hover:text-white border border-red-500/30 text-red-400 text-[10px] rounded cursor-pointer transition-all flex items-center space-x-1"
+                            title={lang === 'pt' ? 'Apagar definitivamente do Firestore' : 'Delete permanently from Firestore'}
+                          >
+                            <Trash2 className="w-3 h-3" />
+                            <span>{lang === 'pt' ? 'Apagar' : 'Delete'}</span>
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>
