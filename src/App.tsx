@@ -29,13 +29,10 @@ import InvestorChat from './components/InvestorChat';
 import TeteProfile from './components/TeteProfile';
 import BancoMocFinancialSuite from './components/BancoMocFinancialSuite';
 import FloatingLanguageToggle from './components/FloatingLanguageToggle';
-import AccessGatekeeper from './components/AccessGatekeeper';
-import AccessTimeIndicator from './components/AccessTimeIndicator';
 
 import { INITIAL_REGISTRATIONS, TRANSLATIONS, SPONSORS } from './data';
-import { Registration, ProjectItem, AccessSessionState } from './types';
+import { Registration, ProjectItem } from './types';
 import { realtimeAttendance } from './services/realtimeAttendance';
-import { accessControl } from './services/accessControl';
 import { Mail, Phone, MapPin, ExternalLink, Calendar, ChevronRight, ArrowUp } from 'lucide-react';
 import ciitLogoImg from './assets/images/ciit_2026_logo_1787657793393.png';
 
@@ -48,18 +45,7 @@ export default function App() {
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [selectedInquiryProject, setSelectedInquiryProject] = useState<ProjectItem | null>(null);
 
-  // Access Control Session state
-  const [sessionState, setSessionState] = useState<AccessSessionState>(() => accessControl.getState());
-
   const t = TRANSLATIONS[lang];
-
-  // Subscribe to Access Control session state
-  useEffect(() => {
-    const unsubscribe = accessControl.subscribe((state) => {
-      setSessionState(state);
-    });
-    return () => unsubscribe();
-  }, []);
 
   // Subscribe to real-time attendance singleton
   useEffect(() => {
@@ -152,37 +138,11 @@ export default function App() {
     scrollToSection('area-investidor');
   };
 
-  // 1. Initial Access Verification Loading State
-  if (sessionState.isChecking) {
-    return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center text-white px-4 font-sans selection:bg-amber-500 selection:text-slate-950">
-        <img
-          src={ciitLogoImg}
-          alt="CIIT 2026 Logo"
-          className="h-16 w-auto object-contain mb-6 animate-pulse"
-          referrerPolicy="no-referrer"
-        />
-        <div className="w-6 h-6 border-2 border-amber-400 border-t-transparent rounded-full animate-spin mb-4" />
-        <span className="text-xs font-mono tracking-widest uppercase text-slate-400">
-          {lang === 'pt' ? 'A verificar credenciais de acesso...' : 'Verifying access credentials...'}
-        </span>
-      </div>
-    );
-  }
-
-  // 2. Restricted Access Gatekeeper Screen (Requires valid access code, enforces 24h validity window)
-  if (!sessionState.isAuthenticated) {
-    return <AccessGatekeeper sessionState={sessionState} lang={lang} />;
-  }
-
   return (
     <div id="root-layout" className="min-h-screen flex flex-col justify-between bg-neutral-50 text-neutral-900 overflow-x-hidden selection:bg-amber-500 selection:text-slate-950">
       
-      {/* FIXED STICKY HEADER (ACCESS TIME INDICATOR + NAVBAR + BANCO DE MOÇAMBIQUE TICKER BAR) */}
+      {/* FIXED STICKY HEADER (NAVBAR + BANCO DE MOÇAMBIQUE TICKER BAR) */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-slate-950 shadow-2xl border-b border-amber-500/20">
-        {/* 24-HOUR ACCESS TIME INDICATOR & LIVE EXPIRATION COUNTDOWN */}
-        <AccessTimeIndicator sessionState={sessionState} lang={lang} />
-
         <Navbar
           lang={lang}
           activeSection={activeSection}
@@ -203,7 +163,7 @@ export default function App() {
       </header>
 
       {/* Main Content Sections */}
-      <main className="flex-grow pt-[128px] sm:pt-[138px] md:pt-[146px] lg:pt-[152px]">
+      <main className="flex-grow pt-[102px] sm:pt-[114px] md:pt-[122px] lg:pt-[128px]">
         
         {/* 1. HERO SECTION (High Impact with new Headline & Subheadline) */}
         <Hero
