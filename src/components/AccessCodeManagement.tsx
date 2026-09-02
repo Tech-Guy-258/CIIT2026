@@ -199,9 +199,6 @@ export default function AccessCodeManagement({ lang, currentAdminCode }: AccessC
   const handleInitDefaultCodes = async () => {
     setIsSubmitting(true);
     await accessControl.initializeStarterCodes();
-    for (const starter of DEFAULT_STARTER_CODES) {
-      await accessControl.createCode(starter.code, starter.label, starter.maxHours);
-    }
     setIsSubmitting(false);
     showToast(lang === 'pt' ? 'Códigos oficiais inicializados no Firestore com sucesso!' : 'Official codes initialized in Firestore!', 'success');
   };
@@ -473,7 +470,7 @@ export default function AccessCodeManagement({ lang, currentAdminCode }: AccessC
             onClick={handleInitDefaultCodes}
             className="px-4 py-2 bg-amber-500 text-slate-950 font-bold text-xs rounded-lg cursor-pointer hover:bg-amber-400"
           >
-            {lang === 'pt' ? 'Criar Códigos Padrão CIIT 2026' : 'Create Default CIIT 2026 Codes'}
+            {lang === 'pt' ? 'Restaurar Códigos Oficiais (ADMIN-DIVA & APRESENTACAO-CIIT)' : 'Restore Official Codes (ADMIN-DIVA & APRESENTACAO-CIIT)'}
           </button>
         </div>
       ) : filteredCodes.length === 0 ? (
