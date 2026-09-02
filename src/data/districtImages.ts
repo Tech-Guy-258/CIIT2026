@@ -18,7 +18,6 @@ import cahoraImg3 from '../assets/images/Distritos/Cahora Bassa/images (2).jpg';
 import changara1 from '../assets/images/Distritos/Changara/images.jpg';
 import changara2 from '../assets/images/Distritos/Changara/images (1).jpg';
 import changara3 from '../assets/images/Distritos/Changara/images (3).jpg';
-import changara4 from '../assets/images/Distritos/Changara/images (4).jpg';
 
 // 4. Chifunde
 import chifunde1 from '../assets/images/Distritos/Chifunde/SER 583_final.jpg';
@@ -37,7 +36,6 @@ import chiuta5 from '../assets/images/Distritos/Chiuta/images (2).jpg';
 import cidadeTeteSamora from '../assets/images/Distritos/Cidade de Tete/Ponte-samora.jpg';
 import cidadeTete1 from '../assets/images/Distritos/Cidade de Tete/Tete.jpg';
 import cidadeTete2 from '../assets/images/Distritos/Cidade de Tete/Tete_Cidade2.jpg';
-import cidadeTeteDsc from '../assets/images/Distritos/Cidade de Tete/dsc_9993.jpg';
 import cidadeTete3 from '../assets/images/Distritos/Cidade de Tete/TETE (1).jpg';
 import cidadeTete4 from '../assets/images/Distritos/Cidade de Tete/762566529_2188388415290359_8600894102521136810_n.jpg';
 import cidadeTeteThumb from '../assets/images/Distritos/Cidade de Tete/filename-1-jpg-thumbnail0.jpg';
@@ -52,9 +50,6 @@ import doaImg3 from '../assets/images/Distritos/Dôa/images (3).jpg';
 // 8. Macanga
 import macangaOuro from '../assets/images/Distritos/Macanga/OURO.jpg';
 import macangaImg1 from '../assets/images/Distritos/Macanga/6277197_imagem.jpeg';
-import macangaOuroPuro from '../assets/images/Distritos/Macanga/o-minerio-de-ouro-puro-encontrado-na-mina-em-um-chao-de-pedra_653449-8334_Easy-Resize.com_.jpg';
-import macangaImg2 from '../assets/images/Distritos/Macanga/images.jpg';
-import macangaImg3 from '../assets/images/Distritos/Macanga/images (1).jpg';
 import macangaImg4 from '../assets/images/Distritos/Macanga/images (2).jpg';
 
 // 9. Mágoè
@@ -94,7 +89,6 @@ import moatizeImg2 from '../assets/images/Distritos/Moatize/images (1).jpg';
 import mutararaDonaAnaVista from '../assets/images/Distritos/Mutarara/ponte-done-ana-e-vista-de-sena.jpg';
 import mutararaBridge1 from '../assets/images/Distritos/Mutarara/Dona_ana_bridge_mutarara_01.jpg';
 import mutararaBridge2 from '../assets/images/Distritos/Mutarara/Dona_ana_bridge_mutarara_02.jpg';
-import mutararaWa1 from '../assets/images/Distritos/Mutarara/490023879_1487265939254737_5318232305685527283_n.jpg';
 import mutararaWa2 from '../assets/images/Distritos/Mutarara/490806779_1487266315921366_7845189728499406454_n.jpg';
 import mutararaWa3 from '../assets/images/Distritos/Mutarara/492920530_987329590214743_7506672308393434275_n.jpg';
 import mutararaImg1 from '../assets/images/Distritos/Mutarara/images.jpg';
@@ -129,7 +123,7 @@ export const DISTRICT_IMAGES_MAP = {
   changara: {
     image: changara1,
     heroImage: changara2,
-    gallery: [changara1, changara2, changara3, changara4]
+    gallery: [changara1, changara2, changara3]
   },
   chifunde: {
     image: chifunde1,
@@ -144,7 +138,7 @@ export const DISTRICT_IMAGES_MAP = {
   'cidade-de-tete': {
     image: cidadeTeteSamora,
     heroImage: cidadeTete1,
-    gallery: [cidadeTeteSamora, cidadeTete1, cidadeTete2, cidadeTeteDsc, cidadeTete3, cidadeTete4, cidadeTeteThumb, cidadeTete5, cidadeTete6]
+    gallery: [cidadeTeteSamora, cidadeTete1, cidadeTete2, cidadeTete3, cidadeTete4, cidadeTeteThumb, cidadeTete5, cidadeTete6]
   },
   doa: {
     image: doaHero,
@@ -153,8 +147,8 @@ export const DISTRICT_IMAGES_MAP = {
   },
   macanga: {
     image: macangaOuro,
-    heroImage: macangaOuroPuro,
-    gallery: [macangaOuro, macangaImg1, macangaOuroPuro, macangaImg2, macangaImg3, macangaImg4]
+    heroImage: macangaImg1,
+    gallery: [macangaOuro, macangaImg1, macangaImg4]
   },
   magoe: {
     image: magoePark,
@@ -179,7 +173,7 @@ export const DISTRICT_IMAGES_MAP = {
   mutarara: {
     image: mutararaDonaAnaVista,
     heroImage: mutararaBridge1,
-    gallery: [mutararaDonaAnaVista, mutararaBridge1, mutararaBridge2, mutararaWa1, mutararaWa2, mutararaWa3, mutararaImg1]
+    gallery: [mutararaDonaAnaVista, mutararaBridge1, mutararaBridge2, mutararaWa2, mutararaWa3, mutararaImg1]
   },
   tsangano: {
     image: tsanganoWa1,
