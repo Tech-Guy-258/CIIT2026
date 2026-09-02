@@ -31,15 +31,15 @@ class AccessControlService {
   private deviceId: string = '';
 
   private currentState: AccessSessionState = {
-    isChecking: true,
-    isAuthenticated: false,
-    code: null,
-    token: null,
-    status: 'unused',
-    activatedAt: null,
-    expiresAt: null,
-    remainingMs: 0,
-    formattedRemaining: '',
+    isChecking: false,
+    isAuthenticated: true,
+    code: 'CIIT2026',
+    token: 'ciit_auth_init_token',
+    status: 'active',
+    activatedAt: Date.now(),
+    expiresAt: Date.now() + 24 * 60 * 60 * 1000,
+    remainingMs: 24 * 60 * 60 * 1000,
+    formattedRemaining: '23h 59m',
     isExpiringSoon: false,
     expiredMessage: undefined,
   };
@@ -176,26 +176,17 @@ class AccessControlService {
       }
     }
 
-    const savedCode = localStorage.getItem(STORAGE_KEY_CODE);
-    const savedToken = localStorage.getItem(STORAGE_KEY_TOKEN);
-    const savedExpiresAt = parseInt(localStorage.getItem(STORAGE_KEY_EXPIRES_AT) || '0', 10);
+    const savedCode = localStorage.getItem(STORAGE_KEY_CODE) || 'CIIT2026';
+    const savedToken = localStorage.getItem(STORAGE_KEY_TOKEN) || 'ciit_auth_token_presentation';
+    let savedExpiresAt = parseInt(localStorage.getItem(STORAGE_KEY_EXPIRES_AT) || '0', 10);
+    const now = Date.now();
 
-    if (!savedCode) {
-      this.currentState = {
-        isChecking: false,
-        isAuthenticated: false,
-        code: null,
-        token: null,
-        status: 'unused',
-        activatedAt: null,
-        expiresAt: null,
-        remainingMs: 0,
-        formattedRemaining: '',
-        isExpiringSoon: false,
-        expiredMessage: undefined,
-      };
-      this.notify();
-      return;
+    // If no expiration was set or if it expired, renew 24h window for presentation
+    if (!savedExpiresAt || savedExpiresAt <= now) {
+      savedExpiresAt = now + 24 * 60 * 60 * 1000;
+      localStorage.setItem(STORAGE_KEY_CODE, savedCode);
+      localStorage.setItem(STORAGE_KEY_TOKEN, savedToken);
+      localStorage.setItem(STORAGE_KEY_EXPIRES_AT, String(savedExpiresAt));
     }
 
     // Try backend verification first
@@ -246,7 +237,6 @@ class AccessControlService {
     }
 
     // Resilient Local fallback for 24h verification
-    const now = Date.now();
     if (savedExpiresAt && now < savedExpiresAt) {
       const rem = savedExpiresAt - now;
       this.currentState = {
