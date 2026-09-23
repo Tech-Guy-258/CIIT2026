@@ -4,10 +4,19 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Calendar, MapPin, ChevronRight, Clock, ArrowUpRight, TrendingUp, Sparkles } from 'lucide-react';
+import { 
+  Calendar, 
+  MapPin, 
+  ChevronRight, 
+  Clock, 
+  ArrowUpRight, 
+  CalendarPlus, 
+  Navigation, 
+  ExternalLink 
+} from 'lucide-react';
 import { TRANSLATIONS } from '../data';
-import { TETE_KEY_INDICATORS } from '../teteInvestmentData';
 import ciit2026Logo from "../assets/images/ciit_2026_logo_1787657793393.png";
+import mozambiqueEmblem from "../assets/images/Emblema da República/Emblem_of_Mozambique.svg";
 
 interface HeroProps {
   lang: 'pt' | 'en';
@@ -73,10 +82,30 @@ export default function Hero({ lang, onRegisterClick, onExploreClick, onPortfoli
     }
   };
 
+  // Calendar scheduling handler: opens Google Calendar event with full details
+  const handleScheduleCalendar = () => {
+    const title = encodeURIComponent("CIIT 2026 - Conferência Internacional de Investimentos de Tete");
+    const details = encodeURIComponent(
+      "Conferência Internacional de Investimentos de Tete (CIIT 2026).\n" +
+      "Local: Horizonte Lodge, Tete, Moçambique.\n" +
+      "Lema: Tete no Horizonte de Investimentos: Oportunidades para uma Nova Era de Desenvolvimento.\n" +
+      "Invista em Tete, construa o futuro."
+    );
+    const location = encodeURIComponent("Horizonte Lodge, Tete, Moçambique");
+    const gCalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=20261008T063000Z/20261009T170000Z&details=${details}&location=${location}`;
+    window.open(gCalUrl, '_blank', 'noopener,noreferrer');
+  };
+
+  // Google Maps directions handler: directs straight to Horizonte Lodge, Tete
+  const handleGetDirections = () => {
+    const mapsUrl = "https://www.google.com/maps/search/?api=1&query=Horizonte+Lodge+Tete+Mozambique";
+    window.open(mapsUrl, '_blank', 'noopener,noreferrer');
+  };
+
   return (
     <section
       id="home"
-      className="relative min-h-[90vh] bg-gradient-to-b from-slate-50 via-white to-amber-50/40 flex flex-col items-center justify-center pt-6 pb-12 sm:pt-10 sm:pb-20 overflow-hidden px-3 sm:px-6 border-b border-slate-200 scroll-mt-28 sm:scroll-mt-36"
+      className="relative min-h-[90vh] bg-gradient-to-b from-slate-50 via-white to-amber-50/40 flex flex-col items-center justify-center pt-6 pb-12 sm:pt-10 sm:pb-16 overflow-hidden px-3 sm:px-6 border-b border-slate-200 scroll-mt-28 sm:scroll-mt-36"
     >
       {/* Background Stylized Elements */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-100/40 via-slate-50/60 to-white z-0" />
@@ -98,13 +127,30 @@ export default function Hero({ lang, onRegisterClick, onExploreClick, onPortfoli
       <div className="absolute bottom-10 right-10 w-60 sm:w-80 h-60 sm:h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none z-0" />
 
       <div className="relative z-10 max-w-5xl mx-auto text-center flex flex-col items-center w-full">
-        {/* Mozambique Government Banner Header badge */}
-        <div className="flex flex-col items-center mb-4 sm:mb-6 mt-1 sm:mt-0 w-full px-2">
-          <div className="inline-flex items-center space-x-2 sm:space-x-3 bg-amber-100/90 border border-amber-300 px-3 sm:px-5 py-1.5 sm:py-2 rounded-full shadow-xs max-w-full text-center">
-            <span className="w-2 h-2 rounded-full bg-amber-600 animate-pulse flex-shrink-0" />
-            <p className="text-[10px] xs:text-[11px] sm:text-xs tracking-wide sm:tracking-widest uppercase font-mono text-amber-950 font-bold leading-tight break-words">
-              {t.heroSubtitle}
-            </p>
+        {/* Mozambique Government Banner Header badge - STRICT HIERARCHY: Emblema first, República, Governo Provincial */}
+        <div className="flex flex-col items-center justify-center text-center mb-6 sm:mb-8 mt-1 sm:mt-2 w-full px-2">
+          {/* Emblema Nacional da República de Moçambique */}
+          <div className="mb-3.5 sm:mb-4 relative group">
+            <div className="absolute inset-0 bg-amber-400/20 rounded-full blur-xl scale-125 pointer-events-none" />
+            <img 
+              src={mozambiqueEmblem} 
+              alt="Emblema da República de Moçambique"
+              className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 object-contain drop-shadow-md transition-transform duration-300 hover:scale-105"
+            />
+          </div>
+
+          {/* República de Moçambique (sem bolinha verde conforme solicitado) */}
+          <div className="inline-flex items-center bg-slate-900 text-white border border-slate-800 px-5 py-2 shadow-xs mb-3">
+            <span className="text-xs sm:text-sm tracking-[0.25em] uppercase font-mono font-black">
+              REPÚBLICA DE MOÇAMBIQUE
+            </span>
+          </div>
+
+          {/* Governo da Província de Tete com espaçamento aumentado */}
+          <div className="inline-flex items-center bg-amber-100/90 border border-amber-300 px-5 py-1.5 shadow-2xs">
+            <span className="text-xs sm:text-sm tracking-wider uppercase font-display font-bold text-amber-950">
+              {lang === 'pt' ? 'Governo da Província de Tete' : 'Government of Tete Province'}
+            </span>
           </div>
         </div>
 
@@ -117,18 +163,18 @@ export default function Hero({ lang, onRegisterClick, onExploreClick, onPortfoli
           />
         </div>
 
-        {/* High-Impact Headline Requested by User */}
+        {/* High-Impact Headline */}
         <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-black tracking-tight text-slate-950 mb-4 max-w-4xl leading-[1.12]">
           {t.heroHeadline || 'Invista em Tete. Construa o futuro.'}
         </h1>
 
-        {/* High-Impact Subheadline Requested by User */}
+        {/* High-Impact Subheadline */}
         <p className="text-base sm:text-lg md:text-xl text-slate-700 max-w-3xl leading-relaxed font-normal mb-8 sm:mb-10 px-2">
           {t.heroSubheadline || 'Descubra as oportunidades de investimento numa das regiões estratégicas de Moçambique, com vastos recursos naturais, potencial energético, agrícola, mineiro, turístico e logístico.'}
         </p>
 
         {/* Action CTAs: Explorar oportunidades & Ver portfólio de projetos */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto mb-10 sm:mb-12">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full sm:w-auto mb-8 sm:mb-10">
           <button
             id="hero-explore-opportunities-btn"
             onClick={handleScrollToOpportunities}
@@ -148,28 +194,84 @@ export default function Hero({ lang, onRegisterClick, onExploreClick, onPortfoli
           </button>
         </div>
 
-        {/* Event Date and Location Bar */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 mb-10 w-full max-w-2xl">
-          <div className="flex items-center space-x-3 bg-white border border-slate-200 shadow-xs px-4 sm:px-5 py-3 rounded-none text-left flex-1 w-full">
-            <Calendar className="w-5 h-5 text-amber-600 flex-shrink-0" />
-            <div>
-              <span className="text-[10px] text-slate-500 block font-mono uppercase tracking-widest font-bold">Data / Date</span>
-              <span className="text-sm sm:text-base font-bold text-slate-900">{t.heroDate}</span>
-            </div>
+        {/* Event Date and Location Bar - INTERACTIVE WITH CALENDAR REMINDER & GOOGLE MAPS DIRECTIONS */}
+        <div className="w-full max-w-3xl mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+            {/* Clickable Date Card -> Triggers Calendar Scheduling */}
+            <button
+              id="hero-date-calendar-btn"
+              onClick={handleScheduleCalendar}
+              title={lang === 'pt' ? 'Clique para agendar de imediato no seu calendário' : 'Click to schedule on your calendar'}
+              className="group flex items-center justify-between p-4 bg-white border-2 border-slate-200 hover:border-amber-500 hover:bg-amber-50/40 shadow-sm transition-all duration-200 cursor-pointer text-left w-full"
+            >
+              <div className="flex items-center space-x-3.5 min-w-0">
+                <div className="p-2.5 bg-amber-100 border border-amber-300 text-amber-800 group-hover:bg-amber-500 group-hover:text-slate-950 transition-colors flex-shrink-0">
+                  <Calendar className="w-5 h-5" />
+                </div>
+                <div className="min-w-0">
+                  <div className="flex items-center space-x-1.5">
+                    <span className="text-[10px] text-slate-500 font-mono uppercase tracking-wider font-bold">
+                      {lang === 'pt' ? 'Data da Conferência' : 'Conference Date'}
+                    </span>
+                    <span className="inline-flex items-center text-[9px] font-mono font-bold bg-amber-200 text-amber-950 px-1.5 py-0.2 rounded-xs uppercase">
+                      Agendar
+                    </span>
+                  </div>
+                  <span className="text-sm sm:text-base font-display font-black text-slate-950 block truncate">
+                    {lang === 'pt' ? '8 e 9 de Outubro de 2026' : 'October 8-9, 2026'}
+                  </span>
+                </div>
+              </div>
+              <CalendarPlus className="w-5 h-5 text-amber-600 group-hover:scale-110 group-hover:text-amber-700 transition-all flex-shrink-0 ml-2" />
+            </button>
+
+            {/* Clickable Location Card -> Triggers Google Maps to Horizonte Lodge */}
+            <button
+              id="hero-location-maps-btn"
+              onClick={handleGetDirections}
+              title={lang === 'pt' ? 'Clique para obter direções do Horizonte Lodge no Google Maps' : 'Click to get directions on Google Maps'}
+              className="group flex items-center justify-between p-4 bg-white border-2 border-slate-200 hover:border-amber-500 hover:bg-amber-50/40 shadow-sm transition-all duration-200 cursor-pointer text-left w-full"
+            >
+              <div className="flex items-center space-x-3.5 min-w-0">
+                <div className="p-2.5 bg-amber-100 border border-amber-300 text-amber-800 group-hover:bg-amber-500 group-hover:text-slate-950 transition-colors flex-shrink-0">
+                  <MapPin className="w-5 h-5" />
+                </div>
+                <div className="min-w-0">
+                  <div className="flex items-center space-x-1.5">
+                    <span className="text-[10px] text-slate-500 font-mono uppercase tracking-wider font-bold">
+                      {lang === 'pt' ? 'Local do Evento' : 'Event Venue'}
+                    </span>
+                    <span className="inline-flex items-center text-[9px] font-mono font-bold bg-emerald-100 text-emerald-950 px-1.5 py-0.2 rounded-xs uppercase">
+                      Direções
+                    </span>
+                  </div>
+                  <span className="text-sm sm:text-base font-display font-black text-slate-950 block truncate">
+                    Horizonte Lodge, Tete
+                  </span>
+                </div>
+              </div>
+              <Navigation className="w-5 h-5 text-amber-600 group-hover:scale-110 group-hover:text-amber-700 transition-all flex-shrink-0 ml-2" />
+            </button>
           </div>
 
-          <div className="flex items-center space-x-3 bg-white border border-slate-200 shadow-xs px-4 sm:px-5 py-3 rounded-none text-left flex-1 w-full">
-            <MapPin className="w-5 h-5 text-amber-600 flex-shrink-0" />
-            <div>
-              <span className="text-[10px] text-slate-500 block font-mono uppercase tracking-widest font-bold">Local / Venue</span>
-              <span className="text-sm sm:text-base font-bold text-slate-900">{t.heroLocation}</span>
-            </div>
+          {/* Mandatory user-requested note */}
+          <div className="mt-3 text-center">
+            <p className="inline-flex items-center space-x-2 text-xs text-amber-950 bg-amber-50 border border-amber-200 px-4 py-2 font-mono shadow-2xs">
+              <span className="font-extrabold uppercase tracking-wider text-amber-700">
+                {lang === 'pt' ? 'Nota:' : 'Note:'}
+              </span>
+              <span>
+                {lang === 'pt'
+                  ? 'Clique na data para agendar de imediato no seu calendário e no local para obter direções do Horizonte Lodge a partir do Google Maps.'
+                  : 'Click the date to schedule immediately on your calendar, and click the location to get directions to Horizonte Lodge from Google Maps.'}
+              </span>
+            </p>
           </div>
         </div>
 
         {/* Countdown Dashboard */}
         {!timeLeft.isOver && (
-          <div className="mb-12 w-full max-w-xl">
+          <div className="mb-6 w-full max-w-xl">
             <div className="bg-white border-2 border-amber-300 rounded-none p-4 sm:p-6 shadow-sm relative">
               <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-amber-500 px-3.5 py-0.5 border border-amber-600 rounded-none flex items-center space-x-1.5 shadow-xs">
                 <Clock className="w-3.5 h-3.5 text-slate-950" />
@@ -216,30 +318,26 @@ export default function Hero({ lang, onRegisterClick, onExploreClick, onPortfoli
           </div>
         )}
 
-        {/* Highlighted Key Indicators Bar (Area, Terra Arável, População, Distritos, Municípios, Águas Interiores) */}
-        <div className="w-full border-t border-slate-200 pt-8 mt-2">
-          <p className="text-[11px] uppercase font-mono tracking-widest text-slate-500 font-bold mb-4">
-            {lang === 'pt' ? 'Indicadores Estratégicos da Província de Tete' : 'Strategic Indicators of Tete Province'}
-          </p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
-            {TETE_KEY_INDICATORS.map((indicator) => (
-              <div
-                key={indicator.id}
-                className="bg-white p-3.5 sm:p-4 border border-slate-200/90 shadow-xs text-center flex flex-col justify-center transition-all hover:border-amber-400 hover:shadow-sm"
-              >
-                <span className="text-base sm:text-lg lg:text-xl font-display font-black text-slate-950 tracking-tight">
-                  {indicator.value}
-                </span>
-                <span className="text-xs font-semibold text-slate-700 mt-0.5">
-                  {lang === 'pt' ? indicator.label : indicator.labelEn}
-                </span>
-                <span className="text-[10px] text-slate-500 font-mono mt-1 hidden sm:block">
-                  {lang === 'pt' ? indicator.subtext : indicator.subtextEn}
-                </span>
-              </div>
-            ))}
+        {/* HIGH-PROMINENCE REGISTRATION BUTTON IMMEDIATELY AFTER COUNTDOWN (USER REQUEST) */}
+        <div className="w-full max-w-xl mb-4 flex flex-col items-center">
+          <button
+            id="hero-register-prominent-cta"
+            onClick={onRegisterClick}
+            className="w-full py-4 sm:py-5 px-6 sm:px-10 bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 hover:from-amber-600 hover:to-amber-500 text-slate-950 font-display font-black text-base sm:text-xl uppercase tracking-wider shadow-lg hover:shadow-xl hover:scale-[1.01] active:scale-[0.99] transition-all duration-200 cursor-pointer flex items-center justify-center space-x-3 border-2 border-amber-600 group"
+          >
+            <span className="whitespace-nowrap">{lang === 'pt' ? 'INSCREVA-SE NA CIIT 2026' : 'REGISTER FOR CIIT 2026'}</span>
+            <ArrowUpRight className="w-6 h-6 text-slate-950 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform flex-shrink-0" />
+          </button>
+          <div className="flex items-center space-x-2 text-xs text-slate-600 font-mono mt-2.5 font-semibold">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span>
+              {lang === 'pt'
+                ? 'Acreditação Oficial Aberta • Lugares Limitados no Horizonte Lodge'
+                : 'Official Accreditation Open • Limited Seats at Horizonte Lodge'}
+            </span>
           </div>
         </div>
+
       </div>
     </section>
   );

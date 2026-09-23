@@ -3,23 +3,31 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   TrendingUp,
   RefreshCw,
   ArrowRightLeft,
-  Percent,
-  BarChart3,
   Building2,
   ExternalLink,
   X,
   CheckCircle2,
   ChevronRight,
   Calculator,
-  Layers,
   Coins,
-  Lock
+  Lock,
+  Radio,
+  Sliders,
+  Sparkles,
+  Info,
+  Clock
 } from 'lucide-react';
+import {
+  exchangeRateService,
+  ACCESS_BANK_OFFICIAL_RATES,
+  ExchangeRateItem,
+  RatesMetadata
+} from '../services/exchangeRateService';
 
 interface BancoMocFinancialSuiteProps {
   lang: 'pt' | 'en';
@@ -28,102 +36,8 @@ interface BancoMocFinancialSuiteProps {
   isAdminUser?: boolean;
 }
 
-export interface ExchangeRateItem {
-  code: string;
-  name: { pt: string; en: string };
-  symbol: string;
-  buy: number;
-  sell: number;
-  mid: number;
-  change24h: number;
-  flag: string;
-}
-
-export const INITIAL_RATES: ExchangeRateItem[] = [
-  {
-    code: 'USD',
-    name: { pt: 'Dólar Norte-Americano', en: 'US Dollar' },
-    symbol: '$',
-    buy: 63.26,
-    sell: 64.54,
-    mid: 63.90,
-    change24h: 0.05,
-    flag: '🇺🇸'
-  },
-  {
-    code: 'EUR',
-    name: { pt: 'Euro', en: 'Euro' },
-    symbol: '€',
-    buy: 69.10,
-    sell: 70.50,
-    mid: 69.80,
-    change24h: 0.12,
-    flag: '🇪🇺'
-  },
-  {
-    code: 'ZAR',
-    name: { pt: 'Rand Sul-Africano', en: 'South African Rand' },
-    symbol: 'R',
-    buy: 3.51,
-    sell: 3.59,
-    mid: 3.55,
-    change24h: -0.02,
-    flag: '🇿🇦'
-  },
-  {
-    code: 'GBP',
-    name: { pt: 'Libra Esterlina', en: 'British Pound' },
-    symbol: '£',
-    buy: 82.40,
-    sell: 84.00,
-    mid: 83.20,
-    change24h: 0.18,
-    flag: '🇬🇧'
-  },
-  {
-    code: 'CNY',
-    name: { pt: 'Yuan Chinês', en: 'Chinese Yuan' },
-    symbol: '¥',
-    buy: 8.76,
-    sell: 8.94,
-    mid: 8.85,
-    change24h: 0.04,
-    flag: '🇨🇳'
-  },
-  {
-    code: 'BRL',
-    name: { pt: 'Real Brasileiro', en: 'Brazilian Real' },
-    symbol: 'R$',
-    buy: 11.20,
-    sell: 11.80,
-    mid: 11.50,
-    change24h: 0.10,
-    flag: '🇧🇷'
-  },
-  {
-    code: 'INR',
-    name: { pt: 'Rúpia Indiana', en: 'Indian Rupee' },
-    symbol: '₹',
-    buy: 0.74,
-    sell: 0.78,
-    mid: 0.76,
-    change24h: 0.00,
-    flag: '🇮🇳'
-  }
-];
-
-export const ECONOMIC_INDICATORS = {
-  inflationMonthly: 0.18, // %
-  inflationAnnual: 2.95, // %
-  gdpQuarterly: 4.80, // %
-  rates: {
-    mimo: 12.75, // %
-    primeRate: 18.60, // %
-    fpd: 9.75, // %
-    fpc: 15.75 // %
-  },
-  lastUpdate: '2026-07-22'
-};
+export { ACCESS_BANK_OFFICIAL_RATES as INITIAL_RATES };
+export type { ExchangeRateItem };
 
 export default function BancoMocFinancialSuite({
   lang,
@@ -131,14 +45,26 @@ export default function BancoMocFinancialSuite({
   showAdmin,
   isAdminUser
 }: BancoMocFinancialSuiteProps) {
-  const [rates, setRates] = useState<ExchangeRateItem[]>(INITIAL_RATES);
+  const [rates, setRates] = useState<ExchangeRateItem[]>(ACCESS_BANK_OFFICIAL_RATES);
+  const [metadata, setMetadata] = useState<RatesMetadata>({
+    source: 'Access Bank Moçambique',
+    sourceUrl: 'https://mozambique.accessbankplc.com/pt',
+    lastUpdated: Date.now(),
+    lastUpdatedFormatted: '2 de Setembro de 2026',
+    autoUpdateEnabled: true,
+    refreshIntervalSeconds: 60
+  });
+
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [lastUpdatedTime, setLastUpdatedTime] = useState<string>('Hoje, 09:30 (Hora de Maputo)');
   const [isPaused, setIsPaused] = useState(false);
+  const [nextUpdateCountdown, setNextUpdateCountdown] = useState<number>(60);
+  const [autoUpdate, setAutoUpdate] = useState<boolean>(true);
+  const [refreshInterval, setRefreshInterval] = useState<number>(60);
+  const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
   // Sidebar Open State
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [sidebarTab, setSidebarTab] = useState<'converter' | 'indicators' | 'table'>('converter');
+  const [sidebarTab, setSidebarTab] = useState<'converter' | 'table' | 'live_settings'>('converter');
 
   // Currency Converter State
   const [amount, setAmount] = useState<number>(1000);
@@ -146,28 +72,72 @@ export default function BancoMocFinancialSuite({
   const [toCurrency, setToCurrency] = useState<string>('MZN');
   const [rateType, setRateType] = useState<'mid' | 'buy' | 'sell'>('mid');
 
-  // Live refresh simulation
-  const handleRefreshData = () => {
-    setIsRefreshing(true);
-    setTimeout(() => {
-      const updated = rates.map((r) => {
-        const jitter = (Math.random() - 0.5) * 0.08;
-        const newMid = Math.max(0.1, Number((r.mid + jitter).toFixed(2)));
-        const newBuy = Math.max(0.1, Number((newMid * 0.99).toFixed(2)));
-        const newSell = Math.max(0.1, Number((newMid * 1.01).toFixed(2)));
-        return {
-          ...r,
-          mid: newMid,
-          buy: newBuy,
-          sell: newSell,
-          change24h: Number(((Math.random() - 0.48) * 0.3).toFixed(2))
-        };
-      });
-      setRates(updated);
-      const now = new Date();
-      setLastUpdatedTime(`Hoje, ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')} (Hora de Maputo)`);
+  // 1. Subscribe to real-time rates from Firestore
+  useEffect(() => {
+    const unsubscribe = exchangeRateService.subscribeToRates((updatedRates, meta) => {
+      setRates(updatedRates);
+      if (meta) {
+        setMetadata(meta);
+        if (meta.autoUpdateEnabled !== undefined) {
+          setAutoUpdate(meta.autoUpdateEnabled);
+        }
+        if (meta.refreshIntervalSeconds) {
+          setRefreshInterval(meta.refreshIntervalSeconds);
+        }
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  // 2. Continuous Live Auto-Update Loop
+  useEffect(() => {
+    if (!autoUpdate) return;
+
+    setNextUpdateCountdown(refreshInterval);
+
+    // Countdown tick
+    const countdownTimer = setInterval(() => {
+      setNextUpdateCountdown((prev) => (prev > 1 ? prev - 1 : refreshInterval));
+    }, 1000);
+
+    // Main fetch timer
+    const intervalTimer = setInterval(async () => {
+      setIsRefreshing(true);
+      await exchangeRateService.fetchLiveRates();
       setIsRefreshing(false);
-    }, 600);
+    }, refreshInterval * 1000);
+
+    return () => {
+      clearInterval(countdownTimer);
+      clearInterval(intervalTimer);
+    };
+  }, [autoUpdate, refreshInterval]);
+
+  // Handle Manual Refresh
+  const handleRefreshData = async () => {
+    setIsRefreshing(true);
+    const result = await exchangeRateService.fetchLiveRates();
+    setRates(result.rates);
+    setMetadata(result.meta);
+    setIsRefreshing(false);
+    setNextUpdateCountdown(refreshInterval);
+    
+    setStatusMessage(lang === 'pt' ? 'Cotações Access Bank atualizadas!' : 'Access Bank rates updated!');
+    setTimeout(() => setStatusMessage(null), 3000);
+  };
+
+  // Reset to Access Bank Official Values
+  const handleResetToAccessBank = async () => {
+    setIsRefreshing(true);
+    const result = await exchangeRateService.resetToAccessBankOfficial();
+    setRates(result.rates);
+    setMetadata(result.meta);
+    setIsRefreshing(false);
+    setNextUpdateCountdown(refreshInterval);
+
+    setStatusMessage(lang === 'pt' ? 'Restauradas cotações oficiais Access Bank!' : 'Reset to official Access Bank rates!');
+    setTimeout(() => setStatusMessage(null), 3000);
   };
 
   // Convert calculation
@@ -210,12 +180,14 @@ export default function BancoMocFinancialSuite({
           
           {/* Label Badge */}
           <div className="h-7 sm:h-8 flex items-center space-x-1.5 sm:space-x-2 flex-shrink-0 bg-amber-100 border border-amber-300 px-2 sm:px-2.5 text-[10px] sm:text-xs font-mono tracking-wider text-amber-900 font-bold uppercase">
-            <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-600 animate-pulse flex-shrink-0"></span>
-            <span className="hidden xs:inline sm:inline">{lang === 'pt' ? 'BANCO DE MOÇAMBIQUE' : 'BANK OF MOZAMBIQUE'}</span>
-            <span className="xs:hidden">BM</span>
+            <span className={`w-2 h-2 rounded-full ${autoUpdate ? 'bg-emerald-600 animate-pulse' : 'bg-amber-600'} flex-shrink-0`}></span>
+            <span className="hidden xs:inline sm:inline">
+              {lang === 'pt' ? 'ACCESS BANK MOÇAMBIQUE' : 'ACCESS BANK MOZAMBIQUE'}
+            </span>
+            <span className="xs:hidden">ACCESS BANK</span>
             <span className="hidden sm:inline text-slate-400">|</span>
             <span className="hidden md:inline text-slate-700 font-medium">
-              {lang === 'pt' ? 'Câmbio Oficial MZN' : 'Official MZN Rates'}
+              {lang === 'pt' ? 'Câmbio em Tempo Real' : 'Live Forex Rates'}
             </span>
           </div>
 
@@ -240,7 +212,7 @@ export default function BancoMocFinancialSuite({
                     setSidebarTab('converter');
                     setIsSidebarOpen(true);
                   }}
-                  title={lang === 'pt' ? 'Clique para abrir no conversor' : 'Click to open in converter'}
+                  title={lang === 'pt' ? `Clique para converter ${item.code} (Compra: ${item.buy} | Venda: ${item.sell})` : `Click to convert ${item.code}`}
                 >
                   <span className="text-sm sm:text-base">{item.flag}</span>
                   <span className="font-bold text-slate-900">{item.code}</span>
@@ -261,12 +233,23 @@ export default function BancoMocFinancialSuite({
 
           {/* Action Quick Links & Controls */}
           <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0 text-xs font-mono">
+            {/* Continuous Live Pulse Indicator */}
+            {autoUpdate && (
+              <span
+                className="hidden lg:inline-flex items-center space-x-1 px-2 py-1 bg-emerald-50 border border-emerald-300 text-emerald-800 text-[10px] font-bold"
+                title={lang === 'pt' ? `Atualização contínua ativa (${nextUpdateCountdown}s para próxima cotação)` : `Continuous update active (${nextUpdateCountdown}s)`}
+              >
+                <Radio className="w-3 h-3 text-emerald-600 animate-pulse" />
+                <span>{nextUpdateCountdown}s</span>
+              </span>
+            )}
+
             <button
-              id="btn-refresh-bm-rates"
+              id="btn-refresh-rates"
               onClick={handleRefreshData}
               disabled={isRefreshing}
               className="h-7 sm:h-8 w-7 sm:w-8 flex items-center justify-center bg-white hover:bg-amber-100 border border-slate-300 hover:border-amber-500 text-slate-700 hover:text-amber-900 transition-colors cursor-pointer flex-shrink-0 shadow-xs"
-              title={lang === 'pt' ? 'Atualizar Cotações' : 'Refresh Rates'}
+              title={lang === 'pt' ? 'Atualizar Cotações Agora' : 'Refresh Rates Now'}
             >
               <RefreshCw className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${isRefreshing ? 'animate-spin text-amber-600' : ''}`} />
             </button>
@@ -277,7 +260,7 @@ export default function BancoMocFinancialSuite({
               className="h-7 sm:h-8 px-2 sm:px-3.5 bg-amber-500 hover:bg-amber-600 text-slate-950 text-[10px] sm:text-xs font-bold uppercase tracking-wider flex items-center space-x-1.5 sm:space-x-2 transition-all shadow-xs cursor-pointer whitespace-nowrap flex-shrink-0"
             >
               <ArrowRightLeft className="w-3 h-3 sm:w-3.5 sm:h-3.5 flex-shrink-0" />
-              <span className="hidden sm:inline">{lang === 'pt' ? 'Mercado & Conversor' : 'Market & Converter'}</span>
+              <span className="hidden sm:inline">{lang === 'pt' ? 'Câmbio Access Bank' : 'Access Bank Forex'}</span>
               <span className="sm:hidden">{lang === 'pt' ? 'Câmbio' : 'Rates'}</span>
             </button>
 
@@ -307,16 +290,16 @@ export default function BancoMocFinancialSuite({
         id="btn-float-sidebar-toggle"
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
         className="fixed right-0 top-1/2 -translate-y-1/2 z-40 bg-white hover:bg-slate-50 border-l-4 border-y border-amber-500 text-slate-900 px-2 py-4 shadow-xl flex flex-col items-center space-y-2 cursor-pointer transition-all group hover:pr-3"
-        title={lang === 'pt' ? 'Abrir Mercado Financeiro & Conversor (Banco de Moçambique)' : 'Open Financial Market & Converter'}
+        title={lang === 'pt' ? 'Abrir Câmbio Access Bank Moçambique' : 'Open Access Bank Forex'}
       >
         <Building2 className="w-4 h-4 text-amber-600 group-hover:scale-110 transition-transform" />
         <span className="text-[11px] font-mono uppercase font-bold tracking-widest [writing-mode:vertical-lr] rotate-180 py-1 text-slate-800">
-          {lang === 'pt' ? 'MERCADO FINANCEIRO BM' : 'BM FINANCIAL MARKET'}
+          {lang === 'pt' ? 'CÂMBIO ACCESS BANK' : 'ACCESS BANK FOREX'}
         </span>
         <ChevronRight className={`w-3.5 h-3.5 text-amber-600 transition-transform ${isSidebarOpen ? 'rotate-180' : ''}`} />
       </button>
 
-      {/* 3. DEDICATED SLIDE-OVER SIDEBAR FOR FINANCIAL & MONETARY MARKET */}
+      {/* 3. DEDICATED SLIDE-OVER SIDEBAR FOR ACCESS BANK FOREX */}
       {isSidebarOpen && (
         <div className="fixed inset-0 z-50 overflow-hidden">
           {/* Backdrop */}
@@ -337,10 +320,10 @@ export default function BancoMocFinancialSuite({
                     </div>
                     <div>
                       <h3 className="font-display text-lg font-bold text-slate-900 tracking-wide">
-                        {lang === 'pt' ? 'Mercado Financeiro' : 'Financial Market'}
+                        {lang === 'pt' ? 'Câmbio & Conversor' : 'Forex & Converter'}
                       </h3>
                       <p className="text-xs font-mono text-amber-800 uppercase tracking-wider font-bold">
-                        {lang === 'pt' ? 'Banco de Moçambique (BM)' : 'Bank of Mozambique'}
+                        {lang === 'pt' ? 'Access Bank Moçambique' : 'Access Bank Mozambique'}
                       </p>
                     </div>
                   </div>
@@ -353,42 +336,52 @@ export default function BancoMocFinancialSuite({
                   </button>
                 </div>
 
+                {/* Status toast message */}
+                {statusMessage && (
+                  <div className="mb-3 px-3 py-1.5 bg-emerald-100 border border-emerald-400 text-emerald-900 text-xs font-mono font-bold flex items-center justify-between animate-fade-in">
+                    <div className="flex items-center space-x-1.5">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
+                      <span>{statusMessage}</span>
+                    </div>
+                  </div>
+                )}
+
                 {/* Sidebar Navigation Tabs */}
                 <div className="grid grid-cols-3 gap-1 bg-slate-200 p-1 border border-slate-300 text-xs font-mono uppercase font-bold">
                   <button
                     onClick={() => setSidebarTab('converter')}
-                    className={`py-2 flex items-center justify-center space-x-1.5 transition-colors cursor-pointer ${
+                    className={`py-2 flex items-center justify-center space-x-1 transition-colors cursor-pointer ${
                       sidebarTab === 'converter'
                         ? 'bg-amber-500 text-slate-950 shadow-xs'
                         : 'text-slate-700 hover:bg-slate-300'
                     }`}
                   >
                     <Calculator className="w-3.5 h-3.5" />
-                    <span>{lang === 'pt' ? 'Conversor' : 'Converter'}</span>
-                  </button>
-
-                  <button
-                    onClick={() => setSidebarTab('indicators')}
-                    className={`py-2 flex items-center justify-center space-x-1.5 transition-colors cursor-pointer ${
-                      sidebarTab === 'indicators'
-                        ? 'bg-amber-500 text-slate-950 shadow-xs'
-                        : 'text-slate-700 hover:bg-slate-300'
-                    }`}
-                  >
-                    <Percent className="w-3.5 h-3.5" />
-                    <span>{lang === 'pt' ? 'Indicadores' : 'Rates & GDP'}</span>
+                    <span className="text-[11px]">{lang === 'pt' ? 'Conversor' : 'Convert'}</span>
                   </button>
 
                   <button
                     onClick={() => setSidebarTab('table')}
-                    className={`py-2 flex items-center justify-center space-x-1.5 transition-colors cursor-pointer ${
+                    className={`py-2 flex items-center justify-center space-x-1 transition-colors cursor-pointer ${
                       sidebarTab === 'table'
                         ? 'bg-amber-500 text-slate-950 shadow-xs'
                         : 'text-slate-700 hover:bg-slate-300'
                     }`}
                   >
                     <Coins className="w-3.5 h-3.5" />
-                    <span>{lang === 'pt' ? 'Cotações' : 'Rates Table'}</span>
+                    <span className="text-[11px]">{lang === 'pt' ? 'Cotações' : 'Rates'}</span>
+                  </button>
+
+                  <button
+                    onClick={() => setSidebarTab('live_settings')}
+                    className={`py-2 flex items-center justify-center space-x-1 transition-colors cursor-pointer ${
+                      sidebarTab === 'live_settings'
+                        ? 'bg-amber-500 text-slate-950 shadow-xs'
+                        : 'text-slate-700 hover:bg-slate-300'
+                    }`}
+                  >
+                    <Sliders className="w-3.5 h-3.5" />
+                    <span className="text-[11px]">{lang === 'pt' ? 'Contínuo' : 'Live Sync'}</span>
                   </button>
                 </div>
               </div>
@@ -471,7 +464,7 @@ export default function BancoMocFinancialSuite({
                     {/* Rate type selection */}
                     <div>
                       <label className="block text-xs font-mono text-slate-700 mb-1 uppercase font-bold">
-                        {lang === 'pt' ? 'Cotação de Referência BM:' : 'BM Exchange Rate:'}
+                        {lang === 'pt' ? 'Modalidade de Cotação Bancária:' : 'Banking Rate Type:'}
                       </label>
                       <div className="grid grid-cols-3 gap-1.5 text-xs font-mono">
                         {(['mid', 'buy', 'sell'] as const).map((mode) => (
@@ -534,126 +527,17 @@ export default function BancoMocFinancialSuite({
                   </div>
                 )}
 
-                {/* TAB 2: ECONOMIC INDICATORS & INTEREST RATES */}
-                {sidebarTab === 'indicators' && (
-                  <div className="space-y-5 animate-fade-in">
-                    
-                    {/* Interest Rates Box */}
-                    <div className="bg-slate-50 border border-slate-300 p-4 shadow-xs">
-                      <div className="flex items-center space-x-2 mb-3 pb-2 border-b border-slate-200">
-                        <Percent className="w-4 h-4 text-amber-700" />
-                        <h4 className="text-xs font-mono uppercase text-slate-900 font-bold">
-                          {lang === 'pt' ? 'Taxas de Juros do Banco de Moçambique' : 'Bank of Mozambique Interest Rates'}
-                        </h4>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-2.5">
-                        <div className="bg-white p-3 border-2 border-amber-400">
-                          <span className="text-xs font-mono text-amber-900 uppercase block font-bold">
-                            {lang === 'pt' ? 'Prime Rate' : 'Prime Rate'}
-                          </span>
-                          <span className="font-mono text-2xl font-bold text-slate-950 block">
-                            {ECONOMIC_INDICATORS.rates.primeRate}%
-                          </span>
-                          <span className="text-[11px] text-slate-600 block font-mono font-medium">
-                            {lang === 'pt' ? 'Banca Nacional' : 'Commercial Banking'}
-                          </span>
-                        </div>
-
-                        <div className="bg-white p-3 border border-slate-300">
-                          <span className="text-xs font-mono text-slate-800 uppercase block font-bold">
-                            {lang === 'pt' ? 'Taxa MIMO' : 'MIMO Rate'}
-                          </span>
-                          <span className="font-mono text-2xl font-bold text-slate-900 block">
-                            {ECONOMIC_INDICATORS.rates.mimo}%
-                          </span>
-                          <span className="text-[11px] text-slate-600 block font-mono font-medium">
-                            {lang === 'pt' ? 'Política Monetária' : 'Monetary Policy'}
-                          </span>
-                        </div>
-
-                        <div className="bg-white p-3 border border-slate-300">
-                          <span className="text-xs font-mono text-slate-800 uppercase block font-bold">
-                            {lang === 'pt' ? 'Taxa FPC' : 'FPC Rate'}
-                          </span>
-                          <span className="font-mono text-xl font-bold text-slate-900 block">
-                            {ECONOMIC_INDICATORS.rates.fpc}%
-                          </span>
-                          <span className="text-[11px] text-slate-600 block font-mono font-medium">
-                            {lang === 'pt' ? 'Cedência Liquidez' : 'Lending Facility'}
-                          </span>
-                        </div>
-
-                        <div className="bg-white p-3 border border-slate-300">
-                          <span className="text-xs font-mono text-slate-800 uppercase block font-bold">
-                            {lang === 'pt' ? 'Taxa FPD' : 'FPD Rate'}
-                          </span>
-                          <span className="font-mono text-xl font-bold text-slate-900 block">
-                            {ECONOMIC_INDICATORS.rates.fpd}%
-                          </span>
-                          <span className="text-[11px] text-slate-600 block font-mono font-medium">
-                            {lang === 'pt' ? 'Depósito Permanente' : 'Deposit Facility'}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Macro Economic Metrics */}
-                    <div className="space-y-2.5">
-                      <div className="bg-slate-50 p-3.5 border border-slate-300 flex items-center justify-between">
-                        <div>
-                          <span className="text-xs font-mono text-slate-700 uppercase block font-bold">
-                            {lang === 'pt' ? 'Inflação Mensal (INE/BM)' : 'Monthly Inflation'}
-                          </span>
-                          <span className="text-xs font-mono text-slate-600 mt-0.5 block">
-                            {lang === 'pt' ? 'Variação mensal de preços' : 'Monthly CPI variation'}
-                          </span>
-                        </div>
-                        <span className="font-mono text-xl font-bold text-slate-950">
-                          +{ECONOMIC_INDICATORS.inflationMonthly}%
-                        </span>
-                      </div>
-
-                      <div className="bg-slate-50 p-3.5 border border-slate-300 flex items-center justify-between">
-                        <div>
-                          <span className="text-xs font-mono text-slate-700 uppercase block font-bold">
-                            {lang === 'pt' ? 'Inflação Homóloga' : 'Annual Inflation'}
-                          </span>
-                          <span className="text-xs font-mono text-slate-600 mt-0.5 block">
-                            {lang === 'pt' ? 'Taxa anual acumulada' : 'Annual cumulative rate'}
-                          </span>
-                        </div>
-                        <span className="font-mono text-xl font-bold text-emerald-700">
-                          {ECONOMIC_INDICATORS.inflationAnnual}%
-                        </span>
-                      </div>
-
-                      <div className="bg-slate-50 p-3.5 border border-slate-300 flex items-center justify-between">
-                        <div>
-                          <span className="text-xs font-mono text-slate-700 uppercase block font-bold">
-                            {lang === 'pt' ? 'Variação Trimestral PIB' : 'Real GDP Growth'}
-                          </span>
-                          <span className="text-xs font-mono text-slate-600 mt-0.5 block">
-                            {lang === 'pt' ? 'Crescimento real da economia' : 'Real economic growth'}
-                          </span>
-                        </div>
-                        <span className="font-mono text-xl font-bold text-emerald-700">
-                          +{ECONOMIC_INDICATORS.gdpQuarterly}%
-                        </span>
-                      </div>
-                    </div>
-
-                  </div>
-                )}
-
-                {/* TAB 3: EXCHANGE RATES TABLE */}
+                {/* TAB 2: EXCHANGE RATES TABLE (WITH ACCESS BANK HIGHLIGHTS) */}
                 {sidebarTab === 'table' && (
                   <div className="space-y-4 animate-fade-in">
                     <div className="flex items-center justify-between text-xs font-mono">
-                      <span className="text-amber-800 font-bold uppercase">
-                        {lang === 'pt' ? 'Cotações Oficiais MZN' : 'Official MZN Rates'}
-                      </span>
-                      <span className="text-xs text-slate-600 font-semibold">{lastUpdatedTime}</span>
+                      <div className="flex items-center space-x-1.5">
+                        <span className={`w-2 h-2 rounded-full ${autoUpdate ? 'bg-emerald-500 animate-ping' : 'bg-slate-400'}`}></span>
+                        <span className="text-amber-900 font-bold uppercase">
+                          {lang === 'pt' ? 'Taxas Oficiais Access Bank' : 'Official Access Bank Rates'}
+                        </span>
+                      </div>
+                      <span className="text-[11px] text-slate-600 font-semibold">{metadata.lastUpdatedFormatted}</span>
                     </div>
 
                     <div className="overflow-x-auto bg-slate-50 border border-slate-300 p-2">
@@ -664,6 +548,7 @@ export default function BancoMocFinancialSuite({
                             <th className="pb-2 font-bold text-right">{lang === 'pt' ? 'Compra' : 'Buy'}</th>
                             <th className="pb-2 font-bold text-right">{lang === 'pt' ? 'Venda' : 'Sell'}</th>
                             <th className="pb-2 font-bold text-right">{lang === 'pt' ? 'Média' : 'Mid'}</th>
+                            <th className="pb-2 font-bold text-right">{lang === 'pt' ? '24h' : '24h'}</th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-200">
@@ -680,20 +565,152 @@ export default function BancoMocFinancialSuite({
                             >
                               <td className="py-2.5 font-bold text-slate-950 flex items-center space-x-1.5">
                                 <span className="text-base">{r.flag}</span>
-                                <span className="text-amber-900 font-bold">{r.code}</span>
+                                <div>
+                                  <span className="text-amber-900 font-bold block">{r.code}</span>
+                                  <span className="text-[10px] text-slate-500 font-normal">{r.name[lang]}</span>
+                                </div>
                               </td>
                               <td className="py-2.5 text-right text-slate-800 font-medium">{r.buy.toFixed(2)}</td>
                               <td className="py-2.5 text-right text-slate-800 font-medium">{r.sell.toFixed(2)}</td>
                               <td className="py-2.5 text-right font-bold text-slate-950">{r.mid.toFixed(2)}</td>
+                              <td className="py-2.5 text-right font-bold">
+                                <span className={r.change24h >= 0 ? 'text-emerald-700' : 'text-rose-700'}>
+                                  {r.change24h >= 0 ? `+${r.change24h}%` : `${r.change24h}%`}
+                                </span>
+                              </td>
                             </tr>
                           ))}
                         </tbody>
                       </table>
                     </div>
 
-                    <p className="text-xs font-mono text-slate-600">
-                      * {lang === 'pt' ? 'Clique em qualquer moeda para efetuar cálculos no conversor.' : 'Click on any currency to convert.'}
-                    </p>
+                    <div className="bg-amber-50/80 border border-amber-300 p-3 text-xs font-mono text-slate-700 flex items-start space-x-2">
+                      <Info className="w-4 h-4 text-amber-800 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <p className="font-bold text-amber-950">
+                          {lang === 'pt' ? 'Fonte Oficial:' : 'Official Source:'} Access Bank Moçambique
+                        </p>
+                        <p className="text-[11px] text-slate-600 mt-0.5">
+                          {lang === 'pt' 
+                            ? 'Valores oficiais extraídos e sincronizados diretamente do portal Access Bank Moçambique. Todas as cotações são em Meticais (MZN).' 
+                            : 'Official rates extracted and synchronized directly from Access Bank Mozambique. All rates in Meticais (MZN).'}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* TAB 3: CONTINUOUS LIVE SYNC SETTINGS */}
+                {sidebarTab === 'live_settings' && (
+                  <div className="space-y-5 animate-fade-in">
+                    
+                    {/* Auto Update Switch Card */}
+                    <div className="bg-slate-50 border border-slate-300 p-4 shadow-xs space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="text-xs font-mono uppercase text-slate-900 font-bold flex items-center space-x-1.5">
+                            <Radio className={`w-4 h-4 ${autoUpdate ? 'text-emerald-600 animate-pulse' : 'text-slate-400'}`} />
+                            <span>{lang === 'pt' ? 'Atualização Contínua em Tempo Real' : 'Continuous Live Updates'}</span>
+                          </h4>
+                          <p className="text-[11px] text-slate-600 font-mono mt-0.5">
+                            {lang === 'pt'
+                              ? 'Mantém as taxas sincronizadas em background entre todos os utilizadores.'
+                              : 'Keeps forex rates synchronized in background across all users.'}
+                          </p>
+                        </div>
+
+                        <label className="relative inline-flex items-center cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={autoUpdate}
+                            onChange={(e) => setAutoUpdate(e.target.checked)}
+                            className="sr-only peer"
+                          />
+                          <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
+                        </label>
+                      </div>
+
+                      {/* Interval Selector */}
+                      <div>
+                        <label className="block text-xs font-mono text-slate-700 mb-1.5 uppercase font-bold">
+                          {lang === 'pt' ? 'Frequência de Atualização:' : 'Update Frequency:'}
+                        </label>
+                        <div className="grid grid-cols-4 gap-1.5 text-xs font-mono">
+                          {[
+                            { label: '15s', sec: 15 },
+                            { label: '30s', sec: 30 },
+                            { label: '1 min', sec: 60 },
+                            { label: '5 min', sec: 300 }
+                          ].map((freq) => (
+                            <button
+                              key={freq.sec}
+                              onClick={() => setRefreshInterval(freq.sec)}
+                              className={`py-2 border font-bold text-center transition-colors cursor-pointer ${
+                                refreshInterval === freq.sec
+                                  ? 'bg-amber-500 text-slate-950 border-amber-600'
+                                  : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'
+                              }`}
+                            >
+                              {freq.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Countdown & Status */}
+                      {autoUpdate && (
+                        <div className="p-3 bg-emerald-50 border border-emerald-300 text-emerald-900 text-xs font-mono flex items-center justify-between">
+                          <div className="flex items-center space-x-2">
+                            <Clock className="w-4 h-4 text-emerald-600 animate-spin" />
+                            <span>{lang === 'pt' ? 'Próxima verificação em:' : 'Next check in:'}</span>
+                          </div>
+                          <span className="font-bold text-sm">{nextUpdateCountdown} segundos</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Actions Panel */}
+                    <div className="space-y-2">
+                      <button
+                        onClick={handleRefreshData}
+                        disabled={isRefreshing}
+                        className="w-full py-3 bg-amber-500 hover:bg-amber-600 text-slate-950 font-mono font-bold text-xs uppercase tracking-wider flex items-center justify-center space-x-2 transition-colors cursor-pointer shadow-xs disabled:opacity-50"
+                      >
+                        <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+                        <span>{lang === 'pt' ? 'Atualizar Agora (Forçar Sincronização)' : 'Refresh Now (Force Sync)'}</span>
+                      </button>
+
+                      <button
+                        onClick={handleResetToAccessBank}
+                        disabled={isRefreshing}
+                        className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 font-mono font-semibold text-xs flex items-center justify-center space-x-2 transition-colors cursor-pointer"
+                      >
+                        <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                        <span>{lang === 'pt' ? 'Restaurar Valores Oficiais Access Bank' : 'Reset to Access Bank Baseline'}</span>
+                      </button>
+                    </div>
+
+                    {/* External Source Box */}
+                    <div className="bg-slate-50 border border-slate-300 p-4 space-y-2 text-xs font-mono">
+                      <h5 className="font-bold text-slate-900 uppercase">
+                        {lang === 'pt' ? 'Portal Oficial de Câmbio:' : 'Official Exchange Portal:'}
+                      </h5>
+                      <div>
+                        <a
+                          href="https://mozambique.accessbankplc.com/pt"
+                          target="_blank"
+                          rel="noreferrer"
+                          className="flex items-center justify-between p-2 bg-white hover:bg-amber-50 border border-slate-300 text-slate-800 font-medium transition-colors"
+                        >
+                          <span className="flex items-center space-x-1.5">
+                            <span>🏦</span>
+                            <span className="font-bold text-amber-900">Access Bank Moçambique</span>
+                          </span>
+                          <ExternalLink className="w-3.5 h-3.5 text-slate-500" />
+                        </a>
+                      </div>
+                    </div>
+
                   </div>
                 )}
 
@@ -703,15 +720,15 @@ export default function BancoMocFinancialSuite({
               <div className="p-4 bg-slate-100 border-t border-slate-300 sticky bottom-0 z-20 text-xs font-mono text-slate-700 flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-700 flex-shrink-0" />
-                  <span className="font-semibold">{lang === 'pt' ? 'Fonte: bancomoc.mz' : 'Source: bancomoc.mz'}</span>
+                  <span className="font-semibold">Access Bank Moçambique</span>
                 </div>
                 <a
-                  href="https://www.bancomoc.mz"
+                  href="https://mozambique.accessbankplc.com/pt"
                   target="_blank"
                   rel="noreferrer"
                   className="text-amber-800 hover:text-amber-950 font-bold flex items-center space-x-1 transition-colors"
                 >
-                  <span>{lang === 'pt' ? 'Portal BM' : 'BM Portal'}</span>
+                  <span>{lang === 'pt' ? 'Aceder Portal' : 'Open Portal'}</span>
                   <ExternalLink className="w-3.5 h-3.5" />
                 </a>
               </div>

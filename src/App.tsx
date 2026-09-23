@@ -10,6 +10,7 @@ import AboutTete from './components/AboutTete';
 import WhereToInvest from './components/WhereToInvest';
 import MineralPotential from './components/MineralPotential';
 import FisheriesAquaculture from './components/FisheriesAquaculture';
+import TourismPotential from './components/TourismPotential';
 import OtherPotentials from './components/OtherPotentials';
 import EnergyPotential from './components/EnergyPotential';
 import ProjectsPortfolio from './components/ProjectsPortfolio';
@@ -20,6 +21,7 @@ import Speakers from './components/Speakers';
 import Agenda from './components/Agenda';
 import RegistrationForm from './components/RegistrationForm';
 import TravelGuide from './components/TravelGuide';
+import FAQ from './components/FAQ';
 import Partners from './components/Partners';
 import { Gallery } from './components/Gallery';
 import LiveAttendance from './components/LiveAttendance';
@@ -79,11 +81,13 @@ export default function App() {
         'onde-investir', 
         'potencial-mineral', 
         'pesca-aquacultura', 
+        'potencial-turistico',
         'outros-potenciais', 
         'potencial-energetico', 
         'portfolio-projetos', 
         'area-investidor',
         'about', 
+        'turismo-investimento',
         'tete-profile', 
         'sectors', 
         'speakers', 
@@ -92,6 +96,7 @@ export default function App() {
         'attendance', 
         'registration', 
         'travel', 
+        'faq',
         'admin'
       ];
       const scrollPosition = window.scrollY + 200;
@@ -155,7 +160,7 @@ export default function App() {
       {({ exitSession }) => (
         <div id="root-layout" className="min-h-screen flex flex-col justify-between bg-neutral-50 text-neutral-900 overflow-x-hidden selection:bg-amber-500 selection:text-slate-950">
           
-          {/* FIXED STICKY HEADER (NAVBAR + BANCO DE MOÇAMBIQUE TICKER BAR + ACCESS STATUS BANNER) */}
+          {/* FIXED STICKY HEADER (NAVBAR + ACCESS BANK MOÇAMBIQUE TICKER BAR + ACCESS STATUS BANNER) */}
           <header className="fixed top-0 left-0 right-0 z-50 bg-slate-950 shadow-2xl border-b border-amber-500/20">
             <Navbar
               lang={lang}
@@ -163,7 +168,7 @@ export default function App() {
               onRegisterClick={() => scrollToSection('registration')}
             />
 
-            {/* BANCO DE MOÇAMBIQUE EXCHANGE TICKER CAROUSEL */}
+            {/* ACCESS BANK MOÇAMBIQUE EXCHANGE TICKER CAROUSEL */}
             <BancoMocFinancialSuite 
               lang={lang} 
               isAdminUser={activeCodeRecord?.code === 'ADMIN-DIVA' || activeCodeRecord?.isUnlimited === true}
@@ -220,12 +225,22 @@ export default function App() {
           lang={lang}
         />
 
-        {/* 6. OUTROS POTENCIAIS (Pecuária 5,29M com Cabrito IG, Agricultura 10M acres, Florestas, Turismo, Logística) */}
+        {/* 6. POTENCIAL TURÍSTICO & ECOTURISMO DE TETE - DESTAQUE ESTRATÉGICO DE INVESTIMENTO */}
+        <TourismPotential 
+          lang={lang}
+          onInquireInterest={(subject) => {
+            setSelectedInquiryProject(subject || 'Investimento em Turismo e Eco-Lodges');
+            scrollToSection('area-investidor');
+          }}
+          onViewProjectsClick={() => scrollToSection('portfolio-projetos')}
+        />
+
+        {/* 7. OUTROS POTENCIAIS (Pecuária 5,29M com Cabrito IG, Agricultura 10M hectares, Florestas, Logística) */}
         <OtherPotentials 
           lang={lang}
         />
 
-        {/* 7. POTENCIAL ENERGÉTICO (HCB 2.925 MW, Mphanda Nkuwa 1.500 MW, Boroma 200 MW, Lupata 600 MW) */}
+        {/* 8. POTENCIAL ENERGÉTICO (HCB 2.925 MW, Mphanda Nkuwa 1.500 MW, Boroma 200 MW, Lupata 600 MW) */}
         <EnergyPotential 
           lang={lang}
           onViewProjectsClick={() => scrollToSection('portfolio-projetos')}
@@ -252,7 +267,7 @@ export default function App() {
         {/* 12. OS 6C'S DE TETE */}
         <Sectors lang={lang} />
 
-        {/* 13. ORADORES CONFIRMADOS */}
+        {/* 13. CONVIDADOS DE HONRA */}
         <Speakers lang={lang} />
 
         {/* 14. PROGRAMA OFICIAL CIIT 2026 */}
@@ -280,7 +295,13 @@ export default function App() {
         {/* 18. GUIA DE VIAGEM E HOTÉIS */}
         <TravelGuide lang={lang} />
 
-        {/* 19. PARCEIROS E PATROCINADORES */}
+        {/* 19. PERGUNTAS FREQUENTES (FAQ) */}
+        <FAQ 
+          lang={lang} 
+          onRegisterClick={() => scrollToSection('registration')} 
+        />
+
+        {/* 20. PARCEIROS E PATROCINADORES */}
         <Partners lang={lang} />
 
         {/* 20. ASSISTENTE VIRTUAL DE INVESTIMENTO */}
@@ -368,6 +389,11 @@ export default function App() {
                 <li>
                   <button onClick={() => scrollToSection('registration')} className="hover:text-white transition-colors cursor-pointer text-left">
                     {t.navRegister}
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => scrollToSection('faq')} className="hover:text-white transition-colors cursor-pointer text-left">
+                    FAQ
                   </button>
                 </li>
               </ul>

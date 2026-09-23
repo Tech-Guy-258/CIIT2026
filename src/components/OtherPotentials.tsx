@@ -79,7 +79,7 @@ export default function OtherPotentials({ lang }: OtherPotentialsProps) {
             }`}
           >
             <Sprout className="w-4 h-4" />
-            <span>{lang === 'pt' ? 'Agricultura (10M Acres)' : 'Agriculture (10M Acres)'}</span>
+            <span>{lang === 'pt' ? 'Agricultura (10M Hectares)' : 'Agriculture (10M Hectares)'}</span>
           </button>
 
           <button
@@ -223,7 +223,7 @@ export default function OtherPotentials({ lang }: OtherPotentialsProps) {
                 <div className="space-y-2 text-xs text-slate-700">
                   <div className="flex justify-between py-1 border-b border-slate-100 font-mono">
                     <span className="text-slate-500">{lang === 'pt' ? 'Terra Arável:' : 'Arable Land:'}</span>
-                    <span className="font-bold text-slate-950">10.065.806 acres</span>
+                    <span className="font-bold text-slate-950">10.065.806 hectares</span>
                   </div>
                   <div className="flex justify-between py-1 border-b border-slate-100 font-mono">
                     <span className="text-slate-500">{lang === 'pt' ? 'Recurso Hídrico:' : 'Water Source:'}</span>

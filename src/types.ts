@@ -224,9 +224,28 @@ export interface ProjectItem {
   sectorEn?: string;
   locationType: 'Distrito' | 'Cidade' | 'Província';
   locationTypeEn?: string;
-  investmentType: 'Energia' | 'Infraestrutura' | 'Produção' | 'Processamento' | 'Extração';
+  investmentType: string;
   investmentTypeEn?: string;
   image?: string;
+  // Official APIEX / Ministério da Economia Form Fields
+  projectType?: 'Novo' | 'Expansão' | 'Reabilitação' | string;
+  projectTypeEn?: string;
+  proponent?: string;
+  proponentType?: 'Público' | 'Privado' | 'PPP' | string;
+  proponentLocation?: string;
+  proponentContact?: string;
+  financingMode?: string;
+  financingModeEn?: string;
+  targetMarket?: string;
+  targetMarketEn?: string;
+  feasibilityStudy?: string;
+  feasibilityStudyEn?: string;
+  socialEconomicBenefits?: string;
+  socialEconomicBenefitsEn?: string;
+  basicInfrastructure?: string;
+  basicInfrastructureEn?: string;
+  officialSource?: string;
+  isOfficialForm?: boolean;
 }
 
 export interface SpeciesDistribution {

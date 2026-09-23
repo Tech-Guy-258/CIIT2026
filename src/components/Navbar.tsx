@@ -39,19 +39,21 @@ export default function Navbar({
     { label: (t as any).navWhereToInvest || (lang === 'pt' ? 'Onde Investir' : 'Where to Invest'), href: '#onde-investir' },
     { label: (t as any).navMinerals || (lang === 'pt' ? 'Minérios' : 'Minerals'), href: '#potencial-mineral' },
     { label: (t as any).navFisheries || (lang === 'pt' ? 'Pesca & Água' : 'Fisheries'), href: '#pesca-aquacultura' },
+    { label: lang === 'pt' ? 'Turismo' : 'Tourism', href: '#potencial-turistico' },
     { label: (t as any).navOtherPotentials || (lang === 'pt' ? 'Outros Potenciais' : 'Other Potentials'), href: '#outros-potenciais' },
     { label: (t as any).navEnergy || (lang === 'pt' ? 'Energia' : 'Energy'), href: '#potencial-energetico' }
   ];
 
-  // Row 2: Projetos, Investimento & Conferência CIIT (7 items)
+  // Row 2: Projetos, Investimento & Conferência CIIT (8 items)
   const navRow2 = [
     { label: (t as any).navPortfolio || (lang === 'pt' ? 'Projetos' : 'Projects'), href: '#portfolio-projetos' },
     { label: (t as any).navInvestorArea || (lang === 'pt' ? 'Área do Investidor' : 'Investor Area'), href: '#area-investidor' },
     { label: t.navAgenda, href: '#agenda' },
-    { label: t.navSpeakers, href: '#speakers' },
+    { label: t.navSpeakers, href: '#convidados-honra' },
     { label: t.navGallery || (lang === 'pt' ? 'Galeria' : 'Gallery'), href: '#gallery' },
     { label: (t as any).navAttendance || (lang === 'pt' ? 'Presenças LIVE' : 'Live Attendance'), href: '#attendance' },
-    { label: t.navTravel, href: '#travel' }
+    { label: t.navTravel, href: '#travel' },
+    { label: 'FAQ', href: '#faq' }
   ];
 
   const allNavItems = [...navRow1, ...navRow2];
@@ -145,17 +147,8 @@ export default function Navbar({
             </div>
           </div>
 
-          {/* RIGHT EXTREMITY: REGISTRATION BUTTON & MOBILE TOGGLE */}
+          {/* RIGHT EXTREMITY: MOBILE TOGGLE */}
           <div className="flex items-center space-x-2 flex-shrink-0">
-            {/* CTA Register - Desktop */}
-            <button
-              id="nav-cta-register"
-              onClick={onRegisterClick}
-              className="hidden sm:flex h-10 lg:h-11 xl:h-12 items-center justify-center px-4 xl:px-6 2xl:px-7 rounded-none bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs xl:text-[13px] font-black uppercase tracking-wider shadow-xs active:scale-[0.98] transition-all cursor-pointer whitespace-nowrap border border-amber-600"
-            >
-              {t.navRegister}
-            </button>
-
             {/* MOBILE MENU TOGGLE (< lg) */}
             <button
               id="mobile-menu-btn"

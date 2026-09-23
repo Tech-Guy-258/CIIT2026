@@ -82,18 +82,18 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
     },
     {
       id: 'tchuma-tchato',
-      title: lang === 'pt' ? 'Área de Conservação Tchuma Tchato' : 'Tchuma Tchato Conservation Area',
+      title: lang === 'pt' ? 'Parque Nacional de Mágoè (ex-Tchuma Tchato)' : 'Mágoè National Park (formerly Tchuma Tchato)',
       category: 'wildlife',
-      categoryLabel: lang === 'pt' ? 'Conservação Comunitária' : 'Community Conservation',
+      categoryLabel: lang === 'pt' ? 'Parque Nacional & Conservação' : 'National Park & Wildlife',
       location: 'Distritos de Mágoè e Zumbo',
       image: tchumaTchatoImg,
       description: lang === 'pt'
-        ? 'Pioneiro projeto de gestão comunitária de recursos naturais nas margens do Rio Zambeze e de Cahora Bassa. Une o ecoturismo sustentável, safaris fotográficos e o desenvolvimento económico das comunidades locais.'
-        : 'A pioneering community-based natural resource management project along the Zambezi River and Lake Cahora Bassa, combining sustainable ecotourism, photo safaris, and local development.',
+        ? 'Parque Nacional criado oficialmente a partir do pioneiro programa de gestão comunitária de recursos naturais Tchuma Tchato. Protege mais de 3.500 km² de ecossistemas fluviais do Rio Zambeze e da Albufeira de Cahora Bassa, com safaris, elefantes, leões, búfalos e ecoturismo de luxo.'
+        : 'Formally established as a National Park originating from the pioneering Tchuma Tchato community conservation model. Protects over 3,500 km² along the Zambezi River and Lake Cahora Bassa, featuring photographic safaris, elephants, lions, and high-end ecotourism.',
       highlights: [
-        lang === 'pt' ? 'Gestão comunitária sustentável' : 'Community eco-management',
-        lang === 'pt' ? 'Observação de hipopótamos e crocodilos' : 'Hippo and crocodile watching',
-        lang === 'pt' ? 'Safaris fotográficos no Zambeze' : 'Zambezi photo safaris'
+        lang === 'pt' ? '3.500 km² de Parque Nacional protegido' : '3,500 km² protected national park',
+        lang === 'pt' ? 'Safaris e megafauna da África Austral' : 'Big-game safaris & Southern African fauna',
+        lang === 'pt' ? 'Matriz histórica comunitária Tchuma Tchato' : 'Tchuma Tchato community legacy'
       ]
     },
     {
@@ -441,7 +441,9 @@ export default function TeteProfile({ lang }: TeteProfileProps) {
     : attractions.filter(a => a.category === filterType);
 
   return (
-    <section id="tete-profile" className="py-20 bg-slate-50 text-slate-900 relative border-b border-slate-200 overflow-hidden">
+    <section id="turismo-investimento" className="py-20 bg-slate-50 text-slate-900 relative border-b border-slate-200 overflow-hidden scroll-mt-28">
+      {/* Anchor for backwards compatibility */}
+      <div id="tete-profile" className="absolute -top-28" />
       {/* Background Decorative Pattern */}
       <div className="absolute inset-0 bg-[radial-gradient(#d97706_1px,transparent_1px)] [background-size:32px_32px] opacity-10 pointer-events-none" />
 

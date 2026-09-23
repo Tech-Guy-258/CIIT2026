@@ -243,7 +243,7 @@ export default function Agenda({ lang }: AgendaProps) {
                     <div className="pt-3 flex flex-wrap gap-3 items-center border-t border-gray-100">
                       <span className="text-[10px] uppercase tracking-wider font-mono font-bold text-gray-500 flex items-center space-x-1">
                         <User className="w-3.5 h-3.5 text-gold-600" />
-                        <span>{lang === 'pt' ? 'Intervenientes / Oradores:' : 'Speakers / Panelists:'}</span>
+                        <span>{lang === 'pt' ? 'Intervenientes & Convidados de Honra:' : 'Dignitaries & Speakers:'}</span>
                       </span>
                       <div className="flex flex-wrap gap-2">
                         {session.speakerIds.map((speakerId) => {

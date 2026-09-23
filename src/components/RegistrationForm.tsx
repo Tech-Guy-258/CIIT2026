@@ -66,14 +66,14 @@ export default function RegistrationForm({ lang, onRegisterSuccess }: Registrati
   const sectors = lang === 'pt' ? [
     'Carvão (Mineração & Riqueza Mineral)',
     'Cahora Bassa (Hidroelétrica & Energia Vital)',
-    'Calor / Crocodilo (Energia Solar & Tradição do Zambeze)',
+    'Calor (Energia Solar, Alta Insolação & Renováveis)',
     'Cabrito (Gastronomia & Pecuária de Excelência)',
     'Chicoa (Peixe Seco Tradicional & Região Histórica)',
     'Capenta (Pesca no Zambeze & Aquacultura)'
   ] : [
     'Carvão / Coal (Mining & Mineral Wealth)',
     'Cahora Bassa (Hydropower & Vital Energy)',
-    'Calor / Crocodilo (Solar Energy & Zambezi Legacy)',
+    'Calor (Solar Energy, High Irradiance & Renewables)',
     'Cabrito (Local Gastronomy & Elite Livestock)',
     'Chicoa (Traditional Dried Fish & Heritage)',
     'Capenta (Zambezi Fisheries & Aquaculture)'

@@ -24,7 +24,8 @@ import {
 } from 'lucide-react';
 import { 
   TETE_ABOUT_METRICS, 
-  WHY_INVEST_TETE 
+  WHY_INVEST_TETE,
+  TETE_KEY_INDICATORS
 } from '../teteInvestmentData';
 import { 
   DISTRICTS_DETAILED_DATA, 
@@ -107,54 +108,34 @@ export default function AboutTete({ lang, onExplorePortfolio, onInquireInterest 
           </p>
         </div>
 
-        {/* RIGOROUS PROVINCIAL METRICS GRID */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-          <div className="bg-slate-50 border border-slate-200 p-5 text-left">
-            <span className="text-xs font-mono uppercase tracking-wider text-slate-500 font-bold block mb-1">
-              {lang === 'pt' ? 'Área Territorial' : 'Land Area'}
-            </span>
-            <div className="text-2xl sm:text-3xl font-display font-black text-slate-950">
-              {TETE_ABOUT_METRICS.area}
-            </div>
-            <span className="text-xs text-amber-700 font-semibold mt-1 block">
-              {lang === 'pt' ? TETE_ABOUT_METRICS.areaRank : '3rd largest by area'}
+        {/* RIGOROUS STRATEGIC PROVINCIAL INDICATORS GRID (RELOCATED FROM HERO & DEDUPLICATED) */}
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-xs font-mono uppercase tracking-widest text-slate-500 font-bold">
+              {lang === 'pt' ? 'Indicadores Estratégicos Oficiais da Província de Tete' : 'Official Strategic Indicators of Tete Province'}
+            </h3>
+            <span className="text-[11px] font-mono text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 font-bold">
+              {lang === 'pt' ? '6 Dimensões-Chave' : '6 Key Dimensions'}
             </span>
           </div>
 
-          <div className="bg-slate-50 border border-slate-200 p-5 text-left">
-            <span className="text-xs font-mono uppercase tracking-wider text-slate-500 font-bold block mb-1">
-              {lang === 'pt' ? 'Terra Arável' : 'Arable Land'}
-            </span>
-            <div className="text-2xl sm:text-3xl font-display font-black text-slate-950">
-              {TETE_ABOUT_METRICS.arableLand}
-            </div>
-            <span className="text-xs text-slate-600 mt-1 block">
-              {lang === 'pt' ? 'Elevada fertilidade e regadio' : 'High fertility & irrigation'}
-            </span>
-          </div>
-
-          <div className="bg-slate-50 border border-slate-200 p-5 text-left">
-            <span className="text-xs font-mono uppercase tracking-wider text-slate-500 font-bold block mb-1">
-              {lang === 'pt' ? 'População Total' : 'Total Population'}
-            </span>
-            <div className="text-2xl sm:text-3xl font-display font-black text-slate-950">
-              {TETE_ABOUT_METRICS.population}
-            </div>
-            <span className="text-xs text-amber-700 font-semibold mt-1 block">
-              {lang === 'pt' ? `${TETE_ABOUT_METRICS.activePopulation} ativa (PEA)` : `${TETE_ABOUT_METRICS.activePopulation} active pop`}
-            </span>
-          </div>
-
-          <div className="bg-slate-50 border border-slate-200 p-5 text-left">
-            <span className="text-xs font-mono uppercase tracking-wider text-slate-500 font-bold block mb-1">
-              {lang === 'pt' ? 'Águas Interiores' : 'Inland Waters'}
-            </span>
-            <div className="text-2xl sm:text-3xl font-display font-black text-slate-950">
-              {TETE_ABOUT_METRICS.inlandWaters}
-            </div>
-            <span className="text-xs text-slate-600 mt-1 block">
-              {lang === 'pt' ? `${TETE_ABOUT_METRICS.cahoraBassaWaters} na Albufeira HCB` : `${TETE_ABOUT_METRICS.cahoraBassaWaters} in HCB reservoir`}
-            </span>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+            {TETE_KEY_INDICATORS.map((indicator) => (
+              <div
+                key={indicator.id}
+                className="bg-slate-50 border-2 border-slate-200 hover:border-amber-400 p-4 sm:p-5 text-left transition-all duration-200 group"
+              >
+                <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 font-bold block mb-1 group-hover:text-amber-800">
+                  {lang === 'pt' ? indicator.label : indicator.labelEn}
+                </span>
+                <div className="text-xl sm:text-2xl lg:text-3xl font-display font-black text-slate-950 tracking-tight">
+                  {indicator.value}
+                </div>
+                <span className="text-[11px] text-slate-600 mt-1.5 block font-medium leading-tight">
+                  {lang === 'pt' ? indicator.subtext : indicator.subtextEn}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
 
