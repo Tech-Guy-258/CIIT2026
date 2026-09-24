@@ -77,57 +77,64 @@ class AccessControlService {
   async initializeStarterCodes(): Promise<void> {
     if (this.isInitialized) return;
     try {
-      const now = Date.now();
-      // Ensure strictly ADMIN-DIVA and APRESENTACAO-CIIT exist
-      for (const starter of DEFAULT_STARTER_CODES) {
-        const docRef = doc(db, COLLECTION_NAME, starter.code);
-        const docSnap = await getDoc(docRef);
-        if (!docSnap.exists()) {
-          const initialRecord: AccessCodeRecord = {
-            id: starter.code,
-            code: starter.code,
-            label: starter.label,
-            status: starter.isUnlimited ? 'active' : 'unactivated',
-            activatedAt: starter.isUnlimited ? now : null,
-            expiresAt: starter.isUnlimited ? null : null,
-            createdAt: now,
-            revokedAt: null,
-            maxHours: starter.maxHours || (starter.isUnlimited ? 0 : 24),
-            isUnlimited: !!starter.isUnlimited,
-            notes: starter.notes || (starter.isUnlimited 
-              ? 'Código Super Administrador Oficial (Acesso Ilimitado e Acesso ao Painel Admin)' 
-              : 'Código Oficial de Apresentação CIIT 2026'),
-          };
-          await setDoc(docRef, initialRecord);
-        } else {
-          // If ADMIN-DIVA already exists, ensure isUnlimited is true
-          if (starter.code === 'ADMIN-DIVA') {
-            const data = docSnap.data() as AccessCodeRecord;
-            if (!data.isUnlimited || data.status !== 'active') {
-              await updateDoc(docRef, {
-                isUnlimited: true,
-                status: 'active',
-                expiresAt: null,
-                label: starter.label
-              }).catch(() => {});
-            }
-          }
-        }
-      }
-
-      // Automatically clean obsolete starter codes from initial deployments
-      const obsoleteCodes = ['CIIT-2026', 'CIIT-2026-VIP', 'TETE-INVEST-24H', 'GOV-TETE-2026', 'DEMO-PASS'];
-      for (const obsCode of obsoleteCodes) {
-        const obsRef = doc(db, COLLECTION_NAME, obsCode);
-        const obsSnap = await getDoc(obsRef);
-        if (obsSnap.exists()) {
-          await deleteDoc(obsRef).catch(() => {});
-        }
-      }
-
+      // Set a strict 2.5s timeout so slow or blocked Firestore connections never hang page load
+      await Promise.race([
+        this._executeStarterCodesSync(),
+        new Promise((resolve) => setTimeout(resolve, 2500))
+      ]);
       this.isInitialized = true;
     } catch (err) {
       console.warn('Could not initialize starter codes on Firestore (might be offline or rule restricted):', err);
+    }
+  }
+
+  private async _executeStarterCodesSync(): Promise<void> {
+    const now = Date.now();
+    // Ensure strictly ADMIN-DIVA and APRESENTACAO-CIIT exist
+    for (const starter of DEFAULT_STARTER_CODES) {
+      const docRef = doc(db, COLLECTION_NAME, starter.code);
+      const docSnap = await getDoc(docRef);
+      if (!docSnap.exists()) {
+        const initialRecord: AccessCodeRecord = {
+          id: starter.code,
+          code: starter.code,
+          label: starter.label,
+          status: starter.isUnlimited ? 'active' : 'unactivated',
+          activatedAt: starter.isUnlimited ? now : null,
+          expiresAt: starter.isUnlimited ? null : null,
+          createdAt: now,
+          revokedAt: null,
+          maxHours: starter.maxHours || (starter.isUnlimited ? 0 : 24),
+          isUnlimited: !!starter.isUnlimited,
+          notes: starter.notes || (starter.isUnlimited 
+            ? 'Código Super Administrador Oficial (Acesso Ilimitado e Acesso ao Painel Admin)' 
+            : 'Código Oficial de Apresentação CIIT 2026'),
+        };
+        await setDoc(docRef, initialRecord);
+      } else {
+        // If ADMIN-DIVA already exists, ensure isUnlimited is true
+        if (starter.code === 'ADMIN-DIVA') {
+          const data = docSnap.data() as AccessCodeRecord;
+          if (!data.isUnlimited || data.status !== 'active') {
+            await updateDoc(docRef, {
+              isUnlimited: true,
+              status: 'active',
+              expiresAt: null,
+              label: starter.label
+            }).catch(() => {});
+          }
+        }
+      }
+    }
+
+    // Automatically clean obsolete starter codes from initial deployments
+    const obsoleteCodes = ['CIIT-2026', 'CIIT-2026-VIP', 'TETE-INVEST-24H', 'GOV-TETE-2026', 'DEMO-PASS'];
+    for (const obsCode of obsoleteCodes) {
+      const obsRef = doc(db, COLLECTION_NAME, obsCode);
+      const obsSnap = await getDoc(obsRef);
+      if (obsSnap.exists()) {
+        await deleteDoc(obsRef).catch(() => {});
+      }
     }
   }
 
@@ -337,6 +344,57 @@ class AccessControlService {
       };
     } catch (err: any) {
       console.error('Firestore access validation error:', err);
+      // Offline / Network fallback for official starter codes if Firestore throws or is unreachable
+      if (code === 'ADMIN-DIVA') {
+        const adminRecord: AccessCodeRecord = {
+          id: 'ADMIN-DIVA',
+          code: 'ADMIN-DIVA',
+          label: 'Administrador Geral Diva (Acesso Ilimitado & Painel Admin)',
+          status: 'active',
+          activatedAt: Date.now(),
+          expiresAt: null,
+          createdAt: Date.now(),
+          lastAccessAt: Date.now(),
+          isUnlimited: true,
+          maxHours: 0,
+          notes: 'Super Administrador Oficial (Acesso Ilimitado e Painel Admin)'
+        };
+        this.saveStoredCode(code);
+        return {
+          allowed: true,
+          reason: 'ACTIVE_VALID',
+          codeRecord: adminRecord,
+          remainingMs: 86400000000,
+          message: 'Acesso de Administrador Geral autorizado com sucesso (Acesso Ilimitado).',
+          messageEn: 'General Administrator access granted (Unlimited Access).'
+        };
+      }
+
+      if (code === 'APRESENTACAO-CIIT') {
+        const presRecord: AccessCodeRecord = {
+          id: 'APRESENTACAO-CIIT',
+          code: 'APRESENTACAO-CIIT',
+          label: 'Passe de Apresentação Oficial CIIT 2026',
+          status: 'active',
+          activatedAt: Date.now(),
+          expiresAt: Date.now() + 24 * 60 * 60 * 1000,
+          createdAt: Date.now(),
+          lastAccessAt: Date.now(),
+          isUnlimited: false,
+          maxHours: 24,
+          notes: 'Código Oficial de Apresentação CIIT 2026'
+        };
+        this.saveStoredCode(code);
+        return {
+          allowed: true,
+          reason: 'ACTIVE_VALID',
+          codeRecord: presRecord,
+          remainingMs: 24 * 60 * 60 * 1000,
+          message: 'Acesso de Apresentação autorizado com sucesso. Validade 24 horas.',
+          messageEn: 'Presentation access granted successfully. Valid 24 hours.'
+        };
+      }
+
       return {
         allowed: false,
         reason: 'NOT_FOUND',

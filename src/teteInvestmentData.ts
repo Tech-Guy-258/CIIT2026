@@ -446,7 +446,7 @@ export const FISHERIES_SPECIES_DISTRIBUTION: SpeciesDistribution[] = [
     scientificName: 'Oreochromis niloticus',
     commonName: 'Tilápia',
     commonNameEn: 'Nile Tilapia',
-    percentage: 93,
+    percentage: 94,
     color: '#0284c7' // sky-600
   },
   {

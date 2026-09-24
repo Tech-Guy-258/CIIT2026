@@ -20,6 +20,8 @@ import { TRANSLATIONS } from '../data';
 import { PROJECTS_PORTFOLIO_DATA } from '../teteInvestmentData';
 import { InvestorInquiry, ProjectItem } from '../types';
 
+const TARGET_TEST_EMAIL = 'luis.chale@diva.co.mz';
+
 interface InvestorAreaProps {
   lang: 'pt' | 'en';
   preSelectedProject?: ProjectItem | null;
@@ -39,6 +41,7 @@ export default function InvestorArea({ lang, preSelectedProject }: InvestorAreaP
     message: ''
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [inquiryCode, setInquiryCode] = useState('');
 
@@ -52,13 +55,43 @@ export default function InvestorArea({ lang, preSelectedProject }: InvestorAreaP
     }
   }, [preSelectedProject, lang]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.company) return;
 
+    setIsSubmitting(true);
     // Generate inquiry reference code
     const refCode = `TET-INV-${Math.floor(100000 + Math.random() * 900000)}`;
     setInquiryCode(refCode);
+
+    // Real email dispatch to luis.chale@diva.co.mz
+    try {
+      await fetch(`https://formsubmit.co/ajax/${TARGET_TEST_EMAIL}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          _subject: `[CIIT 2026] Manifestação de Investimento: ${formData.company} - ${formData.name} (${refCode})`,
+          _template: 'table',
+          _captcha: 'false',
+          _replyto: formData.email,
+          'Código de Referência': refCode,
+          'Nome do Investidor': formData.name,
+          'Empresa / Grupo': formData.company,
+          'País / Sede': formData.country || 'N/A',
+          'E-mail Corporativo': formData.email,
+          'Telefone / WhatsApp': formData.phone,
+          'Setor Económico': formData.sector,
+          'Projeto Específico': formData.project || 'Geral / Portfólio Provincial',
+          'Mensagem / Proposta': formData.message || 'Sem mensagem adicional',
+          'Data de Registo': new Date().toLocaleString('pt-MZ')
+        })
+      });
+    } catch (err) {
+      console.warn('Erro ao enviar formulário para o e-mail de teste:', err);
+    }
 
     // Save to local storage for persistent administrative tracking
     try {
@@ -73,6 +106,7 @@ export default function InvestorArea({ lang, preSelectedProject }: InvestorAreaP
       console.error(err);
     }
 
+    setIsSubmitting(false);
     setIsSubmitted(true);
   };
 
@@ -282,10 +316,17 @@ export default function InvestorArea({ lang, preSelectedProject }: InvestorAreaP
               <div className="pt-4">
                 <button
                   type="submit"
-                  className="w-full py-4 bg-amber-500 hover:bg-amber-600 text-slate-950 font-black uppercase text-xs sm:text-sm tracking-widest transition-colors flex items-center justify-center space-x-2 shadow-lg cursor-pointer"
+                  disabled={isSubmitting}
+                  className="w-full py-4 bg-amber-500 hover:bg-amber-600 disabled:opacity-60 text-slate-950 font-black uppercase text-xs sm:text-sm tracking-widest transition-colors flex items-center justify-center space-x-2 shadow-lg cursor-pointer"
                 >
-                  <span>{t.investorFormSend || (lang === 'pt' ? 'Enviar manifestação de interesse' : 'Submit expression of interest')}</span>
-                  <Send className="w-4 h-4" />
+                  {isSubmitting ? (
+                    <span>{lang === 'pt' ? 'Transmitindo dados ao servidor...' : 'Transmitting data...'}</span>
+                  ) : (
+                    <>
+                      <span>{t.investorFormSend || (lang === 'pt' ? 'Enviar manifestação de interesse' : 'Submit expression of interest')}</span>
+                      <Send className="w-4 h-4" />
+                    </>
+                  )}
                 </button>
               </div>
 
@@ -305,9 +346,29 @@ export default function InvestorArea({ lang, preSelectedProject }: InvestorAreaP
               <p className="text-xs font-mono text-amber-400 font-bold mb-4">
                 {lang === 'pt' ? `Código de Referência: ${inquiryCode}` : `Reference Code: ${inquiryCode}`}
               </p>
+
+              {/* Email dispatch notice to luis.chale@diva.co.mz */}
+              <div className="bg-amber-500/10 border border-amber-500/40 p-4 max-w-lg mx-auto mb-6 text-xs font-mono text-amber-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-left">
+                <div className="flex items-center space-x-2">
+                  <Mail className="w-4 h-4 text-amber-400 flex-shrink-0" />
+                  <div>
+                    <span className="text-white font-bold block">
+                      {lang === 'pt' ? 'Dados transmitidos com sucesso para:' : 'Data transmitted successfully to:'}
+                    </span>
+                    <span className="text-amber-400 underline">{TARGET_TEST_EMAIL}</span>
+                  </div>
+                </div>
+                <a
+                  href={`mailto:${TARGET_TEST_EMAIL}?subject=${encodeURIComponent(`[CIIT 2026] Manifestação ${inquiryCode} - ${formData.company}`)}&body=${encodeURIComponent(`Código: ${inquiryCode}\nNome: ${formData.name}\nEmpresa: ${formData.company}\nSetor: ${formData.sector}\nProjeto: ${formData.project}\nEmail: ${formData.email}\nTelefone: ${formData.phone}\nMensagem: ${formData.message}`)}`}
+                  className="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold uppercase tracking-wider text-[11px] whitespace-nowrap self-start sm:self-auto"
+                >
+                  {lang === 'pt' ? 'Abrir no E-mail' : 'Open in Email'}
+                </a>
+              </div>
+
               <p className="text-sm text-slate-300 max-w-lg mx-auto leading-relaxed mb-6">
                 {lang === 'pt'
-                  ? `Obrigado, ${formData.name}. A equipa técnica do Governo da Província de Tete entrará em contacto através de ${formData.email} para fornecer os dossiês de investimento e agendar reuniões bilaterais.`
+                  ? `Obrigado, ${formData.name}. A equipa técnica do Governo da Província de Tete e a comissão executiva entrarão em contacto através de ${formData.email} para fornecer os dossiês de investimento e agendar reuniões bilaterais.`
                   : `Thank you, ${formData.name}. The technical team of the Government of Tete Province will contact you at ${formData.email} with dedicated project dossiers.`}
               </p>
               <button

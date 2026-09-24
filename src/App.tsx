@@ -160,7 +160,7 @@ export default function App() {
       {({ exitSession }) => (
         <div id="root-layout" className="min-h-screen flex flex-col justify-between bg-neutral-50 text-neutral-900 overflow-x-hidden selection:bg-amber-500 selection:text-slate-950">
           
-          {/* FIXED STICKY HEADER (NAVBAR + ACCESS BANK MOÇAMBIQUE TICKER BAR + ACCESS STATUS BANNER) */}
+          {/* FIXED STICKY HEADER (NAVBAR + BANCO DE MOÇAMBIQUE TICKER BAR + ACCESS STATUS BANNER) */}
           <header className="fixed top-0 left-0 right-0 z-50 bg-slate-950 shadow-2xl border-b border-amber-500/20">
             <Navbar
               lang={lang}
@@ -168,7 +168,7 @@ export default function App() {
               onRegisterClick={() => scrollToSection('registration')}
             />
 
-            {/* ACCESS BANK MOÇAMBIQUE EXCHANGE TICKER CAROUSEL */}
+            {/* BANCO DE MOÇAMBIQUE EXCHANGE TICKER CAROUSEL */}
             <BancoMocFinancialSuite 
               lang={lang} 
               isAdminUser={activeCodeRecord?.code === 'ADMIN-DIVA' || activeCodeRecord?.isUnlimited === true}

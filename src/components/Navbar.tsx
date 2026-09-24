@@ -7,6 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { TRANSLATIONS } from '../data';
 import ciitLogoImg from '../assets/images/ciit_2026_logo_1787657793393.png';
+import mozambiqueEmblem from '../assets/images/Emblema da República/Emblem_of_Mozambique.svg';
 
 interface NavbarProps {
   lang: 'pt' | 'en';
@@ -110,25 +111,45 @@ export default function Navbar({
         isScrolled ? 'py-1 shadow-sm' : 'py-1.5'
       }`}
     >
-      <div className="w-full max-w-[1780px] mx-auto px-3 sm:px-5 lg:px-7">
+      <div className="w-full max-w-[1780px] mx-auto px-2.5 sm:px-5 lg:px-7">
         
-        {/* FULL SCREEN / DESKTOP LAYOUT: EXTREMITIES PINNED + 2 SYMMETRICAL LINES IN CENTER */}
-        <div className="flex items-center justify-between gap-3 lg:gap-6 min-h-[56px] lg:min-h-[64px]">
+        {/* FULL SCREEN / DESKTOP / MOBILE LAYOUT */}
+        <div className="flex items-center justify-between gap-2 lg:gap-6 min-h-[54px] sm:min-h-[58px] lg:min-h-[64px]">
           
-          {/* LEFT EXTREMITY: CIIT 2026 OFFICIAL LOGO */}
-          <div className="flex-shrink-0 flex items-center min-w-0">
+          {/* LEFT EXTREMITY: EMBLEMA DA REPÚBLICA (ALWAYS VISIBLE ACROSS ALL DEVICES) + CIIT 2026 LOGO */}
+          <div className="flex-shrink-0 flex items-center space-x-2 sm:space-x-3 min-w-0">
+            {/* Emblema Oficial da República de Moçambique - Sem exceções, visível em mobile, tablet e desktop */}
+            <a
+              href="#home"
+              id="navbar-national-emblem"
+              onClick={(e) => handleNavClick(e, '#home')}
+              className="flex items-center flex-shrink-0 group"
+              title="República de Moçambique - Governo da Província de Tete"
+              aria-label="Emblema da República de Moçambique"
+            >
+              <img
+                src={mozambiqueEmblem}
+                alt="Emblema da República de Moçambique"
+                className="h-8 sm:h-10 lg:h-12 w-auto object-contain drop-shadow-xs transition-transform duration-200 group-hover:scale-105 flex-shrink-0"
+              />
+            </a>
+
+            {/* Separador vertical de identidade institucional */}
+            <div className="h-6 sm:h-7 lg:h-8 w-[1px] bg-slate-300 flex-shrink-0" />
+
+            {/* CIIT 2026 Brand Logo */}
             <a
               href="#home"
               id="navbar-brand-home-btn"
               onClick={(e) => handleNavClick(e, '#home')}
-              className="group flex items-center py-1 transition-all duration-200 hover:opacity-95 active:scale-95 focus:outline-none"
-              title={lang === 'pt' ? 'CIIT 2026 - Início' : 'CIIT 2026 - Home'}
+              className="group flex items-center py-1 transition-all duration-200 hover:opacity-95 active:scale-95 focus:outline-none flex-shrink-0"
+              title={lang === 'pt' ? 'CIIT 2026 - Tete no Horizonte de Investimentos' : 'CIIT 2026 - Home'}
               aria-label="CIIT 2026 Home"
             >
               <img
                 src={ciitLogoImg}
                 alt="CIIT 2026 - Conferência Internacional de Investimentos de Tete"
-                className="h-10 sm:h-11 lg:h-12 xl:h-13 w-auto max-w-[150px] sm:max-w-[190px] xl:max-w-[220px] object-contain drop-shadow-xs transition-transform duration-200 group-hover:scale-102"
+                className="h-7 sm:h-9 lg:h-11 xl:h-12 w-auto max-w-[125px] xs:max-w-[155px] sm:max-w-[190px] xl:max-w-[220px] object-contain drop-shadow-xs transition-transform duration-200 group-hover:scale-102 flex-shrink-0"
                 referrerPolicy="no-referrer"
               />
             </a>
@@ -147,13 +168,19 @@ export default function Navbar({
             </div>
           </div>
 
-          {/* RIGHT EXTREMITY: MOBILE TOGGLE */}
+          {/* RIGHT EXTREMITY: OFFICIAL MOTTO BADGE & MOBILE TOGGLE */}
           <div className="flex items-center space-x-2 flex-shrink-0">
+            {/* Desktop Motto Pill */}
+            <div className="hidden 2xl:flex items-center space-x-1.5 bg-amber-50 border border-amber-200 px-2.5 py-1 text-[10px] font-mono font-bold text-amber-900">
+              <span className="w-1.5 h-1.5 bg-amber-600 rounded-full" />
+              <span>TETE NO HORIZONTE DE INVESTIMENTOS</span>
+            </div>
+
             {/* MOBILE MENU TOGGLE (< lg) */}
             <button
               id="mobile-menu-btn"
               onClick={() => setIsOpen(!isOpen)}
-              className="lg:hidden h-10 w-10 p-0 flex items-center justify-center rounded-none text-slate-800 hover:bg-slate-100 focus:outline-none border border-slate-300 cursor-pointer"
+              className="lg:hidden h-9 w-9 sm:h-10 sm:w-10 p-0 flex items-center justify-center rounded-none text-slate-800 hover:bg-slate-100 focus:outline-none border border-slate-300 cursor-pointer"
               aria-label="Toggle Menu"
             >
               {isOpen ? <X className="w-5 h-5 text-amber-600" /> : <Menu className="w-5 h-5 text-slate-800" />}
@@ -171,6 +198,24 @@ export default function Navbar({
         } bg-white border-b border-slate-200 shadow-xl`}
       >
         <div className="px-4 pt-3 pb-6 space-y-1 text-center max-w-lg mx-auto">
+          {/* Mobile Emblema Header with Official Motto */}
+          <div className="flex flex-col items-center justify-center pb-3 mb-2 border-b border-slate-200">
+            <img
+              src={mozambiqueEmblem}
+              alt="Emblema da República de Moçambique"
+              className="h-12 w-auto object-contain mb-1.5"
+            />
+            <span className="text-[10px] font-mono font-black uppercase tracking-wider text-slate-900">
+              REPÚBLICA DE MOÇAMBIQUE
+            </span>
+            <span className="text-[10px] font-bold text-amber-800 uppercase tracking-wide">
+              GOVERNO DA PROVÍNCIA DE TETE
+            </span>
+            <div className="mt-1.5 px-3 py-1 bg-amber-100/90 border border-amber-300 text-[10px] font-mono font-extrabold text-amber-950">
+              “TETE NO HORIZONTE DE INVESTIMENTOS”
+            </div>
+          </div>
+
           {allNavItems.map((item) => {
             const isAttendance = item.href === '#attendance';
             const isActive = activeSection === item.href.substring(1);

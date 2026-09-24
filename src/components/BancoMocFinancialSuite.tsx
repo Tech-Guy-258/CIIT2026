@@ -5,7 +5,6 @@
 
 import React, { useState, useEffect } from 'react';
 import {
-  TrendingUp,
   RefreshCw,
   ArrowRightLeft,
   Building2,
@@ -24,7 +23,7 @@ import {
 } from 'lucide-react';
 import {
   exchangeRateService,
-  ACCESS_BANK_OFFICIAL_RATES,
+  BANCO_MOC_OFFICIAL_RATES,
   ExchangeRateItem,
   RatesMetadata
 } from '../services/exchangeRateService';
@@ -36,7 +35,7 @@ interface BancoMocFinancialSuiteProps {
   isAdminUser?: boolean;
 }
 
-export { ACCESS_BANK_OFFICIAL_RATES as INITIAL_RATES };
+export { BANCO_MOC_OFFICIAL_RATES as INITIAL_RATES };
 export type { ExchangeRateItem };
 
 export default function BancoMocFinancialSuite({
@@ -45,10 +44,10 @@ export default function BancoMocFinancialSuite({
   showAdmin,
   isAdminUser
 }: BancoMocFinancialSuiteProps) {
-  const [rates, setRates] = useState<ExchangeRateItem[]>(ACCESS_BANK_OFFICIAL_RATES);
+  const [rates, setRates] = useState<ExchangeRateItem[]>(BANCO_MOC_OFFICIAL_RATES);
   const [metadata, setMetadata] = useState<RatesMetadata>({
-    source: 'Access Bank Moçambique',
-    sourceUrl: 'https://mozambique.accessbankplc.com/pt',
+    source: 'Banco de Moçambique',
+    sourceUrl: 'https://www.bancomoc.mz/pt/',
     lastUpdated: Date.now(),
     lastUpdatedFormatted: '2 de Setembro de 2026',
     autoUpdateEnabled: true,
@@ -123,20 +122,20 @@ export default function BancoMocFinancialSuite({
     setIsRefreshing(false);
     setNextUpdateCountdown(refreshInterval);
     
-    setStatusMessage(lang === 'pt' ? 'Cotações Access Bank atualizadas!' : 'Access Bank rates updated!');
+    setStatusMessage(lang === 'pt' ? 'Cotações do Banco de Moçambique atualizadas!' : 'Bank of Mozambique rates updated!');
     setTimeout(() => setStatusMessage(null), 3000);
   };
 
-  // Reset to Access Bank Official Values
-  const handleResetToAccessBank = async () => {
+  // Reset to Banco de Moçambique Official Values
+  const handleResetToBancoMoc = async () => {
     setIsRefreshing(true);
-    const result = await exchangeRateService.resetToAccessBankOfficial();
+    const result = await exchangeRateService.resetToBancoMocOfficial();
     setRates(result.rates);
     setMetadata(result.meta);
     setIsRefreshing(false);
     setNextUpdateCountdown(refreshInterval);
 
-    setStatusMessage(lang === 'pt' ? 'Restauradas cotações oficiais Access Bank!' : 'Reset to official Access Bank rates!');
+    setStatusMessage(lang === 'pt' ? 'Restauradas cotações oficiais do Banco de Moçambique!' : 'Reset to official Bank of Mozambique rates!');
     setTimeout(() => setStatusMessage(null), 3000);
   };
 
@@ -182,12 +181,12 @@ export default function BancoMocFinancialSuite({
           <div className="h-7 sm:h-8 flex items-center space-x-1.5 sm:space-x-2 flex-shrink-0 bg-amber-100 border border-amber-300 px-2 sm:px-2.5 text-[10px] sm:text-xs font-mono tracking-wider text-amber-900 font-bold uppercase">
             <span className={`w-2 h-2 rounded-full ${autoUpdate ? 'bg-emerald-600 animate-pulse' : 'bg-amber-600'} flex-shrink-0`}></span>
             <span className="hidden xs:inline sm:inline">
-              {lang === 'pt' ? 'ACCESS BANK MOÇAMBIQUE' : 'ACCESS BANK MOZAMBIQUE'}
+              {lang === 'pt' ? 'BANCO DE MOÇAMBIQUE' : 'BANK OF MOZAMBIQUE'}
             </span>
-            <span className="xs:hidden">ACCESS BANK</span>
+            <span className="xs:hidden">BANCO DE MOÇAMBIQUE</span>
             <span className="hidden sm:inline text-slate-400">|</span>
             <span className="hidden md:inline text-slate-700 font-medium">
-              {lang === 'pt' ? 'Câmbio em Tempo Real' : 'Live Forex Rates'}
+              {lang === 'pt' ? 'Câmbio Oficial' : 'Official Forex Rates'}
             </span>
           </div>
 
@@ -257,11 +256,11 @@ export default function BancoMocFinancialSuite({
             <button
               id="btn-open-sidebar-market"
               onClick={() => setIsSidebarOpen(true)}
-              className="h-7 sm:h-8 px-2 sm:px-3.5 bg-amber-500 hover:bg-amber-600 text-slate-950 text-[10px] sm:text-xs font-bold uppercase tracking-wider flex items-center space-x-1.5 sm:space-x-2 transition-all shadow-xs cursor-pointer whitespace-nowrap flex-shrink-0"
+              className="h-7 sm:h-8 px-2 sm:px-3 bg-amber-500 hover:bg-amber-600 text-slate-950 text-[10px] sm:text-xs font-bold uppercase tracking-wider flex items-center space-x-1.5 sm:space-x-2 transition-all shadow-xs cursor-pointer whitespace-nowrap flex-shrink-0"
             >
               <ArrowRightLeft className="w-3 h-3 sm:w-3.5 sm:h-3.5 flex-shrink-0" />
-              <span className="hidden sm:inline">{lang === 'pt' ? 'Câmbio Access Bank' : 'Access Bank Forex'}</span>
-              <span className="sm:hidden">{lang === 'pt' ? 'Câmbio' : 'Rates'}</span>
+              <span className="hidden sm:inline">{lang === 'pt' ? 'Câmbio Banco de Moçambique' : 'Bank of Mozambique Forex'}</span>
+              <span className="sm:hidden">{lang === 'pt' ? 'Câmbio BM' : 'BM Forex'}</span>
             </button>
 
             {/* Admin Lock Button ONLY visible if isAdminUser is true (code === 'ADMIN-DIVA') */}
@@ -285,21 +284,31 @@ export default function BancoMocFinancialSuite({
         </div>
       </div>
 
-      {/* 2. FLOATING SIDEBAR TOGGLE BUTTON (PERSISTENT ON RIGHT EDGE OF SCREEN) */}
+      {/* 2. FLOATING SIDEBAR TOGGLE BUTTON (SLIM & NON-INTRUSIVE) */}
       <button
         id="btn-float-sidebar-toggle"
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        className="fixed right-0 top-1/2 -translate-y-1/2 z-40 bg-white hover:bg-slate-50 border-l-4 border-y border-amber-500 text-slate-900 px-2 py-4 shadow-xl flex flex-col items-center space-y-2 cursor-pointer transition-all group hover:pr-3"
-        title={lang === 'pt' ? 'Abrir Câmbio Access Bank Moçambique' : 'Open Access Bank Forex'}
+        className="fixed z-40 cursor-pointer transition-all duration-200 shadow-xl
+          /* Mobile (<sm): Compact floating pill near bottom right, discreet and out of the user's way */
+          bottom-20 right-3 flex sm:hidden items-center space-x-1.5 px-2.5 py-1.5 bg-slate-900/95 hover:bg-slate-950 text-amber-400 border border-amber-500/80 rounded-full backdrop-blur-md active:scale-95
+          /* Desktop (>=sm): Ultra-sleek, slim pinned right edge tab */
+          sm:bottom-auto sm:top-1/2 sm:-translate-y-1/2 sm:right-0 sm:flex sm:flex-col sm:items-center sm:space-y-1.5 sm:px-1 sm:py-3 sm:bg-slate-900/95 sm:hover:bg-slate-950 sm:text-amber-400 sm:border-l-2 sm:border-y sm:border-amber-500 sm:rounded-l-md sm:hover:pl-2"
+        title={lang === 'pt' ? 'Câmbio Oficial Banco de Moçambique' : 'Bank of Mozambique Official Forex'}
+        aria-label="Câmbio Banco de Moçambique"
       >
-        <Building2 className="w-4 h-4 text-amber-600 group-hover:scale-110 transition-transform" />
-        <span className="text-[11px] font-mono uppercase font-bold tracking-widest [writing-mode:vertical-lr] rotate-180 py-1 text-slate-800">
-          {lang === 'pt' ? 'CÂMBIO ACCESS BANK' : 'ACCESS BANK FOREX'}
+        <Building2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400 flex-shrink-0" />
+        {/* Mobile text */}
+        <span className="sm:hidden text-[11px] font-mono font-bold tracking-wider text-slate-100">
+          Câmbio BM
         </span>
-        <ChevronRight className={`w-3.5 h-3.5 text-amber-600 transition-transform ${isSidebarOpen ? 'rotate-180' : ''}`} />
+        {/* Desktop slim vertical text */}
+        <span className="hidden sm:inline-block text-[9px] font-mono uppercase font-black tracking-widest [writing-mode:vertical-lr] rotate-180 py-1 text-slate-100">
+          CÂMBIO BM
+        </span>
+        <ChevronRight className={`w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-400 transition-transform ${isSidebarOpen ? 'rotate-180' : ''}`} />
       </button>
 
-      {/* 3. DEDICATED SLIDE-OVER SIDEBAR FOR ACCESS BANK FOREX */}
+      {/* 3. DEDICATED SLIDE-OVER SIDEBAR FOR BANCO DE MOÇAMBIQUE FOREX */}
       {isSidebarOpen && (
         <div className="fixed inset-0 z-50 overflow-hidden">
           {/* Backdrop */}
@@ -308,22 +317,22 @@ export default function BancoMocFinancialSuite({
             onClick={() => setIsSidebarOpen(false)}
           />
 
-          <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+          <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-6 sm:pl-10">
             <div className="pointer-events-auto w-screen max-w-md sm:max-w-lg bg-white border-l border-slate-300 text-slate-900 shadow-2xl flex flex-col justify-between overflow-y-auto animate-slide-in-right">
               
               {/* Sidebar Header */}
-              <div className="p-5 bg-slate-50 border-b border-slate-200 sticky top-0 z-20 backdrop-blur-md">
+              <div className="p-4 sm:p-5 bg-slate-50 border-b border-slate-200 sticky top-0 z-20 backdrop-blur-md">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center space-x-2.5">
                     <div className="p-2 bg-amber-100 text-amber-900 border border-amber-300">
                       <Building2 className="w-5 h-5" />
                     </div>
                     <div>
-                      <h3 className="font-display text-lg font-bold text-slate-900 tracking-wide">
-                        {lang === 'pt' ? 'Câmbio & Conversor' : 'Forex & Converter'}
+                      <h3 className="font-display text-base sm:text-lg font-bold text-slate-900 tracking-wide">
+                        {lang === 'pt' ? 'Câmbio Oficial & Conversor' : 'Official Forex & Converter'}
                       </h3>
-                      <p className="text-xs font-mono text-amber-800 uppercase tracking-wider font-bold">
-                        {lang === 'pt' ? 'Access Bank Moçambique' : 'Access Bank Mozambique'}
+                      <p className="text-xs font-mono text-amber-900 uppercase tracking-wider font-bold">
+                        {lang === 'pt' ? 'Banco de Moçambique' : 'Bank of Mozambique'}
                       </p>
                     </div>
                   </div>
@@ -331,6 +340,7 @@ export default function BancoMocFinancialSuite({
                   <button
                     onClick={() => setIsSidebarOpen(false)}
                     className="p-1.5 text-slate-600 hover:text-slate-900 bg-white border border-slate-300 hover:border-amber-500 cursor-pointer transition-colors"
+                    aria-label="Fechar"
                   >
                     <X className="w-5 h-5" />
                   </button>
@@ -387,7 +397,7 @@ export default function BancoMocFinancialSuite({
               </div>
 
               {/* Sidebar Content Body */}
-              <div className="p-5 space-y-6 flex-grow">
+              <div className="p-4 sm:p-5 space-y-6 flex-grow">
 
                 {/* TAB 1: CURRENCY CONVERTER */}
                 {sidebarTab === 'converter' && (
@@ -461,94 +471,77 @@ export default function BancoMocFinancialSuite({
                       </div>
                     </div>
 
-                    {/* Rate type selection */}
+                    {/* Rate Type Selector (Buy / Sell / Mid) */}
                     <div>
-                      <label className="block text-xs font-mono text-slate-700 mb-1 uppercase font-bold">
-                        {lang === 'pt' ? 'Modalidade de Cotação Bancária:' : 'Banking Rate Type:'}
+                      <label className="block text-xs font-mono text-slate-700 mb-1.5 uppercase font-bold">
+                        {lang === 'pt' ? 'Tipo de Taxa do Banco de Moçambique:' : 'Bank of Mozambique Rate Type:'}
                       </label>
-                      <div className="grid grid-cols-3 gap-1.5 text-xs font-mono">
-                        {(['mid', 'buy', 'sell'] as const).map((mode) => (
+                      <div className="grid grid-cols-3 gap-2">
+                        {[
+                          { id: 'mid', label: lang === 'pt' ? 'Taxa Média' : 'Mid Rate' },
+                          { id: 'buy', label: lang === 'pt' ? 'Compra' : 'Buy' },
+                          { id: 'sell', label: lang === 'pt' ? 'Venda' : 'Sell' }
+                        ].map((t) => (
                           <button
-                            key={mode}
-                            onClick={() => setRateType(mode)}
-                            className={`py-1.5 uppercase font-bold border transition-colors cursor-pointer ${
-                              rateType === mode
-                                ? 'bg-amber-500 text-slate-950 border-amber-600 font-bold'
+                            key={t.id}
+                            type="button"
+                            onClick={() => setRateType(t.id as any)}
+                            className={`py-2 text-xs font-mono font-bold border transition-colors cursor-pointer ${
+                              rateType === t.id
+                                ? 'bg-amber-500 text-slate-950 border-amber-600'
                                 : 'bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200'
                             }`}
                           >
-                            {mode === 'mid' ? (lang === 'pt' ? 'Média' : 'Mid') : mode === 'buy' ? (lang === 'pt' ? 'Compra' : 'Buy') : (lang === 'pt' ? 'Venda' : 'Sell')}
+                            {t.label}
                           </button>
                         ))}
                       </div>
                     </div>
 
                     {/* Conversion Result Box */}
-                    <div className="bg-amber-50 border-2 border-amber-400 p-4 relative shadow-xs">
-                      <div className="text-xs font-mono text-amber-900 uppercase font-bold">
-                        {lang === 'pt' ? 'Resultado Estimado:' : 'Estimated Result:'}
-                      </div>
-                      <div className="font-mono text-2xl sm:text-3xl font-bold text-slate-950 mt-1">
-                        {convertedValue.toLocaleString('pt-MZ', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {' '}
-                        <span className="text-lg text-amber-900 font-bold">{toCurrency}</span>
-                      </div>
-                      <p className="text-xs font-mono text-slate-700 mt-1.5 font-medium">
-                        1 {fromCurrency} = {(convertedValue / (amount || 1)).toFixed(4)} {toCurrency}
-                      </p>
-                    </div>
-
-                    {/* Quick Presets */}
-                    <div>
-                      <span className="text-xs font-mono text-slate-700 block mb-1.5 uppercase font-bold">
-                        {lang === 'pt' ? 'Atalhos Rápidos:' : 'Quick Shortcuts:'}
+                    <div className="bg-slate-900 text-white p-5 border-2 border-amber-500 shadow-lg">
+                      <span className="text-xs font-mono uppercase text-amber-400 font-bold tracking-wider block mb-1">
+                        {lang === 'pt' ? 'Resultado da Conversão Oficial:' : 'Official Conversion Result:'}
                       </span>
-                      <div className="flex flex-wrap gap-1.5">
-                        {[
-                          { label: '$100 USD', amount: 100, from: 'USD', to: 'MZN' },
-                          { label: 'R 1.000 ZAR', amount: 1000, from: 'ZAR', to: 'MZN' },
-                          { label: '€500 EUR', amount: 500, from: 'EUR', to: 'MZN' },
-                          { label: '50.000 MZN', amount: 50000, from: 'MZN', to: 'USD' }
-                        ].map((p) => (
-                          <button
-                            key={p.label}
-                            onClick={() => {
-                              setAmount(p.amount);
-                              setFromCurrency(p.from);
-                              setToCurrency(p.to);
-                            }}
-                            className="px-2.5 py-1.5 bg-slate-100 hover:bg-amber-200 border border-slate-300 text-xs font-mono text-slate-800 font-semibold transition-colors cursor-pointer"
-                          >
-                            {p.label}
-                          </button>
-                        ))}
+                      <div className="text-2xl sm:text-3xl font-mono font-black text-amber-400">
+                        {convertedValue.toLocaleString(lang === 'pt' ? 'pt-MZ' : 'en-US', {
+                          minimumFractionDigits: 2,
+                          maximumFractionDigits: 2
+                        })}{' '}
+                        <span className="text-lg text-white font-bold">{toCurrency}</span>
+                      </div>
+                      <div className="text-xs font-mono text-slate-400 mt-2 pt-2 border-t border-slate-800 flex justify-between">
+                        <span>
+                          1 {fromCurrency} ={' '}
+                          {(
+                            calculateConversion() / (amount || 1)
+                          ).toFixed(4)}{' '}
+                          {toCurrency}
+                        </span>
+                        <span className="text-slate-300 font-semibold uppercase">Banco de Moçambique</span>
                       </div>
                     </div>
 
                   </div>
                 )}
 
-                {/* TAB 2: EXCHANGE RATES TABLE (WITH ACCESS BANK HIGHLIGHTS) */}
+                {/* TAB 2: DETAILED EXCHANGE RATE TABLE */}
                 {sidebarTab === 'table' && (
                   <div className="space-y-4 animate-fade-in">
-                    <div className="flex items-center justify-between text-xs font-mono">
-                      <div className="flex items-center space-x-1.5">
-                        <span className={`w-2 h-2 rounded-full ${autoUpdate ? 'bg-emerald-500 animate-ping' : 'bg-slate-400'}`}></span>
-                        <span className="text-amber-900 font-bold uppercase">
-                          {lang === 'pt' ? 'Taxas Oficiais Access Bank' : 'Official Access Bank Rates'}
-                        </span>
-                      </div>
-                      <span className="text-[11px] text-slate-600 font-semibold">{metadata.lastUpdatedFormatted}</span>
+                    <div className="flex items-center justify-between text-xs font-mono text-slate-600">
+                      <span>{metadata.lastUpdatedFormatted}</span>
+                      <span className="text-emerald-700 font-bold">{lang === 'pt' ? 'Oficial BM' : 'Official BM'}</span>
                     </div>
 
-                    <div className="overflow-x-auto bg-slate-50 border border-slate-300 p-2">
-                      <table className="w-full text-left text-xs sm:text-sm font-mono">
-                        <thead>
-                          <tr className="border-b border-slate-300 text-slate-700">
-                            <th className="pb-2 font-bold">{lang === 'pt' ? 'Moeda' : 'Currency'}</th>
-                            <th className="pb-2 font-bold text-right">{lang === 'pt' ? 'Compra' : 'Buy'}</th>
-                            <th className="pb-2 font-bold text-right">{lang === 'pt' ? 'Venda' : 'Sell'}</th>
-                            <th className="pb-2 font-bold text-right">{lang === 'pt' ? 'Média' : 'Mid'}</th>
-                            <th className="pb-2 font-bold text-right">{lang === 'pt' ? '24h' : '24h'}</th>
+                    <div className="border border-slate-300 overflow-x-auto">
+                      <table className="w-full text-left text-xs font-mono">
+                        <thead className="bg-slate-100 text-slate-700 uppercase border-b border-slate-300">
+                          <tr>
+                            <th className="py-2.5 px-3 font-bold">{lang === 'pt' ? 'Moeda' : 'Currency'}</th>
+                            <th className="py-2.5 px-2 text-right font-bold">{lang === 'pt' ? 'Compra' : 'Buy'}</th>
+                            <th className="py-2.5 px-2 text-right font-bold">{lang === 'pt' ? 'Venda' : 'Sell'}</th>
+                            <th className="py-2.5 px-2 text-right font-bold">{lang === 'pt' ? 'Médio' : 'Mid'}</th>
+                            <th className="py-2.5 px-3 text-right font-bold">24h</th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-200">
@@ -563,17 +556,17 @@ export default function BancoMocFinancialSuite({
                               className="hover:bg-amber-100/50 transition-colors cursor-pointer"
                               title={lang === 'pt' ? 'Clique para converter' : 'Click to convert'}
                             >
-                              <td className="py-2.5 font-bold text-slate-950 flex items-center space-x-1.5">
+                              <td className="py-2.5 px-3 font-bold text-slate-950 flex items-center space-x-1.5">
                                 <span className="text-base">{r.flag}</span>
                                 <div>
                                   <span className="text-amber-900 font-bold block">{r.code}</span>
                                   <span className="text-[10px] text-slate-500 font-normal">{r.name[lang]}</span>
                                 </div>
                               </td>
-                              <td className="py-2.5 text-right text-slate-800 font-medium">{r.buy.toFixed(2)}</td>
-                              <td className="py-2.5 text-right text-slate-800 font-medium">{r.sell.toFixed(2)}</td>
-                              <td className="py-2.5 text-right font-bold text-slate-950">{r.mid.toFixed(2)}</td>
-                              <td className="py-2.5 text-right font-bold">
+                              <td className="py-2.5 px-2 text-right text-slate-800 font-medium">{r.buy.toFixed(2)}</td>
+                              <td className="py-2.5 px-2 text-right text-slate-800 font-medium">{r.sell.toFixed(2)}</td>
+                              <td className="py-2.5 px-2 text-right font-bold text-slate-950">{r.mid.toFixed(2)}</td>
+                              <td className="py-2.5 px-3 text-right font-bold">
                                 <span className={r.change24h >= 0 ? 'text-emerald-700' : 'text-rose-700'}>
                                   {r.change24h >= 0 ? `+${r.change24h}%` : `${r.change24h}%`}
                                 </span>
@@ -588,12 +581,12 @@ export default function BancoMocFinancialSuite({
                       <Info className="w-4 h-4 text-amber-800 flex-shrink-0 mt-0.5" />
                       <div>
                         <p className="font-bold text-amber-950">
-                          {lang === 'pt' ? 'Fonte Oficial:' : 'Official Source:'} Access Bank Moçambique
+                          {lang === 'pt' ? 'Fonte Oficial:' : 'Official Source:'} Banco de Moçambique
                         </p>
                         <p className="text-[11px] text-slate-600 mt-0.5">
                           {lang === 'pt' 
-                            ? 'Valores oficiais extraídos e sincronizados diretamente do portal Access Bank Moçambique. Todas as cotações são em Meticais (MZN).' 
-                            : 'Official rates extracted and synchronized directly from Access Bank Mozambique. All rates in Meticais (MZN).'}
+                            ? 'Valores oficiais de referência publicados pelo Banco de Moçambique (https://www.bancomoc.mz/pt/). Todas as cotações em Meticais (MZN).' 
+                            : 'Official reference rates published by the Bank of Mozambique (https://www.bancomoc.mz/pt/). All exchange rates quoted in Meticais (MZN).'}
                         </p>
                       </div>
                     </div>
@@ -614,8 +607,8 @@ export default function BancoMocFinancialSuite({
                           </h4>
                           <p className="text-[11px] text-slate-600 font-mono mt-0.5">
                             {lang === 'pt'
-                              ? 'Mantém as taxas sincronizadas em background entre todos os utilizadores.'
-                              : 'Keeps forex rates synchronized in background across all users.'}
+                              ? 'Mantém as taxas sincronizadas em background com referência ao Banco de Moçambique.'
+                              : 'Keeps forex rates synchronized in background referenced to Bank of Mozambique.'}
                           </p>
                         </div>
 
@@ -626,7 +619,7 @@ export default function BancoMocFinancialSuite({
                             onChange={(e) => setAutoUpdate(e.target.checked)}
                             className="sr-only peer"
                           />
-                          <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
+                          <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
                         </label>
                       </div>
 
@@ -681,12 +674,12 @@ export default function BancoMocFinancialSuite({
                       </button>
 
                       <button
-                        onClick={handleResetToAccessBank}
+                        onClick={handleResetToBancoMoc}
                         disabled={isRefreshing}
                         className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 font-mono font-semibold text-xs flex items-center justify-center space-x-2 transition-colors cursor-pointer"
                       >
                         <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-                        <span>{lang === 'pt' ? 'Restaurar Valores Oficiais Access Bank' : 'Reset to Access Bank Baseline'}</span>
+                        <span>{lang === 'pt' ? 'Restaurar Valores Oficiais Banco de Moçambique' : 'Reset to Bank of Mozambique Baseline'}</span>
                       </button>
                     </div>
 
@@ -697,14 +690,14 @@ export default function BancoMocFinancialSuite({
                       </h5>
                       <div>
                         <a
-                          href="https://mozambique.accessbankplc.com/pt"
+                          href="https://www.bancomoc.mz/pt/"
                           target="_blank"
                           rel="noreferrer"
-                          className="flex items-center justify-between p-2 bg-white hover:bg-amber-50 border border-slate-300 text-slate-800 font-medium transition-colors"
+                          className="flex items-center justify-between p-2.5 bg-white hover:bg-amber-50 border border-slate-300 text-slate-800 font-medium transition-colors"
                         >
-                          <span className="flex items-center space-x-1.5">
-                            <span>🏦</span>
-                            <span className="font-bold text-amber-900">Access Bank Moçambique</span>
+                          <span className="flex items-center space-x-2">
+                            <span>🏛️</span>
+                            <span className="font-bold text-amber-950">Banco de Moçambique (bancomoc.mz)</span>
                           </span>
                           <ExternalLink className="w-3.5 h-3.5 text-slate-500" />
                         </a>
@@ -720,15 +713,15 @@ export default function BancoMocFinancialSuite({
               <div className="p-4 bg-slate-100 border-t border-slate-300 sticky bottom-0 z-20 text-xs font-mono text-slate-700 flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-700 flex-shrink-0" />
-                  <span className="font-semibold">Access Bank Moçambique</span>
+                  <span className="font-semibold">Banco de Moçambique</span>
                 </div>
                 <a
-                  href="https://mozambique.accessbankplc.com/pt"
+                  href="https://www.bancomoc.mz/pt/"
                   target="_blank"
                   rel="noreferrer"
                   className="text-amber-800 hover:text-amber-950 font-bold flex items-center space-x-1 transition-colors"
                 >
-                  <span>{lang === 'pt' ? 'Aceder Portal' : 'Open Portal'}</span>
+                  <span>{lang === 'pt' ? 'Aceder Portal BM' : 'Open BM Portal'}</span>
                   <ExternalLink className="w-3.5 h-3.5" />
                 </a>
               </div>

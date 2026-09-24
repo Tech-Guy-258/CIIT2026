@@ -62,14 +62,19 @@ export default function FisheriesAquaculture({ lang }: FisheriesAquacultureProps
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
           
-          {/* Exact Species Breakdown (93% Tilápia / Oreochromis niloticus, 2% Tigerfish, 2% Nchenga, etc.) */}
+          {/* Exact Species Breakdown (94% Tilápia / Oreochromis niloticus, 2% Tigerfish, 2% Nchenga, 1% Tilapia rendalli, 1% Clarias gariepinus = 100% Total) */}
           <div className="lg:col-span-6 bg-white border-2 border-slate-200 p-6 sm:p-8 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-100">
                 <div>
-                  <h3 className="text-xl font-display font-bold text-slate-950">
-                    {lang === 'pt' ? 'Composição de Espécies Comerciais' : 'Commercial Species Breakdown'}
-                  </h3>
+                  <div className="flex items-center space-x-2">
+                    <h3 className="text-xl font-display font-bold text-slate-950">
+                      {lang === 'pt' ? 'Composição de Espécies Comerciais' : 'Commercial Species Breakdown'}
+                    </h3>
+                    <span className="px-2 py-0.5 bg-emerald-100 border border-emerald-300 text-emerald-800 text-[10px] font-mono font-bold">
+                      100% TOTAL
+                    </span>
+                  </div>
                   <p className="text-xs text-slate-500 font-mono mt-0.5">
                     {lang === 'pt' ? 'Levantamento ictiológico da Albufeira de Cahora Bassa' : 'Ichthyological survey of Lake Cahora Bassa'}
                   </p>
@@ -112,8 +117,8 @@ export default function FisheriesAquaculture({ lang }: FisheriesAquacultureProps
             <div className="mt-6 pt-4 border-t border-slate-100 text-xs text-slate-600 bg-amber-50/60 p-3 border border-amber-200/60">
               <strong>{lang === 'pt' ? 'Destaque de Mercado:' : 'Market Highlight:'}</strong>{' '}
               {lang === 'pt'
-                ? 'A tilápia representa 93% do potencial piscícola, permitindo operações em gaiolas flutuantes de alto rendimento com ciclo curto de engorda e mercado garantido na SADC.'
-                : 'Tilapia represents 93% of commercial fish biomass, enabling high-yield cage culture with fast growth cycles and guaranteed regional SADC demand.'}
+                ? 'A tilápia representa 94% do potencial piscícola comercial (fechando os 100% com as espécies associadas), permitindo operações em gaiolas flutuantes de alto rendimento com ciclo curto de engorda e mercado garantido na SADC.'
+                : 'Tilapia represents 94% of commercial fish biomass (closing 100% with associated species), enabling high-yield cage culture with fast growth cycles and guaranteed regional SADC demand.'}
             </div>
           </div>
 

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="pt">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,10 +7,67 @@
     <meta name="description" content="Plataforma oficial da Conferência Internacional de Investimentos de Tete 2026 (CIIT2026). Conectando investidores globais às oportunidades de desenvolvimento de Tete, Moçambique." />
     <meta property="og:title" content="CIIT 2026" />
     <meta property="og:description" content="Plataforma oficial da Conferência Internacional de Investimentos de Tete 2026 (CIIT2026). Conectando investidores globais às oportunidades de desenvolvimento de Tete, Moçambique." />
+
+    <!-- Trailing slash correction for subfolder deployments with relative paths -->
+    <script>
+      (function() {
+        var pathname = window.location.pathname;
+        if (pathname && !pathname.endsWith('/') && !pathname.split('/').pop().includes('.')) {
+          window.location.replace(pathname + '/' + window.location.search + window.location.hash);
+        }
+      })();
+    </script>
   </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+  <body class="bg-slate-950 text-slate-100">
+    <div id="root">
+      <!-- Fallback pre-render: Prevents blank white screen while JavaScript initializes or if deployment files are misplaced -->
+      <div id="ciit-preloader" style="min-height: 100vh; background-color: #020617; color: #ffffff; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 24px; text-align: center; box-sizing: border-box;">
+        <div style="max-width: 560px; width: 100%;">
+          <div style="display: inline-block; width: 44px; height: 44px; border: 3px solid rgba(217, 119, 6, 0.2); border-top-color: #f59e0b; border-radius: 50%; animation: ciit-spin 0.9s linear infinite; margin-bottom: 20px;"></div>
+          <h1 style="font-size: 22px; font-weight: 800; margin: 0 0 6px 0; letter-spacing: 0.08em; color: #f8fafc; text-transform: uppercase;">CIIT 2026</h1>
+          <p style="font-size: 13px; color: #94a3b8; margin: 0 0 20px 0; font-weight: 400;">Conferência Internacional de Investimentos de Tete</p>
+          <div id="ciit-status-box" style="font-size: 12px; color: #cbd5e1; font-family: ui-monospace, monospace; border: 1px solid rgba(217, 119, 6, 0.3); background: rgba(15, 23, 42, 0.8); padding: 14px 18px; border-radius: 10px; line-height: 1.6;">
+            A carregar aplicação e credenciais seguras...
+          </div>
+        </div>
+      </div>
+      <style>
+        @keyframes ciit-spin {
+          to { transform: rotate(360deg); }
+        }
+      </style>
+      <script>
+        function handleMainLoadError() {
+          var statusBox = document.getElementById('ciit-status-box');
+          if (statusBox) {
+            statusBox.innerHTML = 
+              '<strong style="color: #ef4444; font-size: 14px; display: block; margin-bottom: 8px;">' +
+              '✕ Erro: /src/main.tsx não encontrado (404 Not Found)' +
+              '</strong>' +
+              '<div style="text-align: left; color: #cbd5e1; font-size: 12px; line-height: 1.6;">' +
+              '<p style="margin: 0 0 10px 0; color: #fbbf24;">' +
+              'Este erro acontece quando os ficheiros enviados para o servidor pertencem à <strong>raiz do código fonte</strong> e não à pasta de compilação <strong>dist/</strong>.' +
+              '</p>' +
+              '<div style="background: rgba(0,0,0,0.4); padding: 10px; border-radius: 6px; margin-bottom: 10px; font-family: monospace; font-size: 11px;">' +
+              '<strong>Solução Rápida:</strong><br/>' +
+              '1. No seu computador, execute: <code style="color:#38bdf8;">npm run build</code><br/>' +
+              '2. Envie o <strong>CONTEÚDO da pasta dist/</strong> para o servidor (ex: pasta public_html ou htdocs).<br/>' +
+              '3. Se estiver no <strong>GitHub Pages</strong>: No repositório, aceda a <em>Settings &rarr; Pages &rarr; Source</em> e mude para <strong>"GitHub Actions"</strong> (ou utilize <code>npm run deploy</code>).' +
+              '</div>' +
+              '</div>';
+          }
+        }
+
+        // Automatic fallback diagnostic after 6s
+        setTimeout(function() {
+          var statusBox = document.getElementById('ciit-status-box');
+          var preloader = document.getElementById('ciit-preloader');
+          if (statusBox && preloader && statusBox.innerText.indexOf('A carregar') !== -1) {
+            handleMainLoadError();
+          }
+        }, 6000);
+      </script>
+    </div>
+    <script type="module" src="/src/main.tsx" onerror="handleMainLoadError()"></script>
   </body>
 </html>
-

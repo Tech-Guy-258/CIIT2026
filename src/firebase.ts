@@ -1,27 +1,20 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
-import { initializeFirestore, getFirestore } from 'firebase/firestore';
+import { getFirestore, doc, getDocFromServer } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 import firebaseConfig from '../firebase-applet-config.json';
 
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
-const dbId =
-  firebaseConfig.firestoreDatabaseId && firebaseConfig.firestoreDatabaseId !== '(default)'
-    ? firebaseConfig.firestoreDatabaseId
-    : undefined;
+export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+export const auth = getAuth(app);
 
-let firestoreInstance;
-try {
-  firestoreInstance = initializeFirestore(
-    app,
-    {
-      experimentalAutoDetectLongPolling: true,
-    },
-    dbId
-  );
-} catch {
-  firestoreInstance = dbId ? getFirestore(app, dbId) : getFirestore(app);
+// Connection check on boot per Firebase integration skill
+if (typeof window !== 'undefined') {
+  getDocFromServer(doc(db, 'test', 'connection')).catch((error) => {
+    if (error instanceof Error && error.message.includes('the client is offline')) {
+      console.warn('Firestore operating in offline mode. Local cache and fallback codes are active.');
+    }
+  });
 }
 
-export const db = firestoreInstance;
 export default app;
-

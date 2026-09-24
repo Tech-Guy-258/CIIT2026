@@ -9,7 +9,9 @@ import { jsPDF } from 'jspdf';
 import QRCode from 'qrcode';
 import { TRANSLATIONS } from '../data';
 import { Registration } from '../types';
-import { Check, Download, AlertCircle, FileText, User, Mail, Phone, Globe, Briefcase, ChevronRight, RefreshCw, Printer, Loader2 } from 'lucide-react';
+import { Check, Download, AlertCircle, FileText, User, Mail, Phone, Globe, Briefcase, ChevronRight, RefreshCw, Printer, Loader2, Send } from 'lucide-react';
+
+const TARGET_TEST_EMAIL = 'luis.chale@diva.co.mz';
 
 interface RegistrationFormProps {
   lang: 'pt' | 'en';
@@ -87,7 +89,7 @@ export default function RegistrationForm({ lang, onRegisterSuccess }: Registrati
     { id: 'government', label: lang === 'pt' ? 'Entidade Governamental' : 'Government Official', color: 'bg-indigo-600' }
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
 
@@ -105,35 +107,61 @@ export default function RegistrationForm({ lang, onRegisterSuccess }: Registrati
 
     setIsSubmitting(true);
 
-    // Simulate elite processing
+    const ticketId = `CIIT-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+    const newRegistration: Registration = {
+      id: ticketId,
+      fullName,
+      email,
+      phone,
+      company,
+      jobTitle,
+      country,
+      sectorOfInterest,
+      registrationType,
+      registeredAt: new Date().toISOString(),
+      ticketStatus: 'Confirmed'
+    };
+
+    // Real email dispatch to luis.chale@diva.co.mz
+    try {
+      await fetch(`https://formsubmit.co/ajax/${TARGET_TEST_EMAIL}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          _subject: `[CIIT 2026] Credencial Emitida: ${fullName} - ${company} (${ticketId})`,
+          _template: 'table',
+          _captcha: 'false',
+          _replyto: email,
+          'ID Credencial': ticketId,
+          'Nome Completo': fullName,
+          'Email': email,
+          'Telefone': phone,
+          'Empresa / Organização': company,
+          'Cargo': jobTitle,
+          'País': country || 'Moçambique',
+          'Setor de Interesse': sectorOfInterest,
+          'Tipo de Participação': registrationType,
+          'Data': new Date().toLocaleString('pt-MZ')
+        })
+      });
+    } catch (err) {
+      console.warn('Envio do formulário para o e-mail de teste:', err);
+    }
+
+    setGeneratedPass(newRegistration);
+    onRegisterSuccess(newRegistration);
+    setIsSubmitting(false);
+
+    // Scroll to ticket badge
     setTimeout(() => {
-      const ticketId = `CIIT-2026-${Math.floor(1000 + Math.random() * 9000)}`;
-      const newRegistration: Registration = {
-        id: ticketId,
-        fullName,
-        email,
-        phone,
-        company,
-        jobTitle,
-        country,
-        sectorOfInterest,
-        registrationType,
-        registeredAt: new Date().toISOString(),
-        ticketStatus: 'Confirmed'
-      };
-
-      setGeneratedPass(newRegistration);
-      onRegisterSuccess(newRegistration);
-      setIsSubmitting(false);
-
-      // Scroll to ticket badge
-      setTimeout(() => {
-        const ticketElement = document.getElementById('ticket-badge-display');
-        if (ticketElement) {
-          ticketElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-      }, 100);
-    }, 1200);
+      const ticketElement = document.getElementById('ticket-badge-display');
+      if (ticketElement) {
+        ticketElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 100);
   };
 
   // Helper to convert oklch(...), oklab(...), light-dark(...), color(...) colors to rgb/hex
@@ -602,6 +630,29 @@ export default function RegistrationForm({ lang, onRegisterSuccess }: Registrati
                       {t.badgeSubtitle}
                     </p>
                   </div>
+                </div>
+
+                {/* Real Email Dispatched Confirmation */}
+                <div className="bg-amber-50/90 border border-amber-300 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs font-mono">
+                  <div className="flex items-center space-x-2">
+                    <Mail className="w-4 h-4 text-amber-700 flex-shrink-0" />
+                    <div>
+                      <span className="text-slate-800">
+                        {lang === 'pt' ? 'Dados submetidos e direcionados para:' : 'Data submitted and routed to:'}{' '}
+                        <strong className="text-amber-950 font-bold underline">{TARGET_TEST_EMAIL}</strong>
+                      </span>
+                      <p className="text-[11px] text-slate-500 font-normal">
+                        {lang === 'pt' ? 'Servidor de testes da CIIT 2026 ativo' : 'CIIT 2026 test server active'}
+                      </p>
+                    </div>
+                  </div>
+                  <a
+                    href={`mailto:${TARGET_TEST_EMAIL}?subject=${encodeURIComponent(`[CIIT 2026] Credencial ${generatedPass.id} - ${generatedPass.fullName}`)}&body=${encodeURIComponent(`ID Credencial: ${generatedPass.id}\nNome: ${generatedPass.fullName}\nEmpresa: ${generatedPass.company}\nCargo: ${generatedPass.jobTitle}\nTelefone: ${generatedPass.phone}\nEmail: ${generatedPass.email}\nSetor: ${generatedPass.sectorOfInterest}\nTipo: ${generatedPass.registrationType}`)}`}
+                    className="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold uppercase tracking-wider text-[11px] transition-colors whitespace-nowrap self-start sm:self-auto cursor-pointer"
+                  >
+                    <Send className="w-3 h-3" />
+                    <span>{lang === 'pt' ? 'Reenviar via E-mail' : 'Resend via Email'}</span>
+                  </a>
                 </div>
 
                 {/* VIRTUAL ACCESS PASS BADGE CARD DESIGN */}

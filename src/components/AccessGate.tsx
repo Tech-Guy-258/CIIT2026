@@ -44,61 +44,79 @@ export default function AccessGate({ lang, children, onAccessStateChange }: Acce
     let unsubscribeSnapshot: (() => void) | null = null;
 
     const performInitialAuth = async () => {
-      setIsLoading(true);
-      // Ensure default access codes exist immediately in Cloud Firestore
-      await accessControl.initializeStarterCodes();
+      try {
+        setIsLoading(true);
+        // Ensure default access codes exist immediately in Cloud Firestore (with safety timeout)
+        await Promise.race([
+          accessControl.initializeStarterCodes(),
+          new Promise((resolve) => setTimeout(resolve, 2500))
+        ]);
 
-      const storedCode = accessControl.getStoredCode();
+        const storedCode = accessControl.getStoredCode();
 
-      if (!storedCode) {
-        setIsLoading(false);
-        setIsAuthorized(false);
-        return;
-      }
-
-      const result = await accessControl.validateAndActivateCode(storedCode);
-
-      if (result.allowed && result.codeRecord) {
-        setActiveCodeRecord(result.codeRecord);
-        setIsAuthorized(true);
-        setRemainingMs(result.remainingMs || 0);
-        setExpiredState(null);
-        if (onAccessStateChange) {
-          onAccessStateChange(result.codeRecord, result.remainingMs || 0);
+        if (!storedCode) {
+          setIsAuthorized(false);
+          return;
         }
 
-        // Setup real-time listener for code revocation or expiration in Firestore
-        unsubscribeSnapshot = accessControl.subscribeToCodeStatus(result.codeRecord.code, (liveResult) => {
-          if (!liveResult.allowed) {
-            setIsAuthorized(false);
-            if (liveResult.reason === 'EXPIRED') {
-              setExpiredState({ isExpired: true, code: result.codeRecord?.code });
-            } else {
-              setErrorMessage(liveResult.message);
-            }
-            setActiveCodeRecord(null);
-            accessControl.clearStoredCode();
-            if (onAccessStateChange) {
-              onAccessStateChange(null, 0);
-            }
-          } else if (liveResult.codeRecord) {
-            setActiveCodeRecord(liveResult.codeRecord);
-            setRemainingMs(liveResult.remainingMs || 0);
-            if (onAccessStateChange) {
-              onAccessStateChange(liveResult.codeRecord, liveResult.remainingMs || 0);
-            }
+        const result = await Promise.race([
+          accessControl.validateAndActivateCode(storedCode),
+          new Promise<AccessVerificationResult>((resolve) =>
+            setTimeout(() => resolve({
+              allowed: false,
+              reason: 'NOT_FOUND',
+              message: 'Tempo limite ao contactar o servidor.',
+              messageEn: 'Timeout contacting authentication server.'
+            }), 3500)
+          )
+        ]);
+
+        if (result.allowed && result.codeRecord) {
+          setActiveCodeRecord(result.codeRecord);
+          setIsAuthorized(true);
+          setRemainingMs(result.remainingMs || 0);
+          setExpiredState(null);
+          if (onAccessStateChange) {
+            onAccessStateChange(result.codeRecord, result.remainingMs || 0);
           }
-        });
-      } else {
-        accessControl.clearStoredCode();
-        setIsAuthorized(false);
-        if (result.reason === 'EXPIRED') {
-          setExpiredState({ isExpired: true, code: storedCode });
-        } else if (result.reason === 'REVOKED') {
-          setErrorMessage(result.message);
+
+          // Setup real-time listener for code revocation or expiration in Firestore
+          unsubscribeSnapshot = accessControl.subscribeToCodeStatus(result.codeRecord.code, (liveResult) => {
+            if (!liveResult.allowed) {
+              setIsAuthorized(false);
+              if (liveResult.reason === 'EXPIRED') {
+                setExpiredState({ isExpired: true, code: result.codeRecord?.code });
+              } else {
+                setErrorMessage(liveResult.message);
+              }
+              setActiveCodeRecord(null);
+              accessControl.clearStoredCode();
+              if (onAccessStateChange) {
+                onAccessStateChange(null, 0);
+              }
+            } else if (liveResult.codeRecord) {
+              setActiveCodeRecord(liveResult.codeRecord);
+              setRemainingMs(liveResult.remainingMs || 0);
+              if (onAccessStateChange) {
+                onAccessStateChange(liveResult.codeRecord, liveResult.remainingMs || 0);
+              }
+            }
+          });
+        } else {
+          accessControl.clearStoredCode();
+          setIsAuthorized(false);
+          if (result.reason === 'EXPIRED') {
+            setExpiredState({ isExpired: true, code: storedCode });
+          } else if (result.reason === 'REVOKED') {
+            setErrorMessage(result.message);
+          }
         }
+      } catch (authError) {
+        console.warn('Initial authentication error fallback:', authError);
+        setIsAuthorized(false);
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
     };
 
     performInitialAuth();

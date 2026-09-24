@@ -1,0 +1,51 @@
+# ==============================================================================
+# Apache / cPanel / Shared Hosting Configuration for CIIT 2026 SPA
+# ==============================================================================
+
+# Ensure UTF-8 encoding
+AddDefaultCharset UTF-8
+
+# Correct MIME types for modern web assets
+<IfModule mod_mime.c>
+  AddType application/javascript .js .mjs
+  AddType text/css .css
+  AddType image/svg+xml .svg
+  AddType image/webp .webp
+  AddType application/json .json
+  AddType font/woff2 .woff2
+</IfModule>
+
+# Force trailing slash on directories to ensure relative assets (./assets/...) resolve properly
+<IfModule mod_dir.c>
+  DirectorySlash On
+</IfModule>
+
+# Single Page Application (SPA) Routing Rewrite Rules
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Ensure directory slash if request is a directory
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^(.+[^/])$ $1/ [R=301,L]
+
+  # If requested resource is an existing file, serve it directly
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Otherwise redirect all requests to index.html for SPA client-side routing
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+# Enable browser caching for static assets
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/jpg "access plus 1 month"
+  ExpiresByType image/jpeg "access plus 1 month"
+  ExpiresByType image/png "access plus 1 month"
+  ExpiresByType image/webp "access plus 1 month"
+  ExpiresByType image/svg+xml "access plus 1 month"
+  ExpiresByType text/css "access plus 1 week"
+  ExpiresByType application/javascript "access plus 1 week"
+</IfModule>

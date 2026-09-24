@@ -163,6 +163,21 @@ export default function Hero({ lang, onRegisterClick, onExploreClick, onPortfoli
           />
         </div>
 
+        {/* LEMA OFICIAL DA CONFERÊNCIA - "TETE NO HORIZONTE DE INVESTIMENTOS" */}
+        <div className="mb-5 sm:mb-6 max-w-2xl mx-auto px-2">
+          <div className="inline-block bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 text-slate-950 px-5 sm:px-8 py-2.5 sm:py-3 border-2 border-amber-600 shadow-md">
+            <span className="text-[10px] sm:text-xs font-mono font-black uppercase tracking-[0.25em] block text-amber-950/90 mb-0.5">
+              {lang === 'pt' ? 'LEMA OFICIAL DA CONFERÊNCIA' : 'OFFICIAL CONFERENCE MOTTO'}
+            </span>
+            <h2 className="text-base sm:text-xl md:text-2xl font-display font-black tracking-tight uppercase text-slate-950">
+              “TETE NO HORIZONTE DE INVESTIMENTOS”
+            </h2>
+            <span className="text-[11px] sm:text-xs font-semibold text-slate-900 block mt-0.5 tracking-wide">
+              {lang === 'pt' ? 'Oportunidades para uma Nova Era de Desenvolvimento' : 'Opportunities for a New Era of Development'}
+            </span>
+          </div>
+        </div>
+
         {/* High-Impact Headline */}
         <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-black tracking-tight text-slate-950 mb-4 max-w-4xl leading-[1.12]">
           {t.heroHeadline || 'Invista em Tete. Construa o futuro.'}
